@@ -1,0 +1,5 @@
+Adds functionality for users to post into groups.
+
+Required Libs:
+TinyMCE 3.3.9.3 jQuery package: http://github.com/downloads/tinymce/tinymce/tinymce_3_3_9_3_jquery.zip
+JQuery 1.4.4: http://code.jquery.com/jquery-1.4.4.min.js
