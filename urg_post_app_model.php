@@ -12,18 +12,8 @@ class UrgPostAppModel extends AppModel {
            ), "Urg"
     );
 
-    function beforeFilter() {
-        parent::beforeFilter();
-        
-        if (!$this->Urg->has_access()) {
-            $this->log("Redirecting to " . Debugger::exportVar($this->Auth->loginAction, 2), LOG_DEBUG);
-            $this->redirect($this->Auth->loginAction);
-        }
-    }
-
     function log($msg, $type = LOG_ERROR) {
     	$trace = debug_backtrace();
         parent::log("[" . $this->toString() . "::" . $trace[1]["function"] . "()] $msg", $type);
     }
-
 }

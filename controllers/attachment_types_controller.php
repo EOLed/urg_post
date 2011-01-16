@@ -58,5 +58,9 @@ class AttachmentTypesController extends UrgPostAppController {
 		$this->Session->setFlash(__('Attachment type was not deleted', true));
 		$this->redirect(array('action' => 'index'));
 	}
+
+    function find_by_name($name) {
+        return $this->AttachmentType->find("first", array("conditions"=>array("AttachmentType.name" => $name)));
+    }
 }
 ?>
