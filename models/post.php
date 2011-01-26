@@ -14,11 +14,11 @@ class Post extends UrgPostAppModel {
 			),
 		),
 		'title' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+			'notEmpty' => array(
+				'rule' => 'notEmpty',
+                'message' => 'posts.errors.title.required',
+                'required' => true,
+                'allowEmpty' => false
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -28,14 +28,14 @@ class Post extends UrgPostAppModel {
 
 	var $belongsTo = array(
 		'Group' => array(
-			'className' => 'Group',
+			'className' => 'Urg.Group',
 			'foreignKey' => 'group_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
 		'User' => array(
-			'className' => 'User',
+			'className' => 'Urg.User',
 			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
