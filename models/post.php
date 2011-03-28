@@ -24,7 +24,6 @@ class Post extends UrgPostAppModel {
 			),
 		),
 	);
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 	var $belongsTo = array(
 		'Group' => array(
@@ -45,8 +44,9 @@ class Post extends UrgPostAppModel {
 
     var $hasMany = array(
             'Attachment' => array( 
-                    'className'  => 'Attachment', 
-                    'order'      => 'Attachment.filename DESC'
+                    'className'  => 'UrgPost.Attachment', 
+                    'order'      => 'Attachment.filename DESC',
+                    'dependent'  => true
             )
     );
 }

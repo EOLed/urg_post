@@ -1,0 +1,129 @@
+div.upload_queue {
+    border: 1px solid #e5e5e5;
+    height: 213px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 80%;
+    overflow: auto;
+}
+
+div.upload_queue .uploadifyQueueItem {
+    background-color: #FFFFFF;
+    border: none;
+    border-bottom: 1px solid #E5E5E5;
+    font: 11px Verdana, Geneva, sans-serif;
+    height: 50px;
+    margin-top: 0;
+    padding: 10px;
+    width: 95%;
+}
+
+div.upload_queue .uploadifyError {
+    background-color: #FDE5DD !important;
+    border: none !important;
+    border-bottom: 1px solid #FBCBBC !important;
+}
+
+div.upload_queue .uploadifyQueueItem .cancel {
+    float: right;
+}
+
+div.upload_queue .uploadifyQueue .completed {
+    color: #C5C5C5;
+}
+
+div.upload_queue .uploadifyProgress {
+    background-color: #E5E5E5;
+    margin-top: 10px;
+    width: 100%;
+}
+
+div.upload_queue .uploadifyProgressBar {
+    background-color: #0099FF;
+    height: 3px;
+    width: 1px;
+}
+
+
+div.post-banner {
+    width: 960px;
+    height: 540px;
+    overflow: hidden;
+}
+
+.page-title { 
+    list-style-type:none; 
+    margin:0px; 
+    padding:0px; 
+}
+
+.page-title {
+    /* assume all items will be sounds rather than wait for onload etc. in this example.. may differ for your uses. */
+    position:relative; 
+    display:block; 
+    font-size:36px; 
+    color:#666; 
+    padding:0.25em 0.5em 0.25em 0.5em; 
+    border:none; 
+    letter-spacing:-1px; /* ZOMG WEB X.0. ;) */ 
+    background-color:#f9f9f9; 
+    
+    -webkit-transition-property: hover; 
+    -webkit-transition: background-color 0.15s ease-in-out; 
+    
+    -moz-transition: background-color 0.15s linear 0s; /* firefox 4 */ 
+
+    -o-transition-property: background-color; /* opera 10.5 */ 
+    -o-transition-duration: 0.15s;
+}
+
+.page-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.page-title { 
+    display:block; 
+    text-decoration:none; 
+    font-weight:normal; 
+    color:#000; 
+    font-size: 32px; 
+    outline:none; 
+    position:relative; 
+    z-index:2; 
+}
+
+ul#activity_feed, ul#upcoming-events {
+    list-style-type: none;
+}
+
+ul#activity-feed li, ul#upcoming-events li {
+    margin-bottom: 20px;
+}
+
+ul#activity-feed li div.feed-timestamp, .upcoming-info {
+    color: #acacac;
+    padding-top: 1px;
+}
+
+div.upcoming-timestamp {
+    color: #aa1111;
+}
+
+img.feed-icon {
+    width: 10px;
+}
+
+#about-group {
+    font-size: 13px;
+    line-height: 120%;
+}
+
+/** NOTICES & MESSAGES */
+div.validated {
+    clear: both;
+    color: #fff;
+    font-weight: bold;
+    background: #0F903F;
+}
+
