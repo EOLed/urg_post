@@ -15,6 +15,8 @@
 
     <div id="post-content" class="grid_8 right-border">
         <?php echo $post["Post"]["content"]; ?>
+
+        <?php echo $this->Post->attachments($post); ?>
     </div>
 
     <div id="group-upcoming" class="grid_4">

@@ -32,15 +32,20 @@ class PostsController extends UrgPostAppController {
 		}
 
         $post = $this->Post->read(null, $id);
+        $this->log("Viewing post: " . Debugger::exportVar($post, 3), LOG_DEBUG);
 		$this->set('post', $post);
         $group = $this->Post->Group->findById($post["Group"]["id"]);
         $this->set("upcoming_events", $this->get_upcoming_activity($group));
         $about = $this->get_about("Montreal Chinese Alliance Church");
         $about_group = $this->get_about($group["Group"]["name"]);
         $this->set("about", $about);
-        $banners = $this->get_banners($about_group);
+
+        $banners = $this->get_banners($post);
         if (empty($banners)) {
-            $banners = $this->get_banners($about);
+            $banners = $this->get_banners($about_group);
+            if (empty($banners)) {
+                $banners = $this->get_banners($about);
+            }
         }
 
         $this->set("title_for_layout", $post["Group"]["name"] . " &raquo; " . $post["Post"]["title"]);
@@ -191,7 +196,7 @@ class PostsController extends UrgPostAppController {
 //        $filename = $target_folder . $this->Cuploadify->get_filename();
     }
 
-    function get_banners($about) {
+    function get_banners($post) {
         $this->loadModel("Attachment");
         $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
 
@@ -199,14 +204,15 @@ class PostsController extends UrgPostAppController {
 
         $banners = array();
 
-        if (isset($about["Attachment"])) {
+        if (isset($post["Attachment"])) {
             Configure::load("config");
-            foreach ($about["Attachment"] as $attachment) {
-                if ($attachment["attachment_type_id"] == $banner_type["AttachmentType"]["id"])
-                    $this->log("default width: " . Configure::read("Banner.defaultWidth"), LOG_DEBUG);
+            foreach ($post["Attachment"] as $attachment) {
+                if ($attachment["attachment_type_id"] == $banner_type["AttachmentType"]["id"]) {
+                    $this->log("getting banner for " . $attachment["filename"], LOG_DEBUG);
                     array_push($banners, $this->get_image_path($attachment["filename"],
-                                                               $about,
+                                                               $post,
                                                                Configure::read("Banner.defaultWidth")));
+                }
             }
         }
 
@@ -291,6 +297,43 @@ class PostsController extends UrgPostAppController {
         }
 
         return $string;
+    }
+
+    function get_webroot_folder($filename) {
+        $webroot_folder = null;
+
+        if ($this->is_filetype($filename, array(".jpg", ".jpeg", ".png", ".gif", ".bmp"))) {
+            $webroot_folder = $this->IMAGES_WEBROOT;
+        } else if ($this->is_filetype($filename, array(".mp3"))) {
+            $webroot_folder = $this->AUDIO_WEBROOT;
+        } else if ($this->is_filetype($filename, array(".ppt", ".pptx", ".doc", ".docx"))) {
+            $webroot_folder = $this->FILES_WEBROOT;
+        }
+
+        return $webroot_folder;
+    }
+
+    function is_filetype($filename, $filetypes) {
+        $filename = strtolower($filename);
+        $is = false;
+        if (is_array($filetypes)) {
+            foreach ($filetypes as $filetype) {
+                if ($this->ends_with($filename, $filetype)) {
+                    $is = true;
+                    break;
+                }
+            }
+        } else {
+            $is = $this->ends_with($filename, $filetypes);
+        }
+
+        $this->log("is $filename part of " . implode(",",$filetypes) . "? " . ($is ? "true" : "false"), 
+                LOG_DEBUG);
+        return $is;
+    }
+
+    function ends_with($haystack, $needle) {
+        return strrpos($haystack, $needle) === strlen($haystack)-strlen($needle);
     }
 }
 ?>

@@ -126,6 +126,11 @@ h3.post-title {
     margin-bottom: 5px;
 }
 
+ul#attachment-list {
+    padding-top: 25px;
+    font-size: 12px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

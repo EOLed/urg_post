@@ -2,6 +2,15 @@
 class PostHelper extends AppHelper {
     var $helpers = array("Html", "Time");
 
+    function attachments($post) {
+        $attachment_block = "";
+        foreach ($post["Attachment"] as $attachment) {
+            $attachment_block .= $this->Html->tag("li", $attachment["filename"]);
+        }
+
+        return $this->Html->tag("ul", $attachment_block, array("id" => "attachment-list"));
+    }
+
     function post_feed($group, $posts) {
         $feed = "";
         foreach ($posts as $feed_item) {
