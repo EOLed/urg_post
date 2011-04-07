@@ -14,7 +14,7 @@
     </div>
 
     <div id="about-group" class="grid_4 right-border">
-        <h2><?php echo __("Bio", true) ?></h2>
+        <h2><?php echo $about_group["Post"]["title"] ?></h2>
         <?php echo $about_group["Post"]["content"]; ?>
     </div>
     <div id="group-feed" class="grid_4 right-border">
