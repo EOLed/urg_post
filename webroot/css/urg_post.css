@@ -44,53 +44,10 @@ div.upload_queue .uploadifyProgressBar {
     width: 1px;
 }
 
-
 div.post-banner {
     width: 960px;
     height: 540px;
     overflow: hidden;
-}
-
-.page-title { 
-    list-style-type:none; 
-    margin:0px; 
-    padding:0px; 
-}
-
-.page-title {
-    /* assume all items will be sounds rather than wait for onload etc. in this example.. may differ for your uses. */
-    position:relative; 
-    display:block; 
-    font-size:36px; 
-    color:#666; 
-    padding:0.25em 0.5em 0.25em 0.5em; 
-    border:none; 
-    letter-spacing:-1px; /* ZOMG WEB X.0. ;) */ 
-    background-color:#f9f9f9; 
-    
-    -webkit-transition-property: hover; 
-    -webkit-transition: background-color 0.15s ease-in-out; 
-    
-    -moz-transition: background-color 0.15s linear 0s; /* firefox 4 */ 
-
-    -o-transition-property: background-color; /* opera 10.5 */ 
-    -o-transition-duration: 0.15s;
-}
-
-.page-title {
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-.page-title { 
-    display:block; 
-    text-decoration:none; 
-    font-weight:normal; 
-    color:#000; 
-    font-size: 32px; 
-    outline:none; 
-    position:relative; 
-    z-index:2; 
 }
 
 ul#activity_feed, ul#upcoming-events {
@@ -117,6 +74,56 @@ img.feed-icon {
 #about-group {
     font-size: 13px;
     line-height: 120%;
+}
+
+.page-title {
+    /* assume all items will be sounds rather than wait for onload etc. in this example.. may differ for your uses. */
+    position:relative; 
+    display:block; 
+    font-size:36px; 
+    color:#666; 
+    padding:0.25em 0.5em 0.25em 0.5em; 
+    border:none; 
+    letter-spacing:-1px; /* ZOMG WEB X.0. ;) */ 
+    background-color:#f9f9f9; 
+    
+    -webkit-transition-property: hover; 
+    -webkit-transition: background-color 0.15s ease-in-out; 
+    
+    -moz-transition: background-color 0.15s linear 0s; /* firefox 4 */ 
+
+    -o-transition-property: background-color; /* opera 10.5 */ 
+    -o-transition-duration: 0.15s;
+
+    list-style-type:none; 
+    margin: 20px 0px 10px 0px; 
+    padding: 10px; 
+
+    display:block; 
+    text-decoration:none; 
+    font-weight:normal; 
+    color:#000; 
+    font-size: 32px; 
+    outline:none; 
+    position:relative; 
+    z-index:2; 
+}
+
+#post-content {
+    font-size: 14px;
+    line-height: 19px;
+    letter-spacing: 0;
+    color: #444444;
+}
+
+#activity-feed .post {
+    line-height: 125%;
+    letter-spacing: 0;
+    margin-bottom: 20px;
+}
+
+h3.post-title {
+    margin-bottom: 5px;
 }
 
 /** NOTICES & MESSAGES */

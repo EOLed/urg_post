@@ -10,13 +10,17 @@
     </div>
 
     <div id='group-name' class='grid_12 page-title'>
-        <div><?php echo $post["Post"]["title"]?></div>
+        <div><?php echo $group["Group"]["name"]?></div>
     </div>
 
-    <div id="post-content" class="grid_8 right-border">
-        <?php echo $post["Post"]["content"]; ?>
+    <div id="about-group" class="grid_4 right-border">
+        <h2><?php echo __("Bio", true) ?></h2>
+        <?php echo $about_group["Post"]["content"]; ?>
     </div>
-
+    <div id="group-feed" class="grid_4 right-border">
+        <h2><?php echo __("Recent activity", true); ?></h2>
+        <?php echo $this->Post->post_feed($group, $activity); ?>
+    </div>
     <div id="group-upcoming" class="grid_4">
         <h2><?php echo __("Upcoming events", true); ?></h2>
         <?php echo $this->Post->upcoming_activity($upcoming_events); ?>
@@ -24,7 +28,6 @@
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
-$("#post-content, #group-upcoming").equalHeight();
+$("#about-group, #group-feed, #group-upcoming").equalHeight();
 </script>
 <?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>
-
