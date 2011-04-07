@@ -19,8 +19,8 @@ class PostHelper extends AppHelper {
                     $feed_icon . 
                     $this->Time->timeAgoInWords($feed_item["Post"]["publish_timestamp"], 'j/n/y', false, true));
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
-                                    "/urg_post/posts/view/" . $feed_item["Post"]["id"]),
-                                    array("class"=>"post-title"));
+                                      "/urg_post/posts/view/" . $feed_item["Post"]["id"] . "/" . 
+                                      $feed_item["Post"]["slug"]), array("class"=>"post-title"));
             $feed .= $this->Html->div("post", $title . $feed_item["Post"]["content"] . $time);
         }
 

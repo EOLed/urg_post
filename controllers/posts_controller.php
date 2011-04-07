@@ -25,13 +25,25 @@ class PostsController extends UrgPostAppController {
 		$this->set('posts', $this->paginate());
 	}
 
-	function view($id = null) {
+	function view($id = null, $slug = null) {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid post', true));
 			$this->redirect(array('action' => 'index'));
 		}
 
         $post = $this->Post->read(null, $id);
+
+        if (!$slug || $slug != $post["Post"]["slug"]) {
+            if (isset($post["Post"]["slug"]) && $post["Post"]["slug"] != "") {
+                $slug = $post["Post"]["slug"];
+            } else {
+                $this->Post->id = $id;
+                $slug = strtolower(Inflector::slug($post["Post"]["title"], "-"));
+                $this->Post->saveField("slug", $slug);
+            }
+            $this->redirect("/urg_post/posts/view/$id/$slug");
+        }
+
         $this->log("Viewing post: " . Debugger::exportVar($post, 3), LOG_DEBUG);
 		$this->set('post', $post);
         $group = $this->Post->Group->findById($post["Group"]["id"]);
