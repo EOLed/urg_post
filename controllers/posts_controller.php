@@ -91,7 +91,7 @@ class PostsController extends UrgPostAppController {
         $this->set("banners", $banners);
     }
 
-	function add() {
+	function add($group_slug = null) {
 		if (!empty($this->data)) {
 			$this->Post->create();
             $post_creator = $this->Auth->user();
@@ -117,6 +117,11 @@ class PostsController extends UrgPostAppController {
 		} else {
             $this->data["Post"]["uuid"] = String::uuid();
         }
+            if ($group_slug != null) {
+                $group = $this->Post->Group->findBySlug($group_slug);
+                $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
+                $this->data["Post"]["group_id"] = $group["Group"]["id"];
+            }
 
         $this->loadModel("Attachment");
         $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
