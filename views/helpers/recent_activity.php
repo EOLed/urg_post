@@ -17,7 +17,7 @@ class RecentActivityHelper extends AppHelper {
     function feed_icon($feed_item) {
         $icon = null;
         if (isset($feed_item["Post"])) {
-           $icon = $this->Html->image("/urg/img/icons/feed/cloud-alt.png",
+           $icon = $this->Html->image("/urg_post/img/icons/feed/cloud.png",
                                       array("class" => "feed-icon")); 
         }
         return $icon; 

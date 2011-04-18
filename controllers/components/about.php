@@ -34,7 +34,20 @@ class AboutComponent extends Object {
                 )
         );
 
-        CakeLog::write("debug", "about for group: $name" .  Debugger::exportVar($about, 3));
+        if ($about === false) {
+            $this->controller->Post->bindModel(array("belongsTo" => array("Group")));
+
+            $about = $this->controller->Post->find("first", 
+                array("conditions" => 
+                        array(
+                            "AND" => array("Post.title" => "About", "Group.name" => $name)
+                        ),
+                      "order" => "Post.publish_timestamp DESC"
+                )
+            );
+        }
+
+        CakeLog::write("debug", "about for group: $name " .  Debugger::exportVar($about, 3));
 
         return $about;
     }
