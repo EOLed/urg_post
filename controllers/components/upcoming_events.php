@@ -14,8 +14,15 @@ class UpcomingEventsComponent extends Object {
     }
 
     function get_upcoming_activity($group) {
+        $children = $this->controller->Group->children($group["Group"]["id"]);
+        $child_ids = array($group["Group"]["id"]);
+
+        foreach ($children as $child) {
+            array_push($child_ids, $child["Group"]["id"]);
+        }
+
         $posts = $this->controller->Post->find('all', 
-                array("conditions" => array("Post.group_id" => $group["Group"]["id"],
+                array("conditions" => array("Post.group_id" => $child_ids,
                                             "Post.publish_timestamp > NOW()"),
                       "limit" => 10,
                       "order" => "Post.publish_timestamp"));

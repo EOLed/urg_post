@@ -246,7 +246,7 @@ class PostsController extends UrgPostAppController {
                 array("conditions" => 
                         array("OR" => array(
                                 "Group.name" => "About", 
-                                "Group.group_id" => $about_group["Group"]["id"]),
+                                "Group.parent_id" => $about_group["Group"]["id"]),
                               "AND" => array("Post.title" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"
