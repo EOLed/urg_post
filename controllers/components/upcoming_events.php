@@ -9,13 +9,13 @@ class UpcomingEventsComponent extends Object {
     }
 
     function build() {
-        $upcoming = $this->get_upcoming_activity($this->settings["group"]);
+        $upcoming = $this->get_upcoming_activity($this->settings["group_id"]);
         $this->controller->set("upcoming_events", $upcoming);
     }
 
-    function get_upcoming_activity($group) {
-        $children = $this->controller->Group->children($group["Group"]["id"]);
-        $child_ids = array($group["Group"]["id"]);
+    function get_upcoming_activity($group_id) {
+        $children = $this->controller->Group->children($group_id);
+        $child_ids = array($group_id);
 
         foreach ($children as $child) {
             array_push($child_ids, $child["Group"]["id"]);

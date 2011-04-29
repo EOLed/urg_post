@@ -1,10 +1,11 @@
 <?php
 class RecentActivityHelper extends AppHelper {
     var $helpers = array("Html", "Time");
-    var $widget_options = array("recent_activity");
+    var $widget_options = array("recent_activity", "recent_activity_title");
 
     function build($options = array()) {
-        $title = $this->Html->tag("h2", __("Recent activity", true));
+        CakeLog::write("debug", "recent activity title: " . Debugger::exportVar($options, 4));
+        $title = $this->Html->tag("h2", __($options["recent_activity_title"], true));
         $content = "";
 
         foreach ($options["recent_activity"] as $recent_activity) {
