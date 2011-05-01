@@ -8,9 +8,10 @@ class UpcomingEventsComponent extends Object {
         $this->settings = $settings;
     }
 
-    function build() {
-        $upcoming = $this->get_upcoming_activity($this->settings["group_id"]);
-        $this->controller->set("upcoming_events", $upcoming);
+    function build($widget_id) {
+        $settings = $this->settings[$widget_id];
+        $upcoming = $this->get_upcoming_activity($settings["group_id"]);
+        $this->controller->set("upcoming_events_$widget_id", $upcoming);
     }
 
     function get_upcoming_activity($group_id) {

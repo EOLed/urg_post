@@ -10,10 +10,11 @@ class AboutComponent extends Object {
         CakeLog::write("debug", "about component settings: " . Debugger::exportVar($settings, 3));
     }
 
-    function build() {
-        $about = $this->get_about($this->settings["name"]);
-        $this->controller->set("about_title", $about["Post"]["title"]);
-        $this->controller->set("about_content", $about["Post"]["content"]);
+    function build($widget_id) {
+        $settings = $this->settings[$widget_id];
+        $about = $this->get_about($settings["name"]);
+        $this->controller->set("about_title_$widget_id", $about["Post"]["title"]);
+        $this->controller->set("about_content_$widget_id", $about["Post"]["content"]);
         //$this->controller->set("about_widget_options", array("about_title", "about_content"));
     }
 
@@ -21,7 +22,7 @@ class AboutComponent extends Object {
         $this->controller->loadModel("Post");
         $this->controller->Post->bindModel(array("belongsTo" => array("Group")));
 
-        $about_group = $this->controller->Group->findByName($this->settings["name"]);
+        $about_group = $this->controller->Group->findByName($name);
 
         $about = $this->controller->Post->find("first", 
                 array("conditions" => 

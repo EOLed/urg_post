@@ -8,13 +8,17 @@ class RecentActivityComponent extends Object {
         $this->settings = $settings;
     }
 
-    function build() {
-        $activity = $this->get_recent_activity($this->settings["group_id"]);
-        $this->controller->set("recent_activity", $activity);
-        $this->controller->set("recent_activity_title", $this->settings["title"]);
+    function build($widget_id) {
+        $settings = $this->settings[$widget_id];
+        $activity = $this->get_recent_activity($settings["group_id"]);
+        $this->controller->set("recent_activity_$widget_id", $activity);
+        $this->controller->set("recent_activity_title_$widget_id", $settings["title"]);
     }
 
     function get_recent_activity($group_id) {
+        $this->controller->loadModel("Group");
+        $this->controller->loadModel("Post");
+
         $children = $this->controller->Group->children($group_id);
         CakeLog::write("debug", "child groups: " . Debugger::exportVar($children, 3));
         $child_ids = array($group_id);
