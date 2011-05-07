@@ -12,23 +12,32 @@ class AboutComponent extends Object {
 
     function build($widget_id) {
         $settings = $this->settings[$widget_id];
-        $about = $this->get_about($settings["name"]);
-        $this->controller->set("about_title_$widget_id", $about["Post"]["title"]);
+
+        $options = array();
+
+        $about = $this->get_about($settings["group_id"]);
+
+        if (!isset($settings["title"])) {
+            $settings["title"] = $about["Post"]["title"];
+        }
+
+        $this->controller->set("about_title_$widget_id", $settings["title"]);
         $this->controller->set("about_content_$widget_id", $about["Post"]["content"]);
-        //$this->controller->set("about_widget_options", array("about_title", "about_content"));
     }
 
-    function get_about($name) {
+    function get_about($group_id) {
         $this->controller->loadModel("Post");
         $this->controller->Post->bindModel(array("belongsTo" => array("Group")));
 
-        $about_group = $this->controller->Group->findByName($name);
+        $about_group = $this->controller->Group->findById($group_id);
+
+        $name = $about_group["Group"]["name"];
 
         $about = $this->controller->Post->find("first", 
                 array("conditions" => 
                         array("OR" => array(
                                 "Group.name" => "About", 
-                                "Group.parent_id" => $about_group["Group"]["id"]),
+                                "Group.parent_id" => $group_id),
                               "AND" => array("Post.title" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"

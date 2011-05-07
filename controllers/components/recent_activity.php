@@ -12,6 +12,10 @@ class RecentActivityComponent extends Object {
         $settings = $this->settings[$widget_id];
         $activity = $this->get_recent_activity($settings["group_id"]);
         $this->controller->set("recent_activity_$widget_id", $activity);
+
+        if (!isset($settings["title"])) {
+            $settings["title"] = "Recent Activity";
+        }
         $this->controller->set("recent_activity_title_$widget_id", $settings["title"]);
     }
 
