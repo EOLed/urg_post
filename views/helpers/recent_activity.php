@@ -7,12 +7,6 @@ class RecentActivityHelper extends AppHelper {
         CakeLog::write("debug", "recent activity title: " . Debugger::exportVar($options, 4));
 
         $title = $this->Html->tag("h2", __($options["recent_activity_title"], true));
-        $content = "";
-
-        foreach ($options["recent_activity"] as $recent_activity) {
-            $content .= $this->Html->tag("h3", $recent_activity["Post"]["title"]);
-            $content .= $this->Html->para("post-content", $recent_activity["Post"]["content"]);
-        }
         return $this->Html->div("recent-activity", $title . $this->post_feed($options["recent_activity"]));
     }
 
