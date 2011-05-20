@@ -4,8 +4,7 @@ class RecentActivityHelper extends AppHelper {
     var $widget_options = array("recent_activity", "recent_activity_title");
 
     function build($options = array()) {
-        CakeLog::write("debug", "recent activity title: " . Debugger::exportVar($options, 4));
-
+        $this->Html->css("/urg_post/css/urg_post.css", array("inline"=>false));
         $title = $this->Html->tag("h2", __($options["recent_activity_title"], true));
         return $this->Html->div("recent-activity", $title . $this->post_feed($options["recent_activity"]));
     }
