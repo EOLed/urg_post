@@ -4,7 +4,7 @@ class UpcomingEventsHelper extends AppHelper {
     var $widget_options = array("upcoming_events");
 
     function build($options = array()) {
-        $this->Html->css("/urg_post/css/urg_post.css", array("inline"=>false));
+        $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
         $title = $this->Html->tag("h2", __("Upcoming events", true));
         return $this->Html->div("upcoming-events", $title . 
                 $this->upcoming_activity($options["upcoming_events"]));
