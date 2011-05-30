@@ -3,6 +3,7 @@ App::import("Component", "UrgPost.Poster");
 App::import("Component", "Cuploadify.Cuploadify");
 App::import("Component", "ImgLib.ImgLib");
 App::import("Helper", "UrgPost.Post");
+App::import("Component", "UrgSubscription.NotifySubscribers");
 class PostsController extends UrgPostAppController {
 	var $name = 'Posts';
 
@@ -15,7 +16,7 @@ class PostsController extends UrgPostAppController {
                            "action" => "login",
                            "admin" => false
                    )
-           ), "Urg", "Poster", "Cuploadify", "ImgLib"
+           ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers"
     );
 
     var $helpers = array("Post");
@@ -108,6 +109,8 @@ class PostsController extends UrgPostAppController {
                 );
 
                 $this->Poster->resize_banner($this->Post->id);
+
+                $this->NotifySubscribers->execute();
                 
 				$this->Session->setFlash(__('The post has been saved', true));
 				$this->redirect(array('action' => 'index'));
@@ -117,11 +120,12 @@ class PostsController extends UrgPostAppController {
 		} else {
             $this->data["Post"]["uuid"] = String::uuid();
         }
-            if ($group_slug != null) {
-                $group = $this->Post->Group->findBySlug($group_slug);
-                $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
-                $this->data["Post"]["group_id"] = $group["Group"]["id"];
-            }
+
+        if ($group_slug != null) {
+            $group = $this->Post->Group->findBySlug($group_slug);
+            $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
+            $this->data["Post"]["group_id"] = $group["Group"]["id"];
+        }
 
         $this->loadModel("Attachment");
         $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
