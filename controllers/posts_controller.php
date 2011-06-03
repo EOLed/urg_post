@@ -110,6 +110,8 @@ class PostsController extends UrgPostAppController {
 
                 $this->Poster->resize_banner($this->Post->id);
 
+                $this->data["Post"]["id"] = $this->Post->id;
+
                 $this->NotifySubscribers->execute();
                 
 				$this->Session->setFlash(__('The post has been saved', true));
