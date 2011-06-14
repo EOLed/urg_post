@@ -6,5 +6,6 @@
              $this->Html->url(String::insert("/urg_subscription/subscriptions/unsubscribe/:ref", 
                               array("ref" => $subscription["Subscription"]["ref"]))); ?>
 
+
 --
 Sent by the Churchie Network

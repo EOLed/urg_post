@@ -1,5 +1,7 @@
+<?php if (isset($banner)) { ?>
 <p><?php echo $this->Html->image("http://" . $_SERVER['HTTP_HOST'] . $banner) ?></p>
 <br/><br/>
+<?php } ?>
 <?php echo $post["Post"]["content"] ?>
 <br/>
 <p>
