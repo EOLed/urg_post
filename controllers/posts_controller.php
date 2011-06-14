@@ -99,6 +99,12 @@ class PostsController extends UrgPostAppController {
             $this->data["User"] = $post_creator["User"];
             $this->log("new post created by: " . Debugger::exportVar($post_creator["User"]), LOG_DEBUG);
             $this->Poster->prepare_attachments($this->data);
+
+            if (!isset($this->data["Post"]["slug"]) || strlen($this->data["Post"]["slug"]) == 0) {
+                $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], 
+                                                                         "-"));
+            }
+
             $this->log("saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
 			if ($this->Post->saveAll($this->data, array("atomic" => false))) {
                 $temp_dir = $this->data["Post"]["uuid"];
