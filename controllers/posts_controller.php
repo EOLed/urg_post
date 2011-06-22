@@ -4,6 +4,7 @@ App::import("Component", "Cuploadify.Cuploadify");
 App::import("Component", "ImgLib.ImgLib");
 App::import("Helper", "UrgPost.Post");
 App::import("Component", "UrgSubscription.NotifySubscribers");
+App::import("Component", "Urg.WidgetUtil");
 class PostsController extends UrgPostAppController {
 	var $name = 'Posts';
 
@@ -16,7 +17,7 @@ class PostsController extends UrgPostAppController {
                            "action" => "login",
                            "admin" => false
                    )
-           ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers"
+           ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers", "WidgetUtil"
     );
 
     var $helpers = array("Post");
@@ -42,10 +43,19 @@ class PostsController extends UrgPostAppController {
                 $slug = strtolower(Inflector::slug($post["Post"]["title"], "-"));
                 $this->Post->saveField("slug", $slug);
             }
-            $this->redirect("/urg_post/posts/view/$id/$slug");
+            $this->redirect(array("plugin" => "urg_post",
+                                  "controller" => "posts",
+                                  "action" => "view",
+                                  $id,
+                                  $slug));
         }
 
         $this->log("Viewing post: " . Debugger::exportVar($post, 3), LOG_DEBUG);
+
+        $this->set("widgets", $this->prepare_widgets(
+                $this->WidgetUtil->load($post["Group"]["id"],
+                                        array("post_id" => $post["Post"]["id"]))));
+
 		$this->set('post', $post);
         $group = $this->Post->Group->findById($post["Group"]["id"]);
         $this->set("upcoming_events", $this->get_upcoming_activity($group));
@@ -65,6 +75,15 @@ class PostsController extends UrgPostAppController {
 
         $this->set("banners", $banners);
 	}
+
+    function prepare_widgets($widgets) {
+        $widget_list = array();
+        foreach ($widgets as $widget) {
+            $widget_list[$widget["Widget"]["placement"]] = $widget;
+        }
+
+        return $widget_list;
+    }
 
     function view_group($slug) {
         if (!$slug) {
