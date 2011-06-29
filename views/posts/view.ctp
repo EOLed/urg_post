@@ -22,6 +22,15 @@
     </div>
     <?php } ?>
 
+    <?php if (isset($widgets["header"])) {
+        $header_widget = $widgets["header"];
+        $options = array();
+        foreach ($this->{$header_widget["Widget"]["helper_name"]}->widget_options as $option) {
+            $options[$option] = ${$option . "_" . $header_widget["Widget"]["id"]};
+        }
+        echo $this->Html->div("header_widget", $this->{$header_widget["Widget"]["helper_name"]}->build($options));
+    } ?>
+
     <div id="post-content" class="grid_8 right-border">
         <?php echo $post["Post"]["content"]; ?>
 
