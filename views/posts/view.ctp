@@ -31,20 +31,40 @@
         echo $this->Html->div("header_widget", $this->{$header_widget["Widget"]["helper_name"]}->build($options));
     } ?>
 
-    <div id="post-content" class="grid_8 right-border">
-        <?php echo $post["Post"]["content"]; ?>
+    <div id="post-col-1" class="grid_8 right-border">
+        <?php 
+        if (isset($widgets[0])) {
+            foreach ($widgets[0] as $widget) {
+                $options = array();
+                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
+                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
+                }
+                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
+            }
+        }
+        ?>
+        <?php //echo $post["Post"]["content"]; ?>
 
-        <?php echo $this->Post->attachments($post); ?>
+        <?php //echo $this->Post->attachments($post); ?>
     </div>
 
-    <div id="group-upcoming" class="grid_4">
-        <h2><?php echo __("Upcoming events", true); ?></h2>
-        <?php echo $this->Post->upcoming_activity($upcoming_events); ?>
+    <div id="post-col-2" class="grid_4">
+        <?php 
+        if (isset($widgets[1])) {
+            foreach ($widgets[1] as $widget) {
+                $options = array();
+                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
+                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
+                }
+                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
+            }
+        }
+        ?>
     </div>
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
-$("#post-content, #group-upcoming").equalHeight();
+$("#post-col-1, #post-col-2").equalHeight();
 </script>
 <?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>
 

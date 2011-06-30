@@ -79,8 +79,15 @@ class PostsController extends UrgPostAppController {
     function prepare_widgets($widgets) {
         $widget_list = array();
         foreach ($widgets as $widget) {
-            $widget_list[$widget["Widget"]["placement"]] = $widget;
+            if (strpos($widget["Widget"]["placement"], "|") === false) {
+                $widget_list[$widget["Widget"]["placement"]] = $widget;
+            } else {
+                $placement = explode("|", $widget["Widget"]["placement"]);
+                $widget_list[$placement[0]][$placement[1]] = $widget;
+            }
         }
+
+        $this->log("prepared widgets: " . Debugger::exportVar($widget_list, 3), LOG_DEBUG);
 
         return $widget_list;
     }
