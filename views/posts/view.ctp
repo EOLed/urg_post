@@ -39,7 +39,7 @@
                 foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                     $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
                 }
-                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
+                echo $this->Html->div("post-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
             }
         }
         ?>

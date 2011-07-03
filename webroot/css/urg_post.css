@@ -133,6 +133,10 @@ ul#attachment-list {
     font-size: 12px;
 }
 
+.post-widget {
+    padding-bottom: 20px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;
