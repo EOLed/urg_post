@@ -31,10 +31,27 @@
         echo $this->Html->div("header_widget", $this->{$header_widget["Widget"]["helper_name"]}->build($options));
     } ?>
 
-    <div id="post-col-1" class="grid_8 right-border">
+    <?php
+    $columns = array();
+    if (!isset($widgets["layout"])) {
+        $columns["post-col-0"] = "grid_8 right-border";
+        $columns["post-col-1"] = "grid_4";
+    } else {
+        $layout_widget = $widgets["layout"];
+        $options = array();
+        foreach ($this->{$layout_widget["Widget"]["helper_name"]}->widget_options as $option) {
+            $options[$option] = ${$option . "_" . $layout_widget["Widget"]["id"]};
+        }
+        $this->{$layout_widget["Widget"]["helper_name"]}->build($options);
+
+        $columns = $this->{$layout_widget["Widget"]["helper_name"]}->get_columns();
+    }
+
+    foreach ($columns as $column_id => $column_class) { ?>
+    <div id="<?php echo $column_id ?>" class="<?php echo $column_class ?>">
         <?php 
-        if (isset($widgets[0])) {
-            foreach ($widgets[0] as $widget) {
+        if (isset($widgets[$column_id])) {
+            foreach ($widgets[$column_id] as $widget) {
                 $options = array();
                 foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
                     $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
@@ -47,20 +64,7 @@
 
         <?php //echo $this->Post->attachments($post); ?>
     </div>
-
-    <div id="post-col-2" class="grid_4">
-        <?php 
-        if (isset($widgets[1])) {
-            foreach ($widgets[1] as $widget) {
-                $options = array();
-                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
-                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
-                }
-                echo $this->Html->div("group-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
-            }
-        }
-        ?>
-    </div>
+    <?php } ?>
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
