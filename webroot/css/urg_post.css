@@ -137,6 +137,11 @@ ul#attachment-list {
     padding-bottom: 20px;
 }
 
+.doc-viewer {
+    width: 100%;
+    height: 400px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;
