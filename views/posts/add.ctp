@@ -89,6 +89,9 @@
             echo $this->Form->hidden("uuid");
             echo $this->Form->hidden("bannerAttachmentIndex");
             echo $this->Form->input('Post.group_id');
+            echo $this->Form->input('Post.locale', array("type" => "select", 
+                                                         "label" => __("Language", true),
+                                                         "options" => $locales));
             echo $this->Form->input('Post.title');
             echo $this->Html->div("error-message", "", 
                     array("id"=>"PostTitleError", "style"=>"display: none"));

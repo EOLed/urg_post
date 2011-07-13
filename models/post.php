@@ -3,6 +3,10 @@ class Post extends UrgPostAppModel {
 	var $name = 'Post';
 	var $displayField = 'title';
     //var $actsAs = array("UrgSubscription.NotifySubscribers");
+
+    var $actsAs = array(
+        "Translate" => array("title" => "i18nTitle", "content" => "i18nContent")
+    );
 	var $validate = array(
 		'group_id' => array(
 			'numeric' => array(

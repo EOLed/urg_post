@@ -33,7 +33,11 @@ class PostsController extends UrgPostAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 
-        $post = $this->Post->read(null, $id);
+        $logged_user = $this->Auth->user();
+
+        $post = $this->Post->find("first", array("conditions" => array("Post.id" => $id)));
+
+        $this->log("Viewing post ($id): " . Debugger::exportVar($post, 3), LOG_DEBUG);
 
         if (!$slug || $slug != $post["Post"]["slug"]) {
             if (isset($post["Post"]["slug"]) && $post["Post"]["slug"] != "") {
@@ -41,6 +45,8 @@ class PostsController extends UrgPostAppController {
             } else {
                 $this->Post->id = $id;
                 $slug = strtolower(Inflector::slug($post["Post"]["title"], "-"));
+                $this->log("Post to create slug for ($id): " . Debugger::exportVar($post, 3), LOG_DEBUG);
+                $this->log("Saving slug as: " . $slug, LOG_DEBUG);
                 $this->Post->saveField("slug", $slug);
             }
             $this->redirect(array("plugin" => "urg_post",
@@ -119,9 +125,10 @@ class PostsController extends UrgPostAppController {
     }
 
 	function add($group_slug = null) {
+        $post_creator = $this->Auth->user();
+
 		if (!empty($this->data)) {
 			$this->Post->create();
-            $post_creator = $this->Auth->user();
             $this->data["User"] = $post_creator["User"];
             $this->log("new post created by: " . Debugger::exportVar($post_creator["User"]), LOG_DEBUG);
             $this->Poster->prepare_attachments($this->data);
@@ -132,6 +139,7 @@ class PostsController extends UrgPostAppController {
             }
 
             $this->log("saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
+            $this->Post->locale = $this->data["Post"]["locale"];
 			if ($this->Post->saveAll($this->data, array("atomic" => false))) {
                 $temp_dir = $this->data["Post"]["uuid"];
 
@@ -153,6 +161,10 @@ class PostsController extends UrgPostAppController {
 			}
 		} else {
             $this->data["Post"]["uuid"] = String::uuid();
+            $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
+            $this->loadModel("Profile");
+            $profile = $this->Profile->findByUserId($post_creator["User"]["id"]);
+            $this->data["Post"]["locale"] = $profile["Profile"]["locale"];
         }
 
         if ($group_slug != null) {
@@ -170,7 +182,24 @@ class PostsController extends UrgPostAppController {
                 $this->Attachment->AttachmentType->findByName("Audio"));
 		$groups = $this->Post->Group->find('list');
 		$this->set(compact('groups'));
+
+        $this->set_locales();
 	}
+
+    function set_locales() {
+        $languages = Configure::read("Language");
+        unset($languages["default"]);
+
+        $locales = array();
+        $l10n = new L10n();
+
+        foreach ($languages as $lang_key=>$lang) {
+            $catalog = $l10n->catalog($lang);
+            $locales[$catalog["locale"]] = __($catalog["language"], true);
+        }
+
+        $this->set("locales", $locales);
+    }
 
 	function edit($id = null) {
 		if (!$id && empty($this->data)) {
@@ -191,6 +220,30 @@ class PostsController extends UrgPostAppController {
 		$groups = $this->Post->Group->find('list');
 		$users = $this->Post->User->find('list');
 		$this->set(compact('groups', 'users'));
+	}
+
+	function translate($id = null) {
+		if (!$id && empty($this->data)) {
+			$this->Session->setFlash(__('Invalid post', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		if (!empty($this->data)) {
+            $this->Post->locale = $this->data["Post"]["locale"];
+			if ($this->Post->save($this->data)) {
+				$this->Session->setFlash(__('The post has been saved', true));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The post could not be saved. Please, try again.', true));
+			}
+		}
+		if (empty($this->data)) {
+			$this->data = $this->Post->read(null, $id);
+		}
+		$groups = $this->Post->Group->find('list');
+		$users = $this->Post->User->find('list');
+		$this->set(compact('groups', 'users'));
+
+        $this->set_locales();
 	}
 
 	function delete($id = null) {
@@ -285,7 +338,7 @@ class PostsController extends UrgPostAppController {
                         array("OR" => array(
                                 "Group.name" => "About", 
                                 "Group.parent_id" => $about_group["Group"]["id"]),
-                              "AND" => array("Post.title" => $name)
+                              "AND" => array("I18n__title.content" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"
                 )

@@ -2,6 +2,7 @@
 class RecentActivityComponent extends Object {
     var $controller = null;
     var $settings = null;
+    var $components = array("Session", "FlyLoader");
 
     function initialize(&$controller, $settings = array()) {
         $this->controller =& $controller;
@@ -30,7 +31,7 @@ class RecentActivityComponent extends Object {
         foreach ($children as $child) {
             array_push($child_ids, $child["Group"]["id"]);
         }
-
+        
         $posts = $this->controller->Post->find('all', 
                 array("conditions" => array("Post.group_id" => $child_ids,
                                             "Post.publish_timestamp < NOW()"),
