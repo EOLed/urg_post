@@ -38,7 +38,7 @@ class AboutComponent extends Object {
                         array("OR" => array(
                                 "Group.name" => "About", 
                                 "Group.parent_id" => $group_id),
-                              "AND" => array("Post.title" => $name)
+                              "AND" => array("I18n__title.content" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"
                 )
@@ -50,7 +50,7 @@ class AboutComponent extends Object {
             $about = $this->controller->Post->find("first", 
                 array("conditions" => 
                         array(
-                            "AND" => array("Post.title" => "About", "Group.name" => $name)
+                            "AND" => array("I18n__title.content" => "About", "Group.name" => $name)
                         ),
                       "order" => "Post.publish_timestamp DESC"
                 )

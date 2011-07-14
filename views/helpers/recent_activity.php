@@ -1,6 +1,6 @@
 <?php
 class RecentActivityHelper extends AppHelper {
-    var $helpers = array("Html", "Time");
+    var $helpers = array("Html", "Time", "Session");
     var $widget_options = array("recent_activity", "recent_activity_title");
 
     function build($options = array()) {
@@ -26,7 +26,8 @@ class RecentActivityHelper extends AppHelper {
                     $feed_icon . 
                     $this->Time->timeAgoInWords($feed_item["Post"]["publish_timestamp"], 'j/n/y', false, true));
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
-                                      array("plugin"=>"urg_post", 
+                                      array("lang"=>$this->Session->read("Config.lang"),
+                                            "plugin"=>"urg_post", 
                                             "action"=>"view", 
                                             "controller"=>"posts", 
                                             $feed_item["Post"]["id"],

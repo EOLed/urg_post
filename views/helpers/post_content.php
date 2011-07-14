@@ -10,7 +10,13 @@ class PostContentHelper extends AppHelper {
     }
 
     function post_content($title, $post) {
-        $content = $this->Html->tag("h2", $title) . $post["Post"]["content"];
+        $content = "";
+
+        if ($title === false) {
+            $content = $this->Html->tag("h2", $title);
+        }
+
+        $content .= $post["Post"]["content"];
         return $this->Html->div("", $content, array("id" => "post-content"));
     }
 }

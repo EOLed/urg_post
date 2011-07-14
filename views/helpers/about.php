@@ -7,6 +7,7 @@ class AboutHelper extends AppHelper {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
         $title = $this->Html->tag("h2", $options["about_title"], array("class"=>"about-title"));
         $content = $this->Html->para("about-content", $options["about_content"]);
+
         return $this->Html->div("about", $title . $content);
     }
 }
