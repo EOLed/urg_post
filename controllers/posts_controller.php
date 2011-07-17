@@ -52,6 +52,7 @@ class PostsController extends UrgPostAppController {
             $this->redirect(array("plugin" => "urg_post",
                                   "controller" => "posts",
                                   "action" => "view",
+                                  "lang" => $this->Session->read("Config.lang"),
                                   $id,
                                   $slug));
         }
