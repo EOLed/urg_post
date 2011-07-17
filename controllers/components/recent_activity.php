@@ -2,7 +2,6 @@
 class RecentActivityComponent extends Object {
     var $controller = null;
     var $settings = null;
-    var $components = array("Session", "FlyLoader");
 
     function initialize(&$controller, $settings = array()) {
         $this->controller =& $controller;

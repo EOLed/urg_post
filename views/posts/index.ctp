@@ -22,7 +22,7 @@
 	<tr<?php echo $class;?>>
 		<td><?php echo $post['Post']['id']; ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($post['Group']['name'], array('controller' => 'groups', 'action' => 'view', $post['Group']['id'])); ?>
+			<?php echo $this->Html->link($post['Group']['slug'], array('controller' => 'groups', 'action' => 'view', $post['Group']['id'])); ?>
 		</td>
 		<td>
 			<?php echo $this->Html->link($post['User']['username'], array('controller' => 'users', 'action' => 'view', $post['User']['username'])); ?>

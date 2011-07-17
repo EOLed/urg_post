@@ -5,7 +5,9 @@ class Post extends UrgPostAppModel {
     //var $actsAs = array("UrgSubscription.NotifySubscribers");
 
     var $actsAs = array(
-        "Translate" => array("title" => "i18nTitle", "content" => "i18nContent")
+        "Translate" => array("title" => "i18nTitle", 
+                             "content" => "i18nContent",
+                             "slug" => "i18nSlug")
     );
 	var $validate = array(
 		'group_id' => array(

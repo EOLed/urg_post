@@ -77,7 +77,7 @@ class PostsController extends UrgPostAppController {
             }
         }
 
-        $this->set("title_for_layout", $post["Group"]["name"] . " &raquo; " . $post["Post"]["title"]);
+        $this->set("title_for_layout", $group["Group"]["name"] . " &raquo; " . $post["Post"]["title"]);
 
         $this->set("banners", $banners);
 	}
@@ -186,21 +186,6 @@ class PostsController extends UrgPostAppController {
         $this->set_locales();
 	}
 
-    function set_locales() {
-        $languages = Configure::read("Language");
-        unset($languages["default"]);
-
-        $locales = array();
-        $l10n = new L10n();
-
-        foreach ($languages as $lang_key=>$lang) {
-            $catalog = $l10n->catalog($lang);
-            $locales[$catalog["locale"]] = __($catalog["language"], true);
-        }
-
-        $this->set("locales", $locales);
-    }
-
 	function edit($id = null) {
 		if (!$id && empty($this->data)) {
 			$this->Session->setFlash(__('Invalid post', true));
@@ -229,6 +214,7 @@ class PostsController extends UrgPostAppController {
 		}
 		if (!empty($this->data)) {
             $this->Post->locale = $this->data["Post"]["locale"];
+            $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
 			if ($this->Post->save($this->data)) {
 				$this->Session->setFlash(__('The post has been saved', true));
 				$this->redirect(array('action' => 'index'));
@@ -328,18 +314,15 @@ class PostsController extends UrgPostAppController {
     }
 
     function get_about($name) {
-        //$this->Post->bindModel(array("belongsTo" => array("Group")));
+        $about_group = $this->Group->find("first", 
+                array("conditions" => array("I18n__name.content" => "About")));
+       
+        $this->Post->bindModel(array("belongsTo" => array("Group")));
         $this->Post->bindModel(array("hasMany" => array("Attachment")));
 
-        $about_group = $this->Post->Group->findByName("About");
-
         $about = $this->Post->find("first", 
-                array("conditions" => 
-                        array("OR" => array(
-                                "Group.name" => "About", 
-                                "Group.parent_id" => $about_group["Group"]["id"]),
-                              "AND" => array("I18n__title.content" => $name)
-                        ),
+                array("conditions" => array("I18n__title.content" => $name,
+                                            "Group.id" => $about_group["Group"]["id"]),
                       "order" => "Post.publish_timestamp DESC"
                 )
         );

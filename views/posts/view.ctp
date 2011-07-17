@@ -1,3 +1,4 @@
+<?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>
 <div class="posts view">
     <?php foreach ($banners as $banner) { ?>
     <div id="banner" class="grid_9 right-border">
@@ -34,8 +35,8 @@
     <?php
     $columns = array();
     if (!isset($widgets["layout"])) {
-        $columns["post-col-0"] = "grid_8 right-border";
-        $columns["post-col-1"] = "grid_4";
+        $columns["col-0"] = "grid_8 right-border";
+        $columns["col-1"] = "grid_4";
     } else {
         $layout_widget = $widgets["layout"];
         $options = array();
@@ -48,7 +49,7 @@
     }
 
     foreach ($columns as $column_id => $column_class) { ?>
-    <div id="<?php echo $column_id ?>" class="<?php echo $column_class ?>">
+    <div id="<?php echo $column_id ?>" class="post-col <?php echo $column_class ?>">
         <?php 
         if (isset($widgets[$column_id])) {
             foreach ($widgets[$column_id] as $widget) {
@@ -68,7 +69,5 @@
 </div>
 <script type="text/javascript">
 <?php echo $this->element("js_equal_height"); ?>
-$("#post-col-1, #post-col-2").equalHeight();
+$(".post-col").equalHeight();
 </script>
-<?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>
-
