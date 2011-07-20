@@ -3,8 +3,10 @@ App::import("Component", "UrgPost.Poster");
 App::import("Component", "Cuploadify.Cuploadify");
 App::import("Component", "ImgLib.ImgLib");
 App::import("Helper", "UrgPost.Post");
+App::import("Helper", "Markdown.Markdown");
 App::import("Component", "UrgSubscription.NotifySubscribers");
 App::import("Component", "Urg.WidgetUtil");
+App::import("Sanitize");
 class PostsController extends UrgPostAppController {
 	var $name = 'Posts';
 
@@ -20,7 +22,7 @@ class PostsController extends UrgPostAppController {
            ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers", "WidgetUtil"
     );
 
-    var $helpers = array("Post");
+    var $helpers = array("Post", "Markdown");
 
 	function index() {
 		$this->Post->recursive = 0;
@@ -141,6 +143,7 @@ class PostsController extends UrgPostAppController {
 
             $this->log("saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
             $this->Post->locale = $this->data["Post"]["locale"];
+            $this->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
 			if ($this->Post->saveAll($this->data, array("atomic" => false))) {
                 $temp_dir = $this->data["Post"]["uuid"];
 

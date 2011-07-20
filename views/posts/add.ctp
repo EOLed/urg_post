@@ -79,7 +79,6 @@
         attachment_in_progress = true;
     }
 <?php echo $this->Html->scriptEnd(); ?>
-
 <div class="posts form">
 <?php echo $this->Form->create('Post'); ?>
     <div class="grid_6 right-border">
@@ -100,7 +99,7 @@
             echo $this->Form->hidden("Post.publish_timestamp");
             echo $this->Form->input("Post.displayDate", 
                     array("type"=>"text", "label"=>__("Date", true)));
-            echo $this->Form->input('Post.content', array("label"=>__("Content", true), "rows"=>"20"));
+            echo $this->Markdown->input('Post.content', array("label"=>__("Content", true), "rows"=>"20"));
             ?>
         </fieldset>
     </div>
@@ -212,21 +211,6 @@
 <?php echo $this->Html->script("tinymce/jquery.tinymce.js"); ?>
 
 <?php echo $this->Html->scriptStart(); ?>
-    $(function() {
-        $('#PostContent').tinymce({
-            script_url: "<?php echo $this->Html->url("/js/tinymce/tiny_mce.js"); ?>",
-            theme: "advanced",
-            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|," +
-                                      "justifyleft,justifycenter,justifyright,fontsizeselect",
-            theme_advanced_buttons2 : "bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|," +
-                                      "link,unlink,anchor,cleanup,code,|,forecolor,backcolor",
-            theme_advanced_buttons3 : "",
-            theme_advanced_toolbar_location : "top",
-            theme_advanced_toolbar_align : "left",
-            theme_advanced_resizing : true
-        });
-    });
-
     $(function() {
         $("#in-progress").dialog({
             modal: true,

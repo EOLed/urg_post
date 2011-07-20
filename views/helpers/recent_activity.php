@@ -1,6 +1,7 @@
 <?php
+App::import("Helper", "Markdown.Markdown");
 class RecentActivityHelper extends AppHelper {
-    var $helpers = array("Html", "Time", "Session");
+    var $helpers = array("Html", "Time", "Session", "Markdown");
     var $widget_options = array("recent_activity", "recent_activity_title");
 
     function build($options = array()) {
@@ -33,7 +34,7 @@ class RecentActivityHelper extends AppHelper {
                                             $feed_item["Post"]["id"],
                                             $feed_item["Post"]["slug"]), 
                                       array("class"=>"post-title")));
-            $feed .= $this->Html->div("post", $title . $feed_item["Post"]["content"] . $time);
+            $feed .= $this->Html->div("post", $title . $this->Markdown->html($feed_item["Post"]["content"]) . $time);
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));

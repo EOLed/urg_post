@@ -1,6 +1,7 @@
 <?php
+App::import("Helper", "Markdown.Markdown");
 class PostContentHelper extends AppHelper {
-    var $helpers = array("Html", "Time");
+    var $helpers = array("Html", "Time", "Markdown");
     var $widget_options = array("post", "title");
 
     function build($options = array()) {
@@ -16,7 +17,7 @@ class PostContentHelper extends AppHelper {
             $content = $this->Html->tag("h2", $title);
         }
 
-        $content .= $post["Post"]["content"];
+        $content .= $this->Markdown->html($post["Post"]["content"]);
         return $this->Html->div("", $content, array("id" => "post-content"));
     }
 }
