@@ -1,22 +1,21 @@
 <?php
-class RecentActivityComponent extends Object {
-    var $controller = null;
-    var $settings = null;
+App::import("Lib", "Urg.AbstractWidgetComponent");
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
-        $this->settings = $settings;
-    }
+/**
+ * The RecentActivityComponent widget displays a list of the most recent posts within a specific group.
+ *
+ * Parameters: group_id The group id of the recent posts to retrieve.
+ *             title    The name of the widget (defaults to "Recent Activity")
+ */
+class RecentActivityComponent extends AbstractWidgetComponent {
+    function build_widget() {
+        $activity = $this->get_recent_activity($this->widget_settings["group_id"]);
+        $this->set("recent_activity", $activity);
 
-    function build($widget_id) {
-        $settings = $this->settings[$widget_id];
-        $activity = $this->get_recent_activity($settings["group_id"]);
-        $this->controller->set("recent_activity_$widget_id", $activity);
-
-        if (!isset($settings["title"])) {
-            $settings["title"] = "Recent Activity";
+        if (!isset($this->widget_settings["title"])) {
+            $this->widget_settings["title"] = "Recent Activity";
         }
-        $this->controller->set("recent_activity_title_$widget_id", $settings["title"]);
+        $this->set("recent_activity_title", $this->widget_settings["title"]);
     }
 
     function get_recent_activity($group_id) {

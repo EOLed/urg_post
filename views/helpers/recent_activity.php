@@ -2,7 +2,6 @@
 App::import("Helper", "Markdown.Markdown");
 class RecentActivityHelper extends AppHelper {
     var $helpers = array("Html", "Time", "Session", "Markdown");
-    var $widget_options = array("recent_activity", "recent_activity_title");
 
     function build($options = array()) {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));

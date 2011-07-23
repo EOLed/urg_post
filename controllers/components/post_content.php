@@ -1,20 +1,17 @@
 <?php
-class PostContentComponent extends Object {
-    var $controller = null;
-    var $settings = null;
+App::import("Lib", "Urg.AbstractWidgetComponent");
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
-        $this->settings = $settings;
-    }
-
-    function build($widget_id) {
-        $settings = $this->settings[$widget_id];
-
+/**
+ * The Post Content widget will add the content of the specified post within a view.
+ *
+ * Parameters: post_id The id of the post whose content is to be outputted.
+ *             title   The title of the widget. Defaults to the post's title.
+ */
+class PostContentComponent extends AbstractWidgetComponent {
+    function build_widget() {
         $post = $this->controller->Post->findById($settings["post_id"]);
-        $this->controller->set("post_$widget_id", $post);
-        $this->controller->set("title_$widget_id", 
-                               isset($settings["title"]) ? __($settings["title"], true) : 
-                                                           $post["Post"]["title"]);
+        $this->set("post", $post);
+        $this->set("title", isset($settings["title"]) ? 
+                            __($settings["title"], true) : $post["Post"]["title"]);
     }
 }

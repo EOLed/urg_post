@@ -1,17 +1,15 @@
 <?php
-class UpcomingEventsComponent extends Object {
-    var $controller = null;
-    var $settings = null;
+App::import("Lib", "Urg.AbstractWidgetComponent");
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
-        $this->settings = $settings;
-    }
-
-    function build($widget_id) {
-        $settings = $this->settings[$widget_id];
-        $upcoming = $this->get_upcoming_activity($settings["group_id"]);
-        $this->controller->set("upcoming_events_$widget_id", $upcoming);
+/**
+ * The Upcoming Events widget will add a list of upcoming events within a view.
+ *
+ * Parameters: group_id The group_id to retrieve upcoming posts for.
+ */
+class UpcomingEventsComponent extends AbstractWidgetComponent {
+    function build_widget() {
+        $upcoming = $this->get_upcoming_activity($this->widget_settings["group_id"]);
+        $this->set("upcoming_events", $upcoming);
     }
 
     function get_upcoming_activity($group_id) {
