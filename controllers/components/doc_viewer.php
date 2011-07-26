@@ -8,7 +8,7 @@ App::import("Lib", "Urg.AbstractWidgetComponent");
  *             toggle_panel_id The dom id of the panel to toggle visibility between.
  */
 class DocViewerComponent extends AbstractWidgetComponent {
-    function build($widget_id) {
+    function build_widget() {
         $this->bindModels();
         $settings = $this->widget_settings;
         $post = $this->Post->findById($settings["post_id"]);
