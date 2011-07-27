@@ -1,11 +1,16 @@
 <?php
+App::import("Component", "ImgLib.ImgLib");
 App::import("Lib", "Urg.AbstractWidgetComponent");
+App::import("Component", "FlyLoader");
 /**
  * The GroupBanner widget can be used to add a banner of the specified group to views.
  *
  * Parameters: group_id        The id of the group whose banner you wish to display.
  */
 class GroupBannerComponent extends AbstractWidgetComponent {
+    var $IMAGES = "/app/plugins/urg_post/webroot/img";
+    var $components = array("FlyLoader");
+
     function build_widget() {
         $this->bindModels();
         $group_id = $this->widget_settings["group_id"];
@@ -63,8 +68,27 @@ class GroupBannerComponent extends AbstractWidgetComponent {
                )
         );
 
+        Configure::load("config");
+        foreach ($attachments as &$attachment) {
+            $this->log("getting banner for " . $attachment["Attachment"]["filename"], LOG_DEBUG);
+            $attachment["Attachment"]["filename"] = $this->get_image_path($attachment, Configure::read("Banner.defaultWidth"));
+            CakeLog::write("debug", "Attachment filename: " . $attachment["Attachment"]["filename"]);
+        }
+
         $this->set("banners", $attachments);
 
         CakeLog::write("debug", "attachments for Group Banner widget: " . Debugger::exportVar($attachments, 3));
+    }
+
+    function get_image_path($attachment, $width, $height = 0) {
+        $this->controller->FlyLoader->load("Component", "ImgLib.ImgLib");
+        //TODO fix FlyLoader... should refer to it within component.
+        $full_image_path = $this->controller->ImgLib->get_doc_root($this->IMAGES) .  "/" .  
+                $attachment["Attachment"]["post_id"];
+        $image = $this->controller->ImgLib->get_image("$full_image_path/" . $attachment["Attachment"]["filename"], 
+                                          $width, 
+                                          $height, 
+                                          'landscape'); 
+        return $image["filename"];
     }
 }
