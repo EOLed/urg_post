@@ -6,8 +6,9 @@ App::import("Helper", "UrgPost.Post");
 App::import("Helper", "Markdown.Markdown");
 App::import("Component", "UrgSubscription.NotifySubscribers");
 App::import("Component", "Urg.WidgetUtil");
+App::import("Lib", "Urg.TranslatableController");
 App::import("Sanitize");
-class PostsController extends UrgPostAppController {
+class PostsController extends TranslatableController {
 	var $name = 'Posts';
 
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
@@ -165,10 +166,15 @@ class PostsController extends UrgPostAppController {
 			}
 		} else {
             $this->data["Post"]["uuid"] = String::uuid();
+            if (isset($this->params["named"])) {
+                $named = $this->params["named"];
+                $this->data["Post"]["title"] = $named["PostTitle"];
+            }
             $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
             $this->loadModel("Profile");
             $profile = $this->Profile->findByUserId($post_creator["User"]["id"]);
-            $this->data["Post"]["locale"] = $profile["Profile"]["locale"];
+
+            $this->data["Post"]["locale"] = $this->get_locale(); 
         }
 
         if ($group_slug != null) {
@@ -209,31 +215,6 @@ class PostsController extends UrgPostAppController {
 		$groups = $this->Post->Group->find('list');
 		$users = $this->Post->User->find('list');
 		$this->set(compact('groups', 'users'));
-	}
-
-	function translate($id = null) {
-		if (!$id && empty($this->data)) {
-			$this->Session->setFlash(__('Invalid post', true));
-			$this->redirect(array('action' => 'index'));
-		}
-		if (!empty($this->data)) {
-            $this->Post->locale = $this->data["Post"]["locale"];
-            $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
-			if ($this->Post->save($this->data)) {
-				$this->Session->setFlash(__('The post has been saved', true));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The post could not be saved. Please, try again.', true));
-			}
-		}
-		if (empty($this->data)) {
-			$this->data = $this->Post->read(null, $id);
-		}
-		$groups = $this->Post->Group->find('list');
-		$users = $this->Post->User->find('list');
-		$this->set(compact('groups', 'users'));
-
-        $this->set_locales();
 	}
 
 	function delete($id = null) {
@@ -429,6 +410,32 @@ class PostsController extends UrgPostAppController {
 
     function ends_with($haystack, $needle) {
         return strrpos($haystack, $needle) === strlen($haystack)-strlen($needle);
+    }
+
+	function translate($slug = null, $original_locale = null) {
+        parent::translate($slug, $original_locale);
+
+        if (!empty($this->data)) {
+            $this->data["Post"]["user_id"] = $this->data["Translation"]["User"]["id"];
+            $this->data["Post"]["group_id"] = $this->data["Translation"]["Group"]["id"];
+            debug($this->data);
+            $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Translation"]["Post"]["title"], 
+                                                                     "-"));
+        }
+    }
+
+    function banner($group_slug) {
+        $group = $this->Post->Group->findBySlug($group_slug);
+        $config_group = $this->Post->Group->find("first", array("conditions" => 
+                array("Group.parent_id" => $group["Group"]["id"],
+                      "I18n__name.content" => "Config")));
+        $this->data["Post"]["title"] = "Banner";
+        $this->params["named"] = array("PostTitle" => "Banner");
+        $this->redirect(array("controller" => "posts", 
+                              "plugin" => "urg_post", 
+                              "action" => "add", 
+                              $config_group["Group"]["slug"],
+                              "PostTitle" => "Banner"));
     }
 }
 ?>

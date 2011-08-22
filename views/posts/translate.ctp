@@ -1,21 +1,22 @@
-<div class="posts form">
+<div class="grid_6 posts form">
 <?php echo $this->Form->create('Post');?>
 	<fieldset>
  		<legend><?php __('Translate Post'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('group_id');
+		echo $this->Form->input('group_id', array("type" => "hidden"));
         echo $this->Form->input('Post.locale', array("type" => "select", 
                                                      "label" => __("Language", true),
                                                      "options" => $locales));
-		echo $this->Form->input('user_id');
-		echo $this->Form->input('title');
-		echo $this->Form->input('content');
+		echo $this->Form->input('user_id', array("type" => "hidden"));
+		echo $this->Form->input('title', array("between" => $this->data["Translation"]["Post"]["title"]));
+		echo $this->Form->input('content', array("type" => "textarea", 
+                                                 "between" => $this->data["Translation"]["Post"]["content"]));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit', true));?>
 </div>
-<div class="actions">
+<div class="grid_6 actions">
 	<h3><?php __('Actions'); ?></h3>
 	<ul>
 

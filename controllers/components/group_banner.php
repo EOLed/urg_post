@@ -18,7 +18,6 @@ class GroupBannerComponent extends AbstractWidgetComponent {
 
         while ($banners === false) {
             $parent = $this->controller->Group->getparentnode($group_id);
-            CakeLog::write("debug", "parent of group ($group_id): " . Debugger::exportVar($parent, 3));
 
             if ($parent !== false) {
                 $group_id = $parent["Group"]["id"];
@@ -35,7 +34,9 @@ class GroupBannerComponent extends AbstractWidgetComponent {
         $banners = false;
         $config = $this->controller->Group->find("first", 
                 array("conditions" => array("ParentGroup.id" => $group_id, 
-                                            "I18n__name.content" => __("Config", true))));
+                                            "I18n__name__" . $this->controller->Group->locale[0] . ".content" => __("Config", true))));
+
+        CakeLog::write("debug", "getting config for group ($group_id): " . Debugger::exportVar($config, 3));
 
         if ($config !== false) {
             $banners = $this->controller->Post->find("first", 
