@@ -423,19 +423,5 @@ class PostsController extends TranslatableController {
                                                                      "-"));
         }
     }
-
-    function banner($group_slug) {
-        $group = $this->Post->Group->findBySlug($group_slug);
-        $config_group = $this->Post->Group->find("first", array("conditions" => 
-                array("Group.parent_id" => $group["Group"]["id"],
-                      "I18n__name.content" => "Config")));
-        $this->data["Post"]["title"] = "Banner";
-        $this->params["named"] = array("PostTitle" => "Banner");
-        $this->redirect(array("controller" => "posts", 
-                              "plugin" => "urg_post", 
-                              "action" => "add", 
-                              $config_group["Group"]["slug"],
-                              "PostTitle" => "Banner"));
-    }
 }
 ?>

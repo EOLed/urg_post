@@ -48,13 +48,5 @@ class Post extends UrgPostAppModel {
 			'order' => ''
 		)
 	);
-
-    var $hasMany = array(
-            'Attachment' => array( 
-                    'className'  => 'UrgPost.Attachment', 
-                    'order'      => 'Attachment.filename DESC',
-                    'dependent'  => true
-            )
-    );
 }
 ?>
