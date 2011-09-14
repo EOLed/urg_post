@@ -1,13 +1,22 @@
 <?php $this->Html->css("/urg_post/css/urg_post.css", null, array("inline" => false)); ?>
 <div class="posts view">
-    <?php foreach ($banners as $banner) { ?>
     <div id="banner" class="grid_9 right-border">
-        <?php echo $this->Html->image($banner, array("class"=>"shadow")); ?>
+    <?php
+        if (isset($widgets["banner"])) {
+            $banner = $widgets["banner"];
+            echo $this->{$banner["Widget"]["helper_name"]}->build(${"options_" .  
+                                                                  $banner["Widget"]["id"]});
+        }
+    ?>
     </div>
-    <?php } ?>
-    <div id="about-panel" class="grid_3">
-        <h3><?php echo strtoupper(__("About us", true)); ?></h3>
-        <?php echo $about["Post"]["content"] ?>
+    <div id="side-panel" class="grid_3">
+    <?php
+        if (isset($widgets["side"])) {
+            $side = $widgets["side"];
+            echo $this->{$side["Widget"]["helper_name"]}->build(${"options_" .  
+                                                                  $side["Widget"]["id"]});
+        }
+    ?>
     </div>
 
     <?php if (isset($widgets["title"])) {

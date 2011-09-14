@@ -2,6 +2,7 @@
 App::import("Component", "UrgPost.Poster");
 App::import("Component", "Cuploadify.Cuploadify");
 App::import("Component", "ImgLib.ImgLib");
+App::import("Component", "FlyLoader");
 App::import("Helper", "UrgPost.Post");
 App::import("Helper", "Markdown.Markdown");
 App::import("Component", "UrgSubscription.NotifySubscribers");
@@ -20,7 +21,7 @@ class PostsController extends TranslatableController {
                            "action" => "login",
                            "admin" => false
                    )
-           ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers", "WidgetUtil"
+           ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers", "WidgetUtil", "FlyLoader"
     );
 
     var $helpers = array("Post", "Markdown");
@@ -64,26 +65,14 @@ class PostsController extends TranslatableController {
 
         $this->set("widgets", $this->prepare_widgets(
                 $this->WidgetUtil->load($post["Group"]["id"],
-                                        array("post_id" => $post["Post"]["id"]))));
+                                        array("post_id" => $post["Post"]["id"],
+                                              "group_id" => $post["Group"]["id"]))));
 
 		$this->set('post', $post);
         $group = $this->Post->Group->findById($post["Group"]["id"]);
         $this->set("upcoming_events", $this->get_upcoming_activity($group));
-        $about = $this->get_about("Montreal Chinese Alliance Church");
-        $about_group = $this->get_about($group["Group"]["name"]);
-        $this->set("about", $about);
-
-        $banners = $this->get_banners($post);
-        if (empty($banners)) {
-            $banners = $this->get_banners($about_group);
-            if (empty($banners)) {
-                $banners = $this->get_banners($about);
-            }
-        }
 
         $this->set("title_for_layout", $group["Group"]["name"] . " &raquo; " . $post["Post"]["title"]);
-
-        $this->set("banners", $banners);
 	}
 
     function prepare_widgets($widgets) {
@@ -138,24 +127,32 @@ class PostsController extends TranslatableController {
             $this->Poster->prepare_attachments($this->data);
 
             if (!isset($this->data["Post"]["slug"]) || strlen($this->data["Post"]["slug"]) == 0) {
-                $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], 
-                                                                         "-"));
+                $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
             }
 
-            $this->log("saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
             $this->Post->locale = $this->data["Post"]["locale"];
             $this->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
-			if ($this->Post->saveAll($this->data, array("atomic" => false))) {
-                $temp_dir = $this->data["Post"]["uuid"];
+            $attachments = array();
+            if (isset($this->data["Attachment"])) {
+                $attachments = $this->data["Attachment"];
+                unset($this->data["Attachment"]);
+            }
 
-                $this->Poster->consolidate_attachments(
-                        array($this->Poster->AUDIO, $this->Poster->FILES, $this->Poster->IMAGES), 
-                        $temp_dir
-                );
-
-                $this->Poster->resize_banner($this->Post->id);
-
-                $this->data["Post"]["id"] = $this->Post->id;
+            $this->log("now saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
+			if ($this->Post->saveAll($this->data)) {
+                $this->loadModel("Urg.Attachment");
+                foreach ($attachments as $attachment) {
+                    $this->Attachment->create();
+                    $this->Attachment->save(array("Attachment"=>$attachment));
+                    $attachment_data["AttachmentMetadatum"] = array();
+                    $attachment_data["AttachmentMetadatum"]["key"] = "post_id";
+                    $attachment_data["AttachmentMetadatum"]["value"] = $this->data["Post"]["id"];
+                    $attachment_data["AttachmentMetadatum"]["attachment_id"] = $this->Attachment->id;
+                    $this->log("now saving attachments: " . Debugger::exportVar($attachment_data, 3), LOG_DEBUG);
+                    $this->loadModel("Urg.AttachmentMetadatum");
+                    $this->AttachmentMetadatum->save($attachment_data);
+                }
+                $this->Poster->resize_banner($this->data["Post"]["id"]);
 
                 $this->NotifySubscribers->execute();
                 
@@ -165,11 +162,9 @@ class PostsController extends TranslatableController {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.', true));
 			}
 		} else {
-            $this->data["Post"]["uuid"] = String::uuid();
-            if (isset($this->params["named"])) {
-                $named = $this->params["named"];
-                $this->data["Post"]["title"] = $named["PostTitle"];
-            }
+            $this->loadModel("Urg.SequenceId");
+            $this->data["Post"]["id"] = $this->SequenceId->next($this->Post->useTable);
+            $this->log("next id for " . $this->Post->useTable . " " . $this->data["Post"]["id"], LOG_DEBUG);
             $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
             $this->loadModel("Profile");
             $profile = $this->Profile->findByUserId($post_creator["User"]["id"]);
@@ -303,7 +298,6 @@ class PostsController extends TranslatableController {
                 array("conditions" => array("I18n__name.content" => "About")));
        
         $this->Post->bindModel(array("belongsTo" => array("Group")));
-        $this->Post->bindModel(array("hasMany" => array("Attachment")));
 
         $about = $this->Post->find("first", 
                 array("conditions" => array("I18n__title.content" => $name,

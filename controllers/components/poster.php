@@ -21,27 +21,6 @@ class PosterComponent extends Object {
         $this->controller =& $controller;
     }
     
-    function consolidate_attachments($webroot_dirs, $temp_dir) {
-        $doc_root = $this->remove_trailing_slash(env("DOCUMENT_ROOT"));
-
-        if (!is_array($webroot_dirs)) {
-            $webroot_dirs = array($webroot_dirs);
-        }
-
-        foreach ($webroot_dirs as $webroot_dir) {
-            $temp_webroot = "$webroot_dir/$temp_dir";
-
-            if (file_exists($doc_root . $temp_webroot)) {
-                $perm_dir = $webroot_dir . "/" . $this->controller->Post->id;
-                $this->rename_dir($doc_root . $temp_webroot, $doc_root . $perm_dir);
-                $this->log("moved attachments to permanent folder: $doc_root$perm_dir", LOG_DEBUG);
-            } else {
-                $this->log("no attachments to move, since folder doesn't exist: $doc_root$temp_webroot",
-                        LOG_DEBUG);
-            }
-        }
-    }
-
     /**
      * Renames the directory, even if there are contents inside of it.
      * @param $string old_dir The old directory name.
@@ -150,12 +129,8 @@ class PosterComponent extends Object {
             $this->controller->loadModel("Attachment");
             $this->controller->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
 
-            $banner_type = $this->controller->Attachment->AttachmentType->findByName("Banner");
-            $post_banner = $this->controller->Attachment->find("first", 
-                    array("conditions" => array("AND" => array(
-                    "Attachment.attachment_type_id" => $banner_type["AttachmentType"]["id"],
-                    "Attachment.post_id" => $post_id 
-            ))));
+            $post_banners = $this->get_banners($post_id);
+            $post_banner = $post_banners[0];
 
             if (isset($post_banner["Attachment"])) {
                 $this->log("post banner: " . Debugger::exportVar($post_banner, 3), LOG_DEBUG);
@@ -168,6 +143,21 @@ class PosterComponent extends Object {
                 $this->log("no banners found for post: " . $post_id, LOG_DEBUG);
             }
         }
+    }
+
+    function get_banners($post_id) {
+        $banners = false;
+        $this->controller->loadModel("Urg.Attachment");
+        $this->controller->loadModel("Urg.AttachmentMetadatum");
+        $meta = $this->controller->AttachmentMetadatum->find("first", array("conditions" => array(
+                "AttachmentMetadatum.key" => "post_id",
+                "AttachmentMetadatum.value" => $post_id)));
+
+        if (!empty($meta)) {
+            $banners = $this->controller->Attachment->findAllById($meta["AttachmentMetadatum"]["attachment_id"]);
+        }
+
+        return $banners;
     }
 
     function delete_attachment($id) {
@@ -188,7 +178,6 @@ class PosterComponent extends Object {
             }
 
             $this->controller->Post->bindModel(array("hasMany" => array("Attachment")));
-            unset($this->controller->Post->Attachment->validate["post_id"]);
         }
     }
 

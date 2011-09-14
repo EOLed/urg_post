@@ -38,7 +38,7 @@
 
         $("#post-banner").html(
                 "<img id='#post-banner-img' src='" +
-                "<?php echo $this->Html->url("/urg_post/img/" . $this->data["Post"]["uuid"]); ?>" 
+                "<?php echo $this->Html->url("/urg_post/img/" . $this->data["Post"]["id"]); ?>" 
                 + "/" + fileObj.name + "#" + Math.random() + "' style='width: " + banner_width +  "px;' />");
     }
 
@@ -63,7 +63,7 @@
 
         $("<a>").attr({
                 href: "<?php echo $this->Html->url("/urg_post/") ?>" + response.webroot_folder + 
-                        "/<?php echo $this->data["Post"]["uuid"] ?>/" + fileObj.name,
+                        "/<?php echo $this->data["Post"]["id"] ?>/" + fileObj.name,
                 id: "AttachmentQueueAudioLink" + attachmentCounter ,
                 target: "_blank"
         }).appendTo("#AttachmentQueueListItem" + attachmentCounter);
@@ -85,7 +85,7 @@
         <fieldset>
             <legend> <div> <h2><?php __('Add Post'); ?></h2> </div> </legend>
             <?php
-            echo $this->Form->hidden("uuid");
+            echo $this->Form->hidden("Post.id");
             echo $this->Form->hidden("bannerAttachmentIndex");
             echo $this->Form->input('Post.group_id');
             echo $this->Form->input('Post.locale', array("type" => "select", 
@@ -115,7 +115,7 @@
                             "session_id" => $this->Session->id(),
                             "include_scripts" => array("uploadify_css", "uploadify", "swfobject"),
                             "options" => array("auto" => true, 
-                                    "folder" => "/" . $this->data["Post"]["uuid"],
+                                    "folder" => "/" . $this->data["Post"]["id"],
                                     "script" => $this->Html->url("/urg_post/posts/upload_image"),
                                     "buttonText" => strtoupper(__("Add Banner", true)), 
                                     //"multi" => true,
@@ -133,7 +133,7 @@
                             "dom_id" => "attachment_upload", 
                             "session_id" => $this->Session->id(),
                             "options" => array("auto" => true, 
-                                    "folder" => "/" . $this->data["Post"]["uuid"],
+                                    "folder" => "/" . $this->data["Post"]["id"],
                                     "script" => $this->Html->url("/urg_post/posts/upload_attachments"),
                                     "buttonText" => strtoupper(__("Attachments", true)), 
                                     "removeCompleted" => true,
