@@ -1,13 +1,15 @@
 <?php
 App::import("Helper", "Markdown.Markdown");
-class PostContentHelper extends AppHelper {
+App::import("Lib", "Urg.AbstractWidgetHelper");
+class PostContentHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time", "Markdown");
     var $widget_options = array("post", "title");
 
-    function build($options = array()) {
-        CakeLog::write(LOG_DEBUG, "building Post Content widget");
+    function build_widget() {
+        CakeLog::write(LOG_DEBUG, "building Post Content widget with options: " .
+                                  Debugger::exportVar($this->options, 3));
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
-        return $this->post_content($options["title"], $options["post"]);
+        return $this->post_content($this->options["title"], $this->options["post"]);
     }
 
     function post_content($title, $post) {
@@ -21,4 +23,3 @@ class PostContentHelper extends AppHelper {
         return $this->Html->div("", $content, array("id" => "post-content"));
     }
 }
-

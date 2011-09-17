@@ -62,15 +62,13 @@
         <?php 
         if (isset($widgets[$column_id])) {
             foreach ($widgets[$column_id] as $widget) {
-                $options = array();
-                foreach ($this->{$widget["Widget"]["helper_name"]}->widget_options as $option) {
-                    $options[$option] = ${$option . "_" . $widget["Widget"]["id"]};
-                }
-                echo $this->Html->div("post-widget", $this->{$widget["Widget"]["helper_name"]}->build($options));
+                echo $this->Html->div("post-widget", 
+                        $this->{$widget["Widget"]["helper_name"]}->build(${"options_" . $widget["Widget"]["id"]}));
             }
+        } else if ($column_id == "col-0") {
+            echo $post["Post"]["content"];
         }
         ?>
-        <?php //echo $post["Post"]["content"]; ?>
 
         <?php //echo $this->Post->attachments($post); ?>
     </div>
