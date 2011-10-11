@@ -132,15 +132,15 @@ class PostsController extends TranslatableController {
 
             $this->Post->locale = $this->data["Post"]["locale"];
             $this->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
-            $attachments = array();
+           /* $attachments = array();
             if (isset($this->data["Attachment"])) {
                 $attachments = $this->data["Attachment"];
                 unset($this->data["Attachment"]);
-            }
+            }*/
 
             $this->log("now saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
 			if ($this->Post->saveAll($this->data)) {
-                $this->loadModel("Urg.Attachment");
+              /*  $this->loadModel("Urg.Attachment");
                 foreach ($attachments as $attachment) {
                     $this->Attachment->create();
                     $this->Attachment->save(array("Attachment"=>$attachment));
@@ -151,7 +151,7 @@ class PostsController extends TranslatableController {
                     $this->log("now saving attachments: " . Debugger::exportVar($attachment_data, 3), LOG_DEBUG);
                     $this->loadModel("Urg.AttachmentMetadatum");
                     $this->AttachmentMetadatum->save($attachment_data);
-                }
+                }*/
                 $this->Poster->resize_banner($this->data["Post"]["id"]);
 
                 $this->NotifySubscribers->execute();

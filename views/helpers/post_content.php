@@ -15,7 +15,7 @@ class PostContentHelper extends AbstractWidgetHelper {
     function post_content($title, $post) {
         $content = "";
 
-        if ($title === false) {
+        if ($title !== false) {
             $content = $this->Html->tag("h2", $title);
         }
 

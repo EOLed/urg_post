@@ -9,19 +9,9 @@ class PostBannerHelper extends AbstractWidgetHelper {
         $widget = "";
 
         foreach ($banners as $banner) {
-            foreach ($banner["AttachmentMetadatum"] as $meta) {
-                if (strcmp($meta["key"], "post_id") == 0) {
-                    $widget .= $this->Html->div("banner", $this->Html->image("/urg_post/img/" . 
-                                                                             $meta["value"] . "/" . 
-                                                                             $banner["Attachment"]["filename"]));
-                    break;
-                } else if (strcmp($meta["key"], "group_id") == 0) {
-                    $widget .= $this->Html->div("banner", $this->Html->image("/urg/img/banners/" . 
-                                                                             $meta["value"] . "/" . 
-                                                                             $banner["Attachment"]["filename"]));
-                    break;
-                }
-            }
+            $widget .= $this->Html->div("banner", $this->Html->image("/urg_post/img/" . 
+                                                                     $banner["Attachment"]["post_id"] . "/" . 
+                                                                     $banner["Attachment"]["filename"]));
         }
 
         return $widget;

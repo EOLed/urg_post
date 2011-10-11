@@ -14,19 +14,58 @@ class PostBannerComponent extends GroupBannerComponent {
     function build_widget() {
         $this->bindModels();
         $post_id = $this->widget_settings["post_id"];
-        $this->setup_banners($post_id);
+        $attachments = $this->setup_banners($post_id);
+        $parent_group_id = null;
 
-        $this->set("post_id", $post_id);
+        while (!$attachments) {
+            CakeLog::write("debug", "getting post: $post_id");
+            $post = $this->controller->Post->findById($post_id);
+            $parent = $this->controller->Group->getparentnode($parent_group_id == null ? $post["Group"]["id"] : $parent_group_id);
+
+            CakeLog::write("debug", "parent group: " . Debugger::exportVar($parent, 3));
+            // get the banner widget of the parent group
+            if ($parent) {
+                $parent_group_id = $parent["Group"]["id"];
+                CakeLog::write("debug", "new post: " . $post_id);
+                CakeLog::write("debug", "getting widget for $parent_group_id");
+
+                $widget = $this->controller->Group->Widget->find("first", array(
+                        "conditions" => array("Widget.group_id" => $parent_group_id,
+                                              "Widget.action" => "/urg/groups/view",
+                                              "Widget.name" => "UrgPost.PostBanner"),
+                        "order" => "Widget.placement"
+                ));
+
+
+                if ($widget) {
+                    CakeLog::write("debug", "fallback widget: " . Debugger::exportVar($widget, 3));
+                    $this->widget_settings = $this->controller->WidgetUtil->get_settings($widget, array("post_id", $post["Post"]["id"]));
+                    $this->widget_settings = $this->widget_settings["Component"];
+
+                    $post_id = $this->widget_settings["post_id"];
+                   
+                    CakeLog::write("debug", "using widget settings: " . Debugger::exportVar($this->widget_settings, 3));
+                    $attachments = $this->setup_banners($post_id);
+                }
+            } else {
+                break;
+            }
+        }
+
+        CakeLog::write("debug", "widget settings used: " . Debugger::exportVar($this->widget_settings, 3));
+
+        $this->set("post_id", $this->widget_settings["post_id"]);
     }
 
     function get_post_image_path($attachment, $width, $height = 0) {
         $this->controller->FlyLoader->load("Component", "ImgLib.ImgLib");
         //TODO fix FlyLoader... should refer to it within component.
-        $full_image_path = $this->controller->ImgLib->get_doc_root($this->POST_BANNERS) .  "/" .  $this->widget_settings["post_id"];
+        $full_image_path = $this->controller->ImgLib->get_doc_root($this->POST_BANNERS) .  "/" . 
+                $this->widget_settings["post_id"];
         $image = $this->controller->ImgLib->get_image("$full_image_path/" . $attachment["Attachment"]["filename"], 
-                                          $width, 
-                                          $height, 
-                                          'landscape'); 
+                                                      $width, 
+                                                      $height, 
+                                                      'landscape'); 
         return $image["filename"];
     }
 
@@ -44,25 +83,12 @@ class PostBannerComponent extends GroupBannerComponent {
     }
 
     function setup_banners($post_id) { 
-        $this->controller->loadModel("Urg.AttachmentMetadatum");
-        $this->controller->loadModel("Urg.Attachment");
-        $meta = $this->controller->AttachmentMetadatum->find("all", array("conditions" => array("key" => "post_id",
-                                                                                    "value" => $post_id)));
-        CakeLog::write("debug", "meta found: " . Debugger::exportVar($meta, 3));
-        $attachments = array();
-        if (!empty($meta)) {
-            $attachment_ids = array();
-
-            foreach ($meta as $current) {
-                array_push($attachment_ids, $current["AttachmentMetadatum"]["attachment_id"]);
-            }
-
-            $attachments = $this->controller->Attachment->findAllById($attachment_ids);
-            $this->set_post_banners($attachments);
-        } else {
-            $attachments = $this->get_banners($this->widget_settings["group_id"]);
-            $this->set_banners($attachments);
-        }
+        $this->controller->loadModel("UrgPost.AttachmentType");
+        $banner_type = $this->controller->AttachmentType->findByName("Banner");
+        $attachments = $this->controller->Attachment->find("all", 
+                array("conditions"=>array("Attachment.post_id" => $post_id,
+                                          "Attachment.attachment_type_id" => $banner_type["AttachmentType"]["id"])));
+        $this->set_post_banners($attachments);
 
         CakeLog::write("debug", "banners found: " . Debugger::exportVar($attachments, 3));
 

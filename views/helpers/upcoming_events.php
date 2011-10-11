@@ -12,10 +12,15 @@ class UpcomingEventsHelper extends AppHelper {
 
     function upcoming_activity($posts) {
         $upcoming_events = "";
-        foreach ($posts as $post) {
-            $time = $this->Html->div("upcoming-timestamp",
-                    $this->Time->format("F d, Y", $post["Post"]["publish_timestamp"]));
-            $upcoming_events .= $this->Html->tag("li", $time . $post["Post"]["title"]);
+
+        if (sizeof($posts) > 0) {
+            foreach ($posts as $post) {
+                $time = $this->Html->div("upcoming-timestamp",
+                        $this->Time->format("F d, Y", $post["Post"]["publish_timestamp"]));
+                $upcoming_events .= $this->Html->tag("li", $time . $post["Post"]["title"]);
+            }
+        } else {
+            $upcoming_events = $this->Html->tag("li", __("No upcoming events.", true));
         }
 
         return $this->Html->tag("ul", $upcoming_events, array("id" => "upcoming-events"));

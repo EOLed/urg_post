@@ -43,5 +43,7 @@ class Post extends UrgPostAppModel {
 			'order' => ''
 		)
 	);
+
+    var $hasMany = array("Attachment");
 }
 ?>
