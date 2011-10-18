@@ -11,7 +11,8 @@ class DocViewerComponent extends AbstractWidgetComponent {
     function build_widget() {
         $this->bindModels();
         $settings = $this->widget_settings;
-        $post = $this->Post->findById($settings["post_id"]);
+        CakeLog::write("debug", "settings for doc viewer: " . Debugger::exportVar($settings, 3));
+        $post = $this->controller->Post->findById($settings["post_id"]);
         $this->set("post", $post);
         $this->set("title", 
                    isset($settings["title"]) ? __($settings["title"], true) : $post["Post"]["title"]);
@@ -44,7 +45,7 @@ class DocViewerComponent extends AbstractWidgetComponent {
                )
         );
 
-        $this->controller->set("documents", $attachments);
+        $this->set("documents", $attachments);
 
         CakeLog::write("debug", "attachments for Doc Viewer widget: " . 
                                 Debugger::exportVar($attachments, 3));

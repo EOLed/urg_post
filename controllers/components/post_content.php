@@ -14,5 +14,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         $this->set("post", $post);
         $this->set("title", isset($this->widget_settings["title"]) ? 
                             $this->widget_settings["title"] : $post["Post"]["title"]);
+        $this->set("id", isset($this->widget_settings["id"]) ?
+                            $this->widget_settings["id"] : "post-content");
     }
 }

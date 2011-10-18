@@ -3,7 +3,6 @@ App::import("Helper", "Markdown.Markdown");
 App::import("Lib", "Urg.AbstractWidgetHelper");
 class PostContentHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time", "Markdown");
-    var $widget_options = array("post", "title");
 
     function build_widget() {
         CakeLog::write(LOG_DEBUG, "building Post Content widget with options: " .
@@ -20,6 +19,6 @@ class PostContentHelper extends AbstractWidgetHelper {
         }
 
         $content .= $this->Markdown->html($post["Post"]["content"]);
-        return $this->Html->div("", $content, array("id" => "post-content"));
+        return $this->Html->div("", $content, array("id" => $this->options["id"]));
     }
 }

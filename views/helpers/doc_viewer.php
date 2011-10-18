@@ -1,13 +1,13 @@
 <?php
-class DocViewerHelper extends AppHelper {
+App::import("Lib", "Urg.AbstractWidgetHelper");
+class DocViewerHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time");
-    var $widget_options = array("post", "title", "documents", "toggle_panel_id");
     var $toggle_panel_id = null;
 
-    function build($options = array()) {
+    function build_widget() {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
-        $this->toggle_panel_id = $options["toggle_panel_id"];
-        return $this->doc_viewer($options["documents"]);
+        $this->toggle_panel_id = $this->options["toggle_panel_id"];
+        return $this->doc_viewer($this->options["documents"]);
     }
 
     function doc_viewer($documents) {

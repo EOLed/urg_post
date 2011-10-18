@@ -60,9 +60,9 @@ class PostBannerComponent extends GroupBannerComponent {
     function get_post_image_path($attachment, $width, $height = 0) {
         $this->controller->FlyLoader->load("Component", "ImgLib.ImgLib");
         //TODO fix FlyLoader... should refer to it within component.
-        $full_image_path = $this->controller->ImgLib->get_doc_root($this->POST_BANNERS) .  "/" . 
+        $banner_dir = $this->controller->ImgLib->get_doc_root($this->POST_BANNERS) .  "/" . 
                 $this->widget_settings["post_id"];
-        $image = $this->controller->ImgLib->get_image("$full_image_path/" . $attachment["Attachment"]["filename"], 
+        $image = $this->controller->ImgLib->get_image("$banner_dir/" . $attachment["Attachment"]["filename"], 
                                                       $width, 
                                                       $height, 
                                                       'landscape'); 

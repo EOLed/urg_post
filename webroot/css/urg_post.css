@@ -52,6 +52,7 @@ div.post-banner {
 
 ul#activity_feed, ul#upcoming-events {
     list-style-type: none;
+    padding-left: 0;
 }
 
 ul#activity-feed li, ul#upcoming-events li {
