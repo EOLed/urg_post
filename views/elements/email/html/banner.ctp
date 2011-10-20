@@ -12,7 +12,7 @@
 <p><?php echo $this->Html->image("http://" . $_SERVER['HTTP_HOST'] . $banner) ?></p>
 <br/><br/>
 <?php } ?>
-<?php echo $post["Post"]["content"] ?>
+<?php echo $this->Markdown->html($post["Post"]["content"]); ?>
 <br/>
 <p>
 <?php $url = Router::url(array("plugin" => "urg_subscription", 
