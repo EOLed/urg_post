@@ -9,6 +9,7 @@ App::import("Lib", "Urg.AbstractWidgetComponent");
  */
 class PostContentComponent extends AbstractWidgetComponent {
     function build_widget() {
+        $this->controller->loadModel("UrgPost.Post");
         $post = $this->controller->Post->findById($this->widget_settings["post_id"]);
         CakeLog::write("debug", "post for post content widget: " . Debugger::exportVar($post, 3));
         $this->set("post", $post);
