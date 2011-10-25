@@ -143,6 +143,24 @@ ul#attachment-list {
     height: 400px;
 }
 
+.grid_5 .post-widget .activity-feed-thumbnail {
+    width: 60px;
+    display:inline;
+    float:left;
+    position:relative;
+    margin-left:0px;
+    margin-right:10px
+}
+
+.grid_5 .post-widget .activity-feed-post {
+    display:inline;
+    float:left;
+    position:relative;
+    margin-left:10px;
+    margin-right:0px;
+    width: 300px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;
