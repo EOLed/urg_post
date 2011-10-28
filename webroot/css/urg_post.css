@@ -161,6 +161,14 @@ ul#attachment-list {
     width: 300px;
 }
 
+div.gallery-image {
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+div.gallery-image.last {
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

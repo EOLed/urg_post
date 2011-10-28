@@ -213,7 +213,7 @@ class PosterComponent extends Object {
         if ($this->is_filetype($this->Cuploadify->get_filename(),
                 array(".jpg", ".jpeg", ".png", ".gif", ".bmp"))) {
             $root = $this->IMAGES;
-            $attachment_type = $this->Attachment->AttachmentType->findByName("Images");
+            $attachment_type = $this->controller->Attachment->AttachmentType->findByName("Images");
             $webroot_folder = $this->IMAGES_WEBROOT;
         } else if ($this->is_filetype($this->Cuploadify->get_filename(), array(".mp3"))) {
             $root = $this->AUDIO;
