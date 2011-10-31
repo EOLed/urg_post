@@ -31,8 +31,7 @@ class RecentActivityHelper extends AppHelper {
                     $this->Time->timeAgoInWords($feed_item["Post"]["publish_timestamp"], 'j/n/y', false, true));
             $banner = $this->options["show_thumbs"] ? $this->Html->image("/urg_post/img/" . $feed_item["Post"]["id"] . "/" . $this->options["feed_banners"][$feed_item["Post"]["id"]][0], array("class" => "activity-feed-thumbnail")) : "";
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
-                                      array("lang"=>$this->Session->read("Config.lang"),
-                                            "plugin"=>"urg_post", 
+                                      array( "plugin"=>"urg_post", 
                                             "action"=>"view", 
                                             "controller"=>"posts", 
                                             $feed_item["Post"]["id"],
