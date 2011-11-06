@@ -20,6 +20,8 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         $this->set("recent_activity_title", $this->widget_settings["title"]);
         $this->set("show_thumbs", isset($this->widget_settings["show_thumbs"]) && 
                                   $this->widget_settings["show_thumbs"]);
+        $this->set("show_home_link", isset($this->widget_settings["show_home_link"]) && 
+                                     $this->widget_settings["show_home_link"]);
     }
 
     function get_recent_activity($group_id) {
@@ -38,7 +40,8 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                 array("conditions" => array("Post.group_id" => $child_ids,
                                             "Post.publish_timestamp < NOW()"),
                       "limit" => 10,
-                      "order" => "Post.publish_timestamp DESC"));
+                      "order" => "Post.publish_timestamp DESC",
+                      "recursive" => 2));
         $activity = array();
 
         $this->controller->loadModel("UrgPost.AttachmentType");
@@ -55,6 +58,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
             }
 
             $banners[$post["Post"]["id"]] = $post_banners;
+            
             array_push($activity, $post);
         }
 

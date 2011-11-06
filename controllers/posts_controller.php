@@ -130,7 +130,6 @@ class PostsController extends TranslatableController {
                 $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
             }
 
-            $this->Post->locale = $this->data["Post"]["locale"];
             $this->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
            /* $attachments = array();
             if (isset($this->data["Attachment"])) {
@@ -168,8 +167,6 @@ class PostsController extends TranslatableController {
             $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
             $this->loadModel("Profile");
             $profile = $this->Profile->findByUserId($post_creator["User"]["id"]);
-
-            $this->data["Post"]["locale"] = $this->get_locale(); 
         }
 
         if ($group_slug != null) {

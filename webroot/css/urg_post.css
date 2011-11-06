@@ -169,6 +169,34 @@ div.gallery-image {
 div.gallery-image.last {
 }
 
+div.activity-feed-post-content {
+    clear:both;
+}
+
+.activity-feed-post h3 {
+    float: left;
+    padding-right: 5px;
+}
+
+div.home-link {
+    background-color: #EBAEAE;
+    padding: 1px 3px;
+    font-size: 9px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    float: left;
+}
+
+div.home-link a {
+    color: #ffffff;
+}
+
+div.home-link a:hover {
+    text-decoration: none;
+    color: #ffffff;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

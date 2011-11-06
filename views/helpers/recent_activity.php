@@ -37,10 +37,22 @@ class RecentActivityHelper extends AppHelper {
                                             $feed_item["Post"]["id"],
                                             $feed_item["Post"]["slug"]), 
                                       array("class"=>"post-title")));
+            $home_group = $feed_item["Group"]["home"] ? $feed_item : array("Group" => $feed_item["Group"]["ParentGroup"]);
+            CakeLog::write(LOG_DEBUG, "the home group: " . Debugger::exportVar($home_group, 3));
+
+            $home_link = "";
+
+            if ($this->options["show_home_link"]) {
+                $home_link = $this->Html->link($home_group["Group"]["name"], array("plugin" => "urg",
+                                                                                   "controller" => "groups",
+                                                                                   "action" => "view",
+                                                                                   $home_group["Group"]["slug"]));
+                $home_link = $this->Html->div("home-link", $home_link);
+            }
             $post_content = $this->Html->div("activity-feed-post-content", 
                                              $this->Markdown->html($feed_item["Post"]["content"]),
                                              array("id" => "activity-feed-post-content-" . $feed_item["Post"]["id"]));
-            $feed .= $banner . $this->Html->div("activity-feed-post post", $title . $post_content . $this->js($feed_item["Post"]["id"]) . $time);
+            $feed .= $banner . $this->Html->div("activity-feed-post post", $title . $home_link . $post_content . $this->js($feed_item["Post"]["id"]) . $time);
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));
