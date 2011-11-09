@@ -174,12 +174,12 @@ div.activity-feed-post-content {
 }
 
 .activity-feed-post h3 {
-    float: left;
     padding-right: 5px;
+    float: left;
 }
 
 div.home-link {
-    background-color: #EBAEAE;
+    background-color: #ececec;
     padding: 1px 3px;
     font-size: 9px;
     -webkit-border-radius: 5px;
@@ -189,12 +189,12 @@ div.home-link {
 }
 
 div.home-link a {
-    color: #ffffff;
+    color: #acacac;
 }
 
 div.home-link a:hover {
     text-decoration: none;
-    color: #ffffff;
+    color: #bebebe;
 }
 
 /** NOTICES & MESSAGES */
