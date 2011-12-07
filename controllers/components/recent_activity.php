@@ -1,5 +1,6 @@
 <?php
 App::import("Lib", "Urg.AbstractWidgetComponent");
+App::import("Component", "Urg.Urg");
 
 /**
  * The RecentActivityComponent widget displays a list of the most recent posts within a specific group.
@@ -8,6 +9,7 @@ App::import("Lib", "Urg.AbstractWidgetComponent");
  *             title    The name of the widget (defaults to "Recent Activity")
  */
 class RecentActivityComponent extends AbstractWidgetComponent {
+    var $components = array("Urg");
     var $POST_BANNERS = "/app/plugins/urg_post/webroot/img";
 
     function build_widget() {
@@ -22,6 +24,22 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                                   $this->widget_settings["show_thumbs"]);
         $this->set("show_home_link", isset($this->widget_settings["show_home_link"]) && 
                                      $this->widget_settings["show_home_link"]);
+        $this->set("group_id", $this->widget_settings["group_id"]);
+        $this->set("can_edit", $this->can_edit());
+
+        $this->set("group_slug", $this->get_group_slug());
+    }
+
+    function get_group_slug() {
+        $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
+        return $group["Group"]["slug"];
+    }
+
+    function can_edit() {
+        return $this->controller->Urg->has_access(array("plugin"=>"urg_post", 
+                                                        "controller"=>"posts", 
+                                                        "action"=>"add"), 
+                                                  $this->widget_settings["group_id"]);
     }
 
     function get_recent_activity($group_id) {

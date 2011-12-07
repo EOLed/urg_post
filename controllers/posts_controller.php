@@ -7,9 +7,9 @@ App::import("Helper", "UrgPost.Post");
 App::import("Helper", "Markdown.Markdown");
 App::import("Component", "UrgSubscription.NotifySubscribers");
 App::import("Component", "Urg.WidgetUtil");
-App::import("Lib", "Urg.TranslatableController");
+App::import("Controller", "UrgPost.UrgPostAppController");
 App::import("Sanitize");
-class PostsController extends TranslatableController {
+class PostsController extends UrgPostAppController {
 	var $name = 'Posts';
 
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
@@ -169,6 +169,7 @@ class PostsController extends TranslatableController {
             $profile = $this->Profile->findByUserId($post_creator["User"]["id"]);
         }
 
+        $group = null;
         if ($group_slug != null) {
             $group = $this->Post->Group->findBySlug($group_slug);
             $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
@@ -182,10 +183,21 @@ class PostsController extends TranslatableController {
                 $this->Attachment->AttachmentType->findByName("Banner"));
         $this->set("audio_type", 
                 $this->Attachment->AttachmentType->findByName("Audio"));
-		$groups = $this->Post->Group->find('list');
-		$this->set(compact('groups'));
+		$groups = null;//$this->Post->Group->find("list");
+        /*$group == null ? $this->Post->Group->find("list") :
+                                   $this->Post->Group->children($group["Group"]["id"], false); */
 
-        $this->set_locales();
+        if ($group == null) {
+            $groups = $this->Post->Group->find("list");
+        } else {
+            $children = $this->Post->Group->children($group["Group"]["id"], false);
+            CakeLog::write(LOG_DEBUG, 'group list' . Debugger::exportVar($children, 3));
+            $groups[$group["Group"]["id"]] = $group["Group"]["name"];
+            foreach ($children as $child) {
+                $groups[$child["Group"]["id"]] = $child["Group"]["name"];
+            }
+        }
+		$this->set(compact('groups'));
 	}
 
 	function edit($id = null) {

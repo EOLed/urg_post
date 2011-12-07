@@ -1,7 +1,8 @@
 <?php
 App::import("Helper", "Markdown.Markdown");
+App::import ("Helper", "Urg.Urg");
 class RecentActivityHelper extends AppHelper {
-    var $helpers = array("Html", "Time", "Session", "Markdown");
+    var $helpers = array("Html", "Time", "Session", "Markdown", "Urg");
     var $options;
 
     function build($options = array()) {
@@ -9,7 +10,19 @@ class RecentActivityHelper extends AppHelper {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
         $this->Html->script("/urg_post/js/jquery.expander.min", array("inline" => false));
         $title = $this->Html->tag("h2", __($options["recent_activity_title"], true));
-        return $this->Html->div("recent-activity", $title . $this->post_feed($options["recent_activity"]));
+        return $this->Html->div("recent-activity", 
+                                $title . $this->add_post() . $this->post_feed($options["recent_activity"]));
+    }
+
+    function add_post() {
+        $link = "";
+        if ($this->options["can_edit"]) {
+            $link = $this->Html->link(__("Add a new post...", true), array("plugin" => "urg_post",
+                                                                           "controller" => "posts",
+                                                                           "action" => "add",
+                                                                           $this->options["group_slug"]));
+        }
+        return $link;
     }
 
     function feed_icon($feed_item) {
