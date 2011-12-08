@@ -23,6 +23,20 @@ class PostContentHelper extends AbstractWidgetHelper {
             $content = $this->Html->tag("h2", $title);
         }
 
+        if ($this->options["can_edit"]) {
+            $content .= $this->Html->link(__("Edit", true), array("plugin" => "urg_post",
+                                                                              "controller" => "posts",
+                                                                              "action" => "edit",
+                                                                              $this->options["post"]["Post"]["id"]));
+        }
+
+        if ($this->options["can_delete"]) {
+            $content .= $this->Html->link(__("Delete", true), array("plugin" => "urg_post",
+                                                                              "controller" => "posts",
+                                                                              "action" => "delete",
+                                                                              $this->options["post"]["Post"]["id"]));
+        }
+
         $content .= $this->Markdown->html($post["Post"]["content"]);
         $gallery = "";
 

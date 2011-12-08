@@ -1,8 +1,7 @@
 <?php
 App::import("Helper", "Markdown.Markdown");
-App::import ("Helper", "Urg.Urg");
 class RecentActivityHelper extends AppHelper {
-    var $helpers = array("Html", "Time", "Session", "Markdown", "Urg");
+    var $helpers = array("Html", "Time", "Session", "Markdown");
     var $options;
 
     function build($options = array()) {
@@ -16,7 +15,7 @@ class RecentActivityHelper extends AppHelper {
 
     function add_post() {
         $link = "";
-        if ($this->options["can_edit"]) {
+        if ($this->options["can_add"]) {
             $link = $this->Html->link(__("Add a new post...", true), array("plugin" => "urg_post",
                                                                            "controller" => "posts",
                                                                            "action" => "add",

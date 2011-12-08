@@ -25,7 +25,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         $this->set("show_home_link", isset($this->widget_settings["show_home_link"]) && 
                                      $this->widget_settings["show_home_link"]);
         $this->set("group_id", $this->widget_settings["group_id"]);
-        $this->set("can_edit", $this->can_edit());
+        $this->set("can_add", $this->can_add());
 
         $this->set("group_slug", $this->get_group_slug());
     }
@@ -35,7 +35,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         return $group["Group"]["slug"];
     }
 
-    function can_edit() {
+    function can_add() {
         return $this->controller->Urg->has_access(array("plugin"=>"urg_post", 
                                                         "controller"=>"posts", 
                                                         "action"=>"add"), 
