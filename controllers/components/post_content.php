@@ -53,6 +53,10 @@ class PostContentComponent extends AbstractWidgetComponent {
     function setup_images(&$attachments) {
         Configure::load("config");
         foreach ($attachments as &$attachment) {
+            $ext = pathinfo($attachment["filename"], PATHINFO_EXTENSION);
+            if (strcmp($ext, "jpg") != 0 && strcmp($ext, "png") != 0 && strcmp($ext, "gif") != 0 && strcmp($ext, "bmp") != 0) {
+                continue;
+            }
             $this->log("getting image for " . $attachment["filename"], LOG_DEBUG);
             $images = array("thumb" => $this->get_post_image_path($attachment, Configure::read("PostContentImage.defaultThumbWidth")), "view" => $this->get_post_image_path($attachment, Configure::read("PostContentImage.defaultWidth")));
 

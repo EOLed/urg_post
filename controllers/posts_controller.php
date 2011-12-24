@@ -11,8 +11,16 @@ App::import("Controller", "UrgPost.UrgPostAppController");
 App::import("Sanitize");
 class PostsController extends UrgPostAppController {
 	var $name = 'Posts';
-
+    var $AUDIO_WEBROOT = "audio";
+    var $IMAGES_WEBROOT = "img";
+    var $FILES_WEBROOT = "files";
+    var $AUDIO = "/app/plugins/urg_post/webroot/audio";
     var $IMAGES = "/app/plugins/urg_post/webroot/img";
+    var $FILES = "/app/plugins/urg_post/webroot/files";
+    var $WEBROOT = "/app/plugins/urg_post/webroot";
+
+    var $BANNER_SIZE = 700;
+    var $PANEL_BANNER_SIZE = 460;
     var $components = array(
            "Auth" => array(
                    "loginAction" => array(
@@ -176,13 +184,7 @@ class PostsController extends UrgPostAppController {
             $this->data["Post"]["group_id"] = $group["Group"]["id"];
         }
 
-        $this->loadModel("Attachment");
-        $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
-
-        $this->set("banner_type", 
-                $this->Attachment->AttachmentType->findByName("Banner"));
-        $this->set("audio_type", 
-                $this->Attachment->AttachmentType->findByName("Audio"));
+        $this->set_attachment_types();
 		$groups = null;//$this->Post->Group->find("list");
         /*$group == null ? $this->Post->Group->find("list") :
                                    $this->Post->Group->children($group["Group"]["id"], false); */
@@ -200,22 +202,57 @@ class PostsController extends UrgPostAppController {
 		$this->set(compact('groups'));
 	}
 
+    function set_attachment_types() {
+        $this->loadModel("Attachment");
+        $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
+
+        $banner_type = $this->Attachment->AttachmentType->findByName("Banner");
+        $this->set("banner_type", $banner_type);
+        $this->set("audio_type", $this->Attachment->AttachmentType->findByName("Audio"));
+
+        $banner = $this->Attachment->find("first", array(
+                "conditions"=>
+                        array("Attachment.post_id"=>$this->data["Post"]["id"],
+                              "Attachment.attachment_type_id"=>$banner_type["AttachmentType"]["id"]
+                        ),
+                "order" => "Attachment.created DESC"
+            )
+        );
+
+        $this->set("banner", $this->get_image_path($banner["Attachment"]["filename"], 
+                                                   $this->data, 
+                                                   $this->PANEL_BANNER_SIZE));
+
+        $this->set("attachments", $this->Attachment->find("all", array("conditions"=>
+                array("Attachment.post_id"=>$this->data["Post"]["id"],
+                      "Attachment.attachment_type_id !="=>$banner_type["AttachmentType"]["id"]
+                )
+            )
+        ));
+    }
+
 	function edit($id = null) {
 		if (!$id && empty($this->data)) {
 			$this->Session->setFlash(__('Invalid post', true));
 			$this->redirect(array('action' => 'index'));
 		}
 		if (!empty($this->data)) {
-			if ($this->Post->save($this->data)) {
+			if ($this->Post->saveAll($this->data)) {
 				$this->Session->setFlash(__('The post has been saved', true));
-				$this->redirect(array('action' => 'index'));
+                $referer = $this->Session->read("Referer");
+                $this->Session->delete("Referer");
+				$this->redirect($referer);
 			} else {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.', true));
 			}
 		}
 		if (empty($this->data)) {
 			$this->data = $this->Post->read(null, $id);
+            CakeLog::write(LOG_DEBUG, "post to edit: " . Debugger::exportVar($this->data, 3));
+            $this->data["Post"]["displayDate"] = date("F j, Y", strtotime($this->data["Post"]["publish_timestamp"]));
+            $this->Session->write("Referer", $this->referer());
 		}
+        $this->set_attachment_types();
 		$groups = $this->Post->Group->find('list');
 		$users = $this->Post->User->find('list');
 		$this->set(compact('groups', 'users'));
