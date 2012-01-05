@@ -39,6 +39,13 @@ class PostsController extends UrgPostAppController {
 		$this->set('posts', $this->paginate());
 	}
 
+    function delete_attachment($id) {
+        $dom_id = $this->params["url"]["domId"];
+        $success = $this->Post->Attachment->delete($id);
+        $this->set("data", array("success"=>$success === true, "domId"=>$dom_id));
+        $this->render("json", "ajax");
+    }
+
 	function view($id = null, $slug = null) {
 		if (!$id) {
 			$this->Session->setFlash(__('Invalid post', true));
@@ -219,9 +226,11 @@ class PostsController extends UrgPostAppController {
             )
         );
 
-        $this->set("banner", $this->get_image_path($banner["Attachment"]["filename"], 
-                                                   $this->data, 
-                                                   $this->PANEL_BANNER_SIZE));
+        if ($banner) {
+            $this->set("banner", $this->get_image_path($banner["Attachment"]["filename"], 
+                                                       $this->data, 
+                                                       $this->PANEL_BANNER_SIZE));
+        }
 
         $this->set("attachments", $this->Attachment->find("all", array("conditions"=>
                 array("Attachment.post_id"=>$this->data["Post"]["id"],
