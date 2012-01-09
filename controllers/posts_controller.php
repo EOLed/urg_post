@@ -140,6 +140,12 @@ class PostsController extends UrgPostAppController {
             $this->data["User"] = $post_creator["User"];
             $this->log("new post created by: " . Debugger::exportVar($post_creator["User"]), LOG_DEBUG);
             $this->Poster->prepare_attachments($this->data);
+            $post_timestamp = date_parse_from_format("F d, Y h:i A", 
+                                                     $this->data["Post"]["displayDate"] . " " . 
+                                                     $this->data["Post"]["displayTime"]);
+            $this->data["Post"]["publish_timestamp"] = 
+                    "$post_timestamp[year]-$post_timestamp[month]-$post_timestamp[day]" . 
+                    " $post_timestamp[hour]:$post_timestamp[minute]";
 
             if (!isset($this->data["Post"]["slug"]) || strlen($this->data["Post"]["slug"]) == 0) {
                 $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
@@ -246,6 +252,12 @@ class PostsController extends UrgPostAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		if (!empty($this->data)) {
+            $post_timestamp = date_parse_from_format("F d, Y h:i A", 
+                                                     $this->data["Post"]["displayDate"] . " " . 
+                                                     $this->data["Post"]["displayTime"]);
+            $this->data["Post"]["publish_timestamp"] = 
+                    "$post_timestamp[year]-$post_timestamp[month]-$post_timestamp[day]" . 
+                    " $post_timestamp[hour]:$post_timestamp[minute]";
 			if ($this->Post->saveAll($this->data)) {
 				$this->Session->setFlash(__('The post has been saved', true));
                 $referer = $this->Session->read("Referer");
@@ -259,6 +271,7 @@ class PostsController extends UrgPostAppController {
 			$this->data = $this->Post->read(null, $id);
             CakeLog::write(LOG_DEBUG, "post to edit: " . Debugger::exportVar($this->data, 3));
             $this->data["Post"]["displayDate"] = date("F j, Y", strtotime($this->data["Post"]["publish_timestamp"]));
+            $this->data["Post"]["displayTime"] = date("h:i A", strtotime($this->data["Post"]["publish_timestamp"]));
             $this->Session->write("Referer", $this->referer());
 		}
         $this->set_attachment_types();
