@@ -209,6 +209,21 @@ div.home-link a:hover {
 #post-info {
     font-size: 14px;
 }
+
+.post-section-gallery {
+    background-color: #f9f9f9;
+    margin-left: -10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    text-transform: uppercase;
+}
+
+.post-section {
+    margin-top: 20px;
+}
+
+.gallery {
+}
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

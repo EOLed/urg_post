@@ -52,7 +52,9 @@ class PostContentHelper extends AbstractWidgetHelper {
             }
         }
 
-        $gallery = $this->Html->div("gallery", $gallery, array("id" => "gallery-" . $post["Post"]["id"]));
+        if ($gallery != "") {
+            $gallery = $this->Html->div("post-section post-section-gallery", $this->Html->tag("h2", __("Pictures", true)) . $this->Html->div("gallery", $gallery, array("id" => "gallery-" . $post["Post"]["id"])));
+        }
 
         return $this->Html->div("", $content . $gallery, array("id" => $this->options["id"]));
     }
