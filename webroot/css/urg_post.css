@@ -206,6 +206,9 @@ div.home-link a:hover {
     color: #bebebe;
 }
 
+#post-info {
+    font-size: 14px;
+}
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

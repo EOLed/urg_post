@@ -24,8 +24,9 @@
         echo $this->Html->div("title_widget", 
                               $this->{$title["Widget"]["helper_name"]}->build(${"options_" . $title["Widget"]["id"]}));
     } else { ?>
-    <div id='group-name' class='grid_12 page-title'>
+    <div id='post-title' class='grid_12 page-title'>
         <div><?php echo $post["Post"]["title"]?></div>
+        <div id="post-info"><?php echo __(sprintf("by %s on %s", $post["User"]["username"], date("F j, Y h:i A", strtotime($post["Post"]["publish_timestamp"]))), true) ?></div>
     </div>
     <?php } ?>
 
