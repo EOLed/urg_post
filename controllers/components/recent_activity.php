@@ -51,7 +51,9 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         $child_ids = array($group_id);
 
         foreach ($children as $child) {
-            array_push($child_ids, $child["Group"]["id"]);
+            if ($child["Group"]["name"] == __("News & Events", true)) {
+                array_push($child_ids, $child["Group"]["id"]);
+            }
         }
         
         $posts = $this->controller->Post->find('all', 

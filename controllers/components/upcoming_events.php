@@ -7,9 +7,52 @@ App::import("Lib", "Urg.AbstractWidgetComponent");
  * Parameters: group_id The group_id to retrieve upcoming posts for.
  */
 class UpcomingEventsComponent extends AbstractWidgetComponent {
+    var $upcoming_group = false;
     function build_widget() {
         $upcoming = $this->get_upcoming_activity($this->widget_settings["group_id"]);
         $this->set("upcoming_events", $upcoming);
+
+        $upcoming_group = $this->get_upcoming_group();
+
+        $this->set("can_add", $this->can_add());
+        $this->set("can_edit", $this->can_add());
+        $this->set("can_delete", $this->can_delete());
+        $this->set("upcoming_group", $this->get_upcoming_group());
+    }
+
+    function get_upcoming_group() {
+        $children = $this->controller->Group->children($this->widget_settings["group_id"]);
+        $upcoming_group = false;
+
+        foreach ($children as $child) {
+            if ($child["Group"]["name"] == "Upcoming Events") {
+                $upcoming_group = $child;
+                break;
+            }
+        }
+
+        return $upcoming_group;
+    }
+
+    function can_add() {
+        return $this->controller->Urg->has_access(array("plugin"=>"urg_post", 
+                                                        "controller"=>"posts", 
+                                                        "action"=>"add"), 
+                                                  $this->upcoming_group["Group"]["id"]);
+    }
+
+    function can_edit() {
+        return $this->controller->Urg->has_access(array("plugin"=>"urg_post", 
+                                                        "controller"=>"posts", 
+                                                        "action"=>"edit"), 
+                                                  $this->upcoming_group["Group"]["id"]);
+    }
+
+    function can_delete() {
+        return $this->controller->Urg->has_access(array("plugin"=>"urg_post", 
+                                                        "controller"=>"posts", 
+                                                        "action"=>"delete"), 
+                                                  $this->upcoming_group["Group"]["id"]);
     }
 
     function get_upcoming_activity($group_id) {

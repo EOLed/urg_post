@@ -1,13 +1,24 @@
 <?php
-class UpcomingEventsHelper extends AppHelper {
+App::import("Lib", "Urg.AbstractWidgetHelper");
+class UpcomingEventsHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time");
-    var $widget_options = array("upcoming_events");
 
-    function build($options = array()) {
+    function build_widget() {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
         $title = $this->Html->tag("h2", __("Upcoming events", true));
-        return $this->Html->div("upcoming-events", $title . 
-                $this->upcoming_activity($options["upcoming_events"]));
+        return $this->Html->div("upcoming-events", 
+                                $title . $this->add_post() . $this->upcoming_activity($this->options["upcoming_events"]));
+    }
+
+    function add_post() {
+        $link = "";
+        if ($this->options["can_add"]) {
+            $link = $this->Html->link(__("Add an upcoming event...", true), array("plugin" => "urg_post",
+                                                                                     "controller" => "posts",
+                                                                                     "action" => "add",
+                                                                                     $this->options["upcoming_group"]["Group"]["slug"]));
+        }
+        return $link;
     }
 
     function upcoming_activity($posts) {
@@ -16,8 +27,10 @@ class UpcomingEventsHelper extends AppHelper {
         if (sizeof($posts) > 0) {
             foreach ($posts as $post) {
                 $time = $this->Html->div("upcoming-timestamp",
-                        $this->Time->format("F d, Y", $post["Post"]["publish_timestamp"]));
-                $upcoming_events .= $this->Html->tag("li", $time . $post["Post"]["title"]);
+                        $this->Time->format("F j, Y @ g:i A", $post["Post"]["publish_timestamp"]));
+                $title = $this->Html->div("upcoming-title", $post["Post"]["title"]);
+                $details = $this->Html->div("upcoming-details", $post["Post"]["content"]);
+                $upcoming_events .= $this->Html->tag("li", $time . $title . $details);
             }
         } else {
             $upcoming_events = $this->Html->tag("li", __("No upcoming events.", true));
