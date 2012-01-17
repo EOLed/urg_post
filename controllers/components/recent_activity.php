@@ -72,12 +72,24 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         $banner_type = $this->controller->AttachmentType->findByName("Banner");
         $banners = array();
         foreach ($posts as $post) {
-            $post_banners = array();
-            foreach ($post["Attachment"] as &$attachment) {
-                $attachment["filename"] = $this->get_post_image_path($banner_type, $attachment, 60, 60);
+            $post_banners = $this->get_banners($banner_type, $post);
+            if (empty($post_banners)) {
+                $parent = $this->controller->Group->getparentnode($post["Group"]["id"]);
+                if ($parent) {
+                    $parent_group_id = $parent["Group"]["id"];
+                    $widget = $this->controller->Group->Widget->find("first", array(
+                            "conditions" => array("Widget.group_id" => $parent_group_id,
+                                                  "Widget.action" => "/urg/groups/view",
+                                                  "Widget.name" => "UrgPost.PostBanner"),
+                            "order" => "Widget.placement"
+                    ));
 
-                if ($attachment["filename"]) {
-                    array_push($post_banners, $attachment["filename"]);
+                    if ($widget) {
+                        $settings = $this->controller->WidgetUtil->get_settings($widget, array());
+                        $post_id = $settings["Component"]["post_id"];
+                        $parent_post = $this->controller->Post->findById($post_id);
+                        $post_banners = $this->get_banners($banner_type, $parent_post);
+                    }
                 }
             }
 
@@ -91,6 +103,19 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         CakeLog::write("debug", "group activity: " . Debugger::exportVar($activity, 3));
 
         return $activity;
+    }
+
+    function get_banners($banner_type, $post) {
+        $post_banners = array();
+        foreach ($post["Attachment"] as &$attachment) {
+            $attachment["filename"] = $this->get_post_image_path($banner_type, $attachment, 60, 60);
+
+            if ($attachment["filename"]) {
+                array_push($post_banners, $attachment);
+            }
+        }
+
+        return $post_banners;
     }
 
     function get_post_image_path($banner_type, $attachment, $width, $height = 0) {
