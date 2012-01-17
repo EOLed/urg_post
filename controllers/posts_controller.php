@@ -177,7 +177,7 @@ class PostsController extends UrgPostAppController {
                 $this->NotifySubscribers->execute();
                 
 				$this->Session->setFlash(__('The post has been saved', true));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $this->data["Post"]["id"], $this->data["Post"]["slug"]));
 			} else {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.', true));
 			}
@@ -285,12 +285,17 @@ class PostsController extends UrgPostAppController {
 			$this->Session->setFlash(__('Invalid id for post', true));
 			$this->redirect(array('action'=>'index'));
 		}
+
+        $post = $this->Post->findById($id);
 		if ($this->Post->delete($id)) {
 			$this->Session->setFlash(__('Post deleted', true));
-			$this->redirect(array('action'=>'index'));
+			$this->redirect(array("plugin"=>"urg", 
+                                  "controller"=>"groups",
+                                  "action"=>"view",
+                                  $post["Group"]["slug"]));
 		}
 		$this->Session->setFlash(__('Post was not deleted', true));
-		$this->redirect(array('action' => 'index'));
+        $this->redirect(array("plugin"=>"urg", "controller"=>"groups", "action"=>"view", $post["Group"]["slug"]));
 	}
 
     /**
