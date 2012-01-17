@@ -69,7 +69,7 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
 
         $posts = $this->controller->Post->find('all', 
                 array("conditions" => array("Post.group_id" => $child_ids,
-                                            "Post.publish_timestamp BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()"),
+                                            "Post.publish_timestamp BETWEEN SYSDATE() AND SYSDATE() + INTERVAL $days_of_relevance DAY"),
                       "limit" => $limit,
                       "order" => "Post.publish_timestamp"));
         
