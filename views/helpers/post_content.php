@@ -31,10 +31,13 @@ class PostContentHelper extends AbstractWidgetHelper {
         }
 
         if ($this->options["can_delete"]) {
-            $content .= $this->Html->link(__("Delete", true), array("plugin" => "urg_post",
-                                                                              "controller" => "posts",
-                                                                              "action" => "delete",
-                                                                              $this->options["post"]["Post"]["id"]));
+            $content .= $this->Html->link(__("Delete", true),
+                                          array("plugin" => "urg_post",
+                                                "controller" => "posts",
+                                                "action" => "delete",
+                                                $this->options["post"]["Post"]["id"]), 
+                                          null,
+                                          __("Are you sure you want to delete this?", true));
         }
 
         $content .= $this->Markdown->html($post["Post"]["content"]);
