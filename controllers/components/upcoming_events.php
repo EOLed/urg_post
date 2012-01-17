@@ -63,10 +63,14 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
             array_push($child_ids, $child["Group"]["id"]);
         }
 
+        Configure::load("config");
+        $days_of_relevance = Configure::read("ActivityFeed.daysOfRelevance");
+        $limit = isset($this->widget_settings["limit"]) ? $this->widget_settings["limit"] : Configure::read("ActivityFeed.limit");
+
         $posts = $this->controller->Post->find('all', 
                 array("conditions" => array("Post.group_id" => $child_ids,
-                                            "Post.publish_timestamp > NOW()"),
-                      "limit" => 10,
+                                            "Post.publish_timestamp BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()"),
+                      "limit" => $limit,
                       "order" => "Post.publish_timestamp"));
         
         $this->log("upcoming posts: " . Debugger::exportVar($posts, 3), LOG_DEBUG);
