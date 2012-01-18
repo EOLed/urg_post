@@ -56,10 +56,10 @@ class RecentActivityHelper extends AppHelper {
             $home_link = "";
 
             if ($this->options["show_home_link"]) {
-                $home_link = $this->Html->link($home_group["Group"]["name"], array("plugin" => "urg",
-                                                                                   "controller" => "groups",
-                                                                                   "action" => "view",
-                                                                                   $home_group["Group"]["slug"]));
+                $home_link = $this->Html->link(__($home_group["Group"]["name"], true), array("plugin" => "urg",
+                                                                                             "controller" => "groups",
+                                                                                             "action" => "view",
+                                                                                             $home_group["Group"]["slug"]));
                 $home_link = $this->Html->div("home-link", $home_link);
             }
             $post_content = $this->Html->div("activity-feed-post-content", 

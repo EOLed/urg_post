@@ -5,7 +5,7 @@ class UpcomingEventsHelper extends AbstractWidgetHelper {
 
     function build_widget() {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
-        $title = $this->Html->tag("h2", __("Upcoming events", true));
+        $title = $this->Html->tag("h2", __("Upcoming Events", true));
         return $this->Html->div("upcoming-events", 
                                 $title . $this->add_post() . $this->upcoming_activity($this->options["upcoming_events"]));
     }
