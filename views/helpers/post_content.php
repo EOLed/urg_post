@@ -20,7 +20,7 @@ class PostContentHelper extends AbstractWidgetHelper {
         $content = "";
 
         if ($title !== false) {
-            $content = $this->Html->tag("h2", $title);
+            $content = $this->Html->tag("h2", __($title, true));
         }
 
         if ($this->options["can_edit"]) {
