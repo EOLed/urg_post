@@ -42,14 +42,20 @@ class RecentActivityHelper extends AppHelper {
                     $feed_icon . 
                     $this->Time->timeAgoInWords($feed_item["Post"]["publish_timestamp"], 'j/n/y', false, true));
             $banner_attachment = $this->options["feed_banners"][$feed_item["Post"]["id"]][0];
-            $banner = $this->options["show_thumbs"] ? $this->Html->image("/urg_post/img/" . $banner_attachment["post_id"]. "/" . $banner_attachment["filename"], array("class" => "activity-feed-thumbnail")) : "";
+            $link = array("plugin"=>"urg_post", 
+                                  "action"=>"view", 
+                                  "controller"=>"posts", 
+                                  $feed_item["Post"]["id"],
+                                  $feed_item["Post"]["slug"]);
+            $banner = $this->options["show_thumbs"] ? $this->Html->link($this->Html->image("/urg_post/img/" . 
+                                                                                           $banner_attachment["post_id"]. "/" . 
+                                                                                           $banner_attachment["filename"], 
+                                                                                           array("class" => "activity-feed-thumbnail")),
+                                                                        $link, 
+                                                                        array("escape"=>false)) : "";
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
-                                      array( "plugin"=>"urg_post", 
-                                            "action"=>"view", 
-                                            "controller"=>"posts", 
-                                            $feed_item["Post"]["id"],
-                                            $feed_item["Post"]["slug"]), 
-                                      array("class"=>"post-title")));
+                                                              $link,
+                                                              array("class"=>"post-title")));
             $home_group = $feed_item["Group"]["home"] ? $feed_item : array("Group" => $feed_item["Group"]["ParentGroup"]);
             CakeLog::write(LOG_DEBUG, "the home group: " . Debugger::exportVar($home_group, 3));
 
