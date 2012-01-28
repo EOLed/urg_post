@@ -110,7 +110,7 @@
             echo $this->Html->div("input", 
                     $this->Html->div("placeholder", 
                             $this->Html->div("", 
-                                    $this->Html->image($banner, array("id"=>"post-banner-id")), 
+                                    isset($banner) ? $this->Html->image($banner, array("id"=>"post-banner-id")) : "", 
                                     array("id" => "post-banner")
                     ) . 
                     $this->element("uploadify", 
