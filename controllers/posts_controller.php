@@ -184,6 +184,8 @@ class PostsController extends UrgPostAppController {
 		} else {
             $this->loadModel("Urg.SequenceId");
             $this->data["Post"]["id"] = $this->SequenceId->next($this->Post->useTable);
+            $this->data["Post"]["displayDate"] = date("F d, Y");
+            $this->data["Post"]["displayTime"] = date("h:i A");
             $this->log("next id for " . $this->Post->useTable . " " . $this->data["Post"]["id"], LOG_DEBUG);
             $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
             $this->loadModel("Profile");
