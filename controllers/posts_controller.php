@@ -5,7 +5,6 @@ App::import("Component", "ImgLib.ImgLib");
 App::import("Component", "FlyLoader");
 App::import("Helper", "UrgPost.Post");
 App::import("Helper", "Markdown.Markdown");
-App::import("Component", "UrgSubscription.NotifySubscribers");
 App::import("Component", "Urg.WidgetUtil");
 App::import("Controller", "UrgPost.UrgPostAppController");
 App::import("Sanitize");
@@ -29,7 +28,7 @@ class PostsController extends UrgPostAppController {
                            "action" => "login",
                            "admin" => false
                    )
-           ), "Urg", "Poster", "Cuploadify", "ImgLib", "NotifySubscribers", "WidgetUtil", "FlyLoader"
+           ), "Urg", "Poster", "Cuploadify", "ImgLib", "WidgetUtil", "FlyLoader"
     );
 
     var $helpers = array("Post", "Markdown");
@@ -164,6 +163,9 @@ class PostsController extends UrgPostAppController {
 
             $this->log("now saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
 			if ($this->Post->saveAll($this->data)) {
+                $vars = array("post_id" => $this->data["Post"]["id"], "group_id" => $this->data["Post"]["group_id"]);
+                $widgets = $this->prepare_widgets($this->WidgetUtil->load($this->data["Post"]["group_id"], $vars));
+                $this->set("widgets", $widgets);
               /*  $this->loadModel("Urg.Attachment");
                 foreach ($attachments as $attachment) {
                     $this->Attachment->create();
@@ -178,7 +180,12 @@ class PostsController extends UrgPostAppController {
                 }*/
                 $this->Poster->resize_banner($this->data["Post"]["id"]);
 
-                $this->NotifySubscribers->execute();
+                foreach ($widgets as $widget) {
+                    if ($widget["Widget"]["placement"] == "backend") {
+                        $component = $this->FlyLoader->get_name($widget["Widget"]["name"]);
+                        $this->{$component}->execute();
+                    }
+                }
                 
 				$this->Session->setFlash(__('The post has been saved', true));
 				$this->redirect(array('action' => 'view', $this->data["Post"]["id"], $this->data["Post"]["slug"]));
