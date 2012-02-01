@@ -455,7 +455,7 @@ class PostsController extends UrgPostAppController {
             $webroot_folder = $this->IMAGES_WEBROOT;
         } else if ($this->is_filetype($filename, array(".mp3"))) {
             $webroot_folder = $this->AUDIO_WEBROOT;
-        } else if ($this->is_filetype($filename, array(".ppt", ".pptx", ".doc", ".docx"))) {
+        } else if ($this->is_filetype($filename, array(".pdf", ".ppt", ".pptx", ".doc", ".docx"))) {
             $webroot_folder = $this->FILES_WEBROOT;
         }
 
