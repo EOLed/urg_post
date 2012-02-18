@@ -1,13 +1,14 @@
 <?php
-App::import("Component", "UrgPost.Poster");
-App::import("Component", "Cuploadify.Cuploadify");
-App::import("Component", "ImgLib.ImgLib");
-App::import("Component", "FlyLoader");
-App::import("Helper", "UrgPost.Post");
-App::import("Helper", "Markdown.Markdown");
-App::import("Component", "Urg.WidgetUtil");
-App::import("Controller", "UrgPost.UrgPostAppController");
-App::import("Sanitize");
+App::uses("PosterComponent", "UrgPost.Controller/Component");
+App::uses("CuploadifyCompoment", "Cuploadify.Controller/Component");
+App::uses("ImgLibComponent", "ImgLib.Controller/Component");
+App::uses("FlyLoaderComponent", "Controller/Component");
+App::uses("PostHelper", "UrgPost.View/Helper");
+App::uses("MarkdownHelper", "Markdown.View/Helper");
+App::uses("WidgetUtilComponent", "Urg.Controller/Component");
+App::uses("UrgPostAppController", "UrgPost.Controller");
+App::uses("Sanitize", "Utility");
+App::uses("UrgComponent", "Urg.Controller/Component");
 class PostsController extends UrgPostAppController {
 	var $name = 'Posts';
     var $AUDIO_WEBROOT = "audio";
@@ -28,10 +29,10 @@ class PostsController extends UrgPostAppController {
                            "action" => "login",
                            "admin" => false
                    )
-           ), "Urg", "Poster", "Cuploadify", "ImgLib", "WidgetUtil", "FlyLoader"
+           ), "Urg.Urg", "UrgPost.Poster", "Cuploadify.Cuploadify", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader"
     );
 
-    var $helpers = array("Post", "Markdown");
+    var $helpers = array("UrgPost.Post", "Markdown.Markdown");
 
 	function index() {
 		$this->Post->recursive = 0;
@@ -134,37 +135,37 @@ class PostsController extends UrgPostAppController {
 	function add($group_slug = null) {
         $post_creator = $this->Auth->user();
 
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
 			$this->Post->create();
-            $this->data["User"] = $post_creator["User"];
+            $this->request->data["User"] = $post_creator["User"];
             $this->log("new post created by: " . Debugger::exportVar($post_creator["User"]), LOG_DEBUG);
-            $this->Poster->prepare_attachments($this->data);
+            $this->Poster->prepare_attachments($this->request->data);
             /*$post_timestamp = date_parse_from_format("F d, Y h:i A", 
-                                                     $this->data["Post"]["displayDate"] . " " . 
-                                                     $this->data["Post"]["displayTime"]);*/
+                                                     $this->request->data["Post"]["displayDate"] . " " . 
+                                                     $this->request->data["Post"]["displayTime"]);*/
             $post_timestamp = date_parse_from_format("Y-m-d h:i A", 
-                                                     $this->data["Post"]["formatted_date"] . " " . 
-                                                     $this->data["Post"]["displayTime"]);
+                                                     $this->request->data["Post"]["formatted_date"] . " " . 
+                                                     $this->request->data["Post"]["displayTime"]);
 
-            $this->data["Post"]["publish_timestamp"] = 
+            $this->request->data["Post"]["publish_timestamp"] = 
                     "$post_timestamp[year]-$post_timestamp[month]-$post_timestamp[day]" . 
                     " $post_timestamp[hour]:$post_timestamp[minute]";
 
-            if (!isset($this->data["Post"]["slug"]) || strlen($this->data["Post"]["slug"]) == 0) {
-                $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
+            if (!isset($this->request->data["Post"]["slug"]) || strlen($this->data["Post"]["slug"]) == 0) {
+                $this->request->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
             }
 
-            $this->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
+            $this->request->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
            /* $attachments = array();
-            if (isset($this->data["Attachment"])) {
-                $attachments = $this->data["Attachment"];
-                unset($this->data["Attachment"]);
+            if (isset($this->request->data["Attachment"])) {
+                $attachments = $this->request->data["Attachment"];
+                unset($this->request->data["Attachment"]);
             }*/
 
-            $this->log("now saving post: " . Debugger::exportVar($this->data, 3), LOG_DEBUG);
-			if ($this->Post->saveAll($this->data)) {
-                $vars = array("post_id" => $this->data["Post"]["id"], "group_id" => $this->data["Post"]["group_id"]);
-                $widgets = $this->prepare_widgets($this->WidgetUtil->load($this->data["Post"]["group_id"], $vars));
+            $this->log("now saving post: " . Debugger::exportVar($this->request->data, 3), LOG_DEBUG);
+			if ($this->Post->saveAll($this->request->data)) {
+                $vars = array("post_id" => $this->request->data["Post"]["id"], "group_id" => $this->data["Post"]["group_id"]);
+                $widgets = $this->prepare_widgets($this->WidgetUtil->load($this->request->data["Post"]["group_id"], $vars));
                 $this->set("widgets", $widgets);
               /*  $this->loadModel("Urg.Attachment");
                 foreach ($attachments as $attachment) {
@@ -172,13 +173,13 @@ class PostsController extends UrgPostAppController {
                     $this->Attachment->save(array("Attachment"=>$attachment));
                     $attachment_data["AttachmentMetadatum"] = array();
                     $attachment_data["AttachmentMetadatum"]["key"] = "post_id";
-                    $attachment_data["AttachmentMetadatum"]["value"] = $this->data["Post"]["id"];
+                    $attachment_data["AttachmentMetadatum"]["value"] = $this->request->data["Post"]["id"];
                     $attachment_data["AttachmentMetadatum"]["attachment_id"] = $this->Attachment->id;
                     $this->log("now saving attachments: " . Debugger::exportVar($attachment_data, 3), LOG_DEBUG);
                     $this->loadModel("Urg.AttachmentMetadatum");
                     $this->AttachmentMetadatum->save($attachment_data);
                 }*/
-                $this->Poster->resize_banner($this->data["Post"]["id"]);
+                $this->Poster->resize_banner($this->request->data["Post"]["id"]);
 
                 foreach ($widgets as $widget) {
                     if ($widget["Widget"]["placement"] == "backend") {
@@ -188,17 +189,17 @@ class PostsController extends UrgPostAppController {
                 }
                 
 				$this->Session->setFlash(__('The post has been saved'));
-				$this->redirect(array('action' => 'view', $this->data["Post"]["id"], $this->data["Post"]["slug"]));
+				$this->redirect(array('action' => 'view', $this->request->data["Post"]["id"], $this->data["Post"]["slug"]));
 			} else {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
 			}
 		} else {
             $this->loadModel("Urg.SequenceId");
-            $this->data["Post"]["id"] = $this->SequenceId->next($this->Post->useTable);
-            $this->data["Post"]["displayDate"] = date("F d, Y");
-            $this->data["Post"]["displayTime"] = date("h:i A");
-            $this->data["Post"]["formatted_date"] = date("Y-m-d");
-            $this->log("next id for " . $this->Post->useTable . " " . $this->data["Post"]["id"], LOG_DEBUG);
+            $this->request->data["Post"]["id"] = $this->SequenceId->next($this->Post->useTable);
+            $this->request->data["Post"]["displayDate"] = date("F d, Y");
+            $this->request->data["Post"]["displayTime"] = date("h:i A");
+            $this->request->data["Post"]["formatted_date"] = date("Y-m-d");
+            $this->log("next id for " . $this->Post->useTable . " " . $this->request->data["Post"]["id"], LOG_DEBUG);
             $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
             $this->loadModel("Profile");
             $profile = $this->Profile->findByUserId($post_creator["User"]["id"]);
@@ -208,7 +209,7 @@ class PostsController extends UrgPostAppController {
         if ($group_slug != null) {
             $group = $this->Post->Group->findBySlug($group_slug);
             $this->log("group id: " . $group["Group"]["id"], LOG_DEBUG);
-            $this->data["Post"]["group_id"] = $group["Group"]["id"];
+            $this->request->data["Post"]["group_id"] = $group["Group"]["id"];
         }
 
         $this->set_attachment_types();
@@ -238,7 +239,7 @@ class PostsController extends UrgPostAppController {
 
         $banner = $this->Attachment->find("first", array(
                 "conditions"=>
-                        array("Attachment.post_id"=>$this->data["Post"]["id"],
+                        array("Attachment.post_id"=>$this->request->data["Post"]["id"],
                               "Attachment.attachment_type_id"=>$banner_type["AttachmentType"]["id"]
                         ),
                 "order" => "Attachment.created DESC"
@@ -247,12 +248,12 @@ class PostsController extends UrgPostAppController {
 
         if ($banner) {
             $this->set("banner", $this->get_image_path($banner["Attachment"]["filename"], 
-                                                       $this->data, 
+                                                       $this->request->data, 
                                                        $this->PANEL_BANNER_SIZE));
         }
 
         $this->set("attachments", $this->Attachment->find("all", array("conditions"=>
-                array("Attachment.post_id"=>$this->data["Post"]["id"],
+                array("Attachment.post_id"=>$this->request->data["Post"]["id"],
                       "Attachment.attachment_type_id !="=>$banner_type["AttachmentType"]["id"]
                 )
             )
@@ -260,18 +261,18 @@ class PostsController extends UrgPostAppController {
     }
 
 	function edit($id = null) {
-		if (!$id && empty($this->data)) {
+		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid post'));
 			$this->redirect(array('action' => 'index'));
 		}
-		if (!empty($this->data)) {
+		if (!empty($this->request->data)) {
             $post_timestamp = date_parse_from_format("Y-m-d h:i A", 
-                                                     $this->data["Post"]["formatted_date"] . " " . 
-                                                     $this->data["Post"]["displayTime"]);
-            $this->data["Post"]["publish_timestamp"] = 
+                                                     $this->request->data["Post"]["formatted_date"] . " " . 
+                                                     $this->request->data["Post"]["displayTime"]);
+            $this->request->data["Post"]["publish_timestamp"] = 
                     "$post_timestamp[year]-$post_timestamp[month]-$post_timestamp[day]" . 
                     " $post_timestamp[hour]:$post_timestamp[minute]";
-			if ($this->Post->saveAll($this->data)) {
+			if ($this->Post->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The post has been saved'));
                 $referer = $this->Session->read("Referer");
                 $this->Session->delete("Referer");
@@ -280,11 +281,11 @@ class PostsController extends UrgPostAppController {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->data = $this->Post->read(null, $id);
-            CakeLog::write(LOG_DEBUG, "post to edit: " . Debugger::exportVar($this->data, 3));
-            $this->data["Post"]["formatted_date"] = date("Y-m-d", strtotime($this->data["Post"]["publish_timestamp"]));
-            $this->data["Post"]["displayDate"] = date("F j, Y", strtotime($this->data["Post"]["publish_timestamp"]));
-            $this->data["Post"]["displayTime"] = date("h:i A", strtotime($this->data["Post"]["publish_timestamp"]));
+			$this->request->data = $this->Post->read(null, $id);
+            CakeLog::write(LOG_DEBUG, "post to edit: " . Debugger::exportVar($this->request->data, 3));
+            $this->request->data["Post"]["formatted_date"] = date("Y-m-d", strtotime($this->data["Post"]["publish_timestamp"]));
+            $this->request->data["Post"]["displayDate"] = date("F j, Y", strtotime($this->data["Post"]["publish_timestamp"]));
+            $this->request->data["Post"]["displayTime"] = date("h:i A", strtotime($this->data["Post"]["publish_timestamp"]));
             $this->Session->write("Referer", $this->referer());
 		}
         $this->set_attachment_types();
@@ -319,10 +320,10 @@ class PostsController extends UrgPostAppController {
         $this->layout = "ajax";
         $errors = array();
 
-        $this->data[$model_name][$field] = $this->params["url"]["value"];
+        $this->request->data[$model_name][$field] = $this->params["url"]["value"];
 
         $model = $model_name == "Post" ? $this->Post : $this->Post->{$model_name};
-        $model->set($this->data);
+        $model->set($this->request->data);
 
         if ($model->validates(array("fieldList"=>array($field)))) {
         } else {
@@ -495,11 +496,11 @@ class PostsController extends UrgPostAppController {
 	function translate($slug = null, $original_locale = null) {
         parent::translate($slug, $original_locale);
 
-        if (!empty($this->data)) {
-            $this->data["Post"]["user_id"] = $this->data["Translation"]["User"]["id"];
-            $this->data["Post"]["group_id"] = $this->data["Translation"]["Group"]["id"];
-            debug($this->data);
-            $this->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Translation"]["Post"]["title"], 
+        if (!empty($this->request->data)) {
+            $this->request->data["Post"]["user_id"] = $this->data["Translation"]["User"]["id"];
+            $this->request->data["Post"]["group_id"] = $this->data["Translation"]["Group"]["id"];
+            debug($this->request->data);
+            $this->request->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Translation"]["Post"]["title"], 
                                                                      "-"));
         }
     }

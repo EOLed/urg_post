@@ -1,5 +1,5 @@
 <?php
-App::import("Lib", "Urg.AbstractWidgetComponent");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
 
 /**
  * The Upcoming Events widget will add a list of upcoming events within a view.

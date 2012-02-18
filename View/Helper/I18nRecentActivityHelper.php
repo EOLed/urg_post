@@ -1,5 +1,5 @@
 
 <?php
-App::import("Helper", "UrgPost.RecentActivity");
+App::uses("RecentActivityHelper", "UrgPost.View/Helper");
 class I18nRecentActivityHelper extends RecentActivityHelper {
 }

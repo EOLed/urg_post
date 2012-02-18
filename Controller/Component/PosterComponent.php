@@ -1,7 +1,7 @@
 <?php
-App::import("Component", "ImgLib.ImgLib");
-App::import("Component", "Cuploadify.Cuploadify");
-class PosterComponent extends Object {
+App::uses("ImgLibComponent", "ImgLib.Controller/Component");
+App::uses("CuploadifyComponent", "Cuploadify.Controller/Component");
+class PosterComponent extends Component {
     var $AUDIO_WEBROOT = "audio";
     var $IMAGES_WEBROOT = "img";
     var $FILES_WEBROOT = "files";

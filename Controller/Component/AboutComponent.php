@@ -1,5 +1,5 @@
 <?php
-class AboutComponent extends Object {
+class AboutComponent extends Component {
     var $controller = null;
     var $settings = null;
 

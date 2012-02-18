@@ -1,5 +1,5 @@
 <?php
-App::import("Helper", "Markdown");
+App::uses("MarkdownHelper", "Markdown.View/Helper");
 class AboutHelper extends AppHelper {
     var $helpers = array("Html", "Time", "Markdown");
     var $widget_options = array("about_title", "about_content");

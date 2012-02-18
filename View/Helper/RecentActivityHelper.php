@@ -1,5 +1,5 @@
 <?php
-App::import("Helper", "Markdown.Markdown");
+App::uses("MarkdownHelper", "Markdown.View/Helper");
 class RecentActivityHelper extends AppHelper {
     var $helpers = array("Html", "Time", "Session", "Markdown");
     var $options;

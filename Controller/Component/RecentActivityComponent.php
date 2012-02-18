@@ -1,6 +1,6 @@
 <?php
-App::import("Lib", "Urg.AbstractWidgetComponent");
-App::import("Component", "Urg.Urg");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
+App::uses("UrgComponent", "Urg.Controller/Component");
 
 /**
  * The RecentActivityComponent widget displays a list of the most recent posts within a specific group.

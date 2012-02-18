@@ -1,6 +1,6 @@
 <?php
-App::import("Helper", "Markdown.Markdown");
-App::import("Lib", "Urg.AbstractWidgetHelper");
+App::uses("MarkdownHelper", "Markdown.View/Helper");
+App::uses("AbstractWidgetHelper", "Urg.Lib");
 class PostContentHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time", "Markdown");
     var $images_type;

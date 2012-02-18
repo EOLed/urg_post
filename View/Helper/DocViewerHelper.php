@@ -1,5 +1,5 @@
 <?php
-App::import("Lib", "Urg.AbstractWidgetHelper");
+App::uses("AbstractWidgetHelper", "Urg.Lib");
 class DocViewerHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time");
     var $toggle_panel_id = null;

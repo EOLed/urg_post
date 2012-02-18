@@ -1,7 +1,7 @@
 <?php
-App::import("Component", "FlyLoader");
-App::import("Lib", "Urg.AbstractWidgetComponent");
-App::import("Component", "ImgLib.ImgLib");
+App::uses("FlyLoaderComponent", "Controller/Component");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
+App::uses("ImgLibComponent", "ImgLib.Controller/Component");
 
 /**
  * The Post Content widget will add the content of the specified post within a view.

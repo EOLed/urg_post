@@ -1,4 +1,4 @@
 <?php
-App::import("Helper", "UrgPost.PostContent");
+App::uses("PostContentHelper", "UrgPost.View/Helper");
 class I18nPostContentHelper extends PostContentHelper {
 }

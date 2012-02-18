@@ -1,5 +1,5 @@
 <?php
-App::import("Component", "UrgPost.RecentActivity");
+App::uses("RecentActivityComponent", "UrgPost.Controller/Component");
 
 /**
  * The Post Content widget will add the content of the specified post within a view.

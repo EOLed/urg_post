@@ -1,5 +1,5 @@
 <?php
-App::import("Component", "Urg.Urg");
+App::uses("UrgComponent", "Urg.Controller/Component");
 class UrgPostAppModel extends AppModel {
     var $components = array(
            "Auth" => array(

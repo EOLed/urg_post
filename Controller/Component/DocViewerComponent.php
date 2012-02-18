@@ -1,5 +1,6 @@
 <?php
-App::import("Lib", "Urg.AbstractWidgetComponent");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
+
 /**
  * The Doc Viewer widget can be used to add an inline Google Docs viewer.
  *

@@ -1,8 +1,8 @@
 <?php
-App::import("Component", "ImgLib.ImgLib");
-App::import("Lib", "Urg.AbstractWidgetComponent");
-App::import("Component", "FlyLoader");
-App::import("Component", "Urg.GroupBanner");
+App::uses("ImgLibComponent", "ImgLib.Controller/Component");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
+App::uses("FlyLoaderComponent", "Controller/Component");
+App::uses("GroupBannerComponent", "Urg.Controller/Component");
 /**
  * The PostBanner widget can be used to add a banner of the specified group to views.
  *
