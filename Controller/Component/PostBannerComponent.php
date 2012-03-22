@@ -20,7 +20,7 @@ class PostBannerComponent extends GroupBannerComponent {
         while (!$attachments) {
             CakeLog::write("debug", "getting post: $post_id");
             $post = $this->controller->Post->findById($post_id);
-            $parent = $this->controller->Group->getparentnode($parent_group_id == null ? $post["Group"]["id"] : $parent_group_id);
+            $parent = $this->controller->Group->getParentNode($parent_group_id == null ? $post["Group"]["id"] : $parent_group_id);
 
             CakeLog::write("debug", "parent group: " . Debugger::exportVar($parent, 3));
             // get the banner widget of the parent group

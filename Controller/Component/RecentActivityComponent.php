@@ -74,7 +74,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         foreach ($posts as $post) {
             $post_banners = $this->get_banners($banner_type, $post);
             if (empty($post_banners)) {
-                $parent = $this->controller->Group->getparentnode($post["Group"]["id"]);
+                $parent = $this->controller->Group->getParentNode($post["Group"]["id"]);
                 while ($parent && empty($post_banners)) {
                     CakeLog::write("debug", "parent group: " . Debugger::exportVar($parent, 3));
                     $parent_group_id = $parent["Group"]["id"];
@@ -92,7 +92,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                         $post_banners = $this->get_banners($banner_type, $parent_post);
                     }
 
-                    $parent = $this->controller->Group->getparentnode($parent_group_id);
+                    $parent = $this->controller->Group->getParentNode($parent_group_id);
                 }
             }
 
