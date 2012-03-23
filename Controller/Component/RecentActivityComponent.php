@@ -1,7 +1,6 @@
 <?php
 App::uses("AbstractWidgetComponent", "Urg.Lib");
 App::uses("UrgComponent", "Urg.Controller/Component");
-
 /**
  * The RecentActivityComponent widget displays a list of the most recent posts within a specific group.
  *
@@ -9,7 +8,7 @@ App::uses("UrgComponent", "Urg.Controller/Component");
  *             title    The name of the widget (defaults to "Recent Activity")
  */
 class RecentActivityComponent extends AbstractWidgetComponent {
-    var $components = array("Urg");
+    var $components = array("Urg.Urg");
     var $POST_BANNERS = "/app/plugins/urg_post/webroot/img";
 
     function build_widget() {

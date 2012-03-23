@@ -1,7 +1,7 @@
 <?php
 App::uses("AbstractWidgetHelper", "Urg.Lib");
 class PostBannerHelper extends AbstractWidgetHelper {
-    var $helpers = array("Html", "Time");
+    public $helpers = array("Html", "Time");
 
     function build_widget() {
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));

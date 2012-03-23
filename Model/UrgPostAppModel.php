@@ -9,7 +9,7 @@ class UrgPostAppModel extends AppModel {
                            "action" => "login",
                            "admin" => false
                    )
-           ), "Urg"
+           ), "Urg.Urg"
     );
 
     function log($msg, $type = LOG_ERROR) {
