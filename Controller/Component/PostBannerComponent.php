@@ -9,7 +9,7 @@ App::uses("GroupBannerComponent", "Urg.Controller/Component");
  * Parameters: group_id        The id of the group whose banner you wish to display.
  */
 class PostBannerComponent extends GroupBannerComponent {
-    var $POST_BANNERS = "/app/plugins/urg_post/webroot/img";
+    var $POST_BANNERS = "/app/Plugin/UrgPost/webroot/img";
 
     function build_widget() {
         $this->bindModels();

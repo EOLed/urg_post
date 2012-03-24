@@ -1,6 +1,6 @@
 <?php
 class AttachmentsController extends UrgAppController {
-    var $BANNER_FOLDER = "/app/plugins/urg/webroot/img/banners";
+    var $BANNER_FOLDER = "/app/Plugin/Urg/webroot/img/banners";
 	var $name = 'Attachments';
     var $components = array("Cuploadify.cuploadify");
 

@@ -9,7 +9,7 @@ App::uses("UrgComponent", "Urg.Controller/Component");
  */
 class RecentActivityComponent extends AbstractWidgetComponent {
     var $components = array("Urg.Urg");
-    var $POST_BANNERS = "/app/plugins/urg_post/webroot/img";
+    var $POST_BANNERS = "/app/Plugin/UrgPost/webroot/img";
 
     function build_widget() {
         $activity = $this->get_recent_activity($this->widget_settings["group_id"]);

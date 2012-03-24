@@ -10,7 +10,7 @@ App::uses("ImgLibComponent", "ImgLib.Controller/Component");
  *             title   The title of the widget. Defaults to the post's title.
  */
 class PostContentComponent extends AbstractWidgetComponent {
-    var $POST_IMAGES = "/app/plugins/urg_post/webroot/img";
+    var $POST_IMAGES = "/app/Plugin/UrgPost/webroot/img";
     var $post = null;
 
     function build_widget() {
