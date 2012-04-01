@@ -32,7 +32,7 @@ class PostsController extends UrgPostAppController {
            ), "Urg.Urg", "UrgPost.Poster", "Cuploadify.Cuploadify", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader"
     );
 
-    var $helpers = array("UrgPost.Post", "Markdown.Markdown");
+    var $helpers = array("UrgPost.Post", "Markdown.Markdown", "Html", "Form", "Session");
 
 	function index() {
 		$this->Post->recursive = 0;
@@ -352,6 +352,7 @@ class PostsController extends UrgPostAppController {
 
     function upload_image() {
         $this->upload($this->Poster->IMAGES);
+        $this->layout = false;
 //        $options = array("root" => $this->Poster->IMAGES);
 //        $target_folder = $this->Cuploadify->get_target_folder($options);
 //        $filename = $target_folder . $this->Cuploadify->get_filename();
