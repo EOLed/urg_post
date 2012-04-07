@@ -22,14 +22,7 @@ class PostsController extends UrgPostAppController {
     var $BANNER_SIZE = 700;
     var $PANEL_BANNER_SIZE = 460;
     var $components = array(
-           "Auth" => array(
-                   "loginAction" => array(
-                           "plugin" => "urg",
-                           "controller" => "users",
-                           "action" => "login",
-                           "admin" => false
-                   )
-           ), "Urg.Urg", "UrgPost.Poster", "Cuploadify.Cuploadify", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader"
+           "Urg.Urg", "UrgPost.Poster", "Cuploadify.Cuploadify", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader"
     );
 
     var $helpers = array("UrgPost.Post", "Markdown.Markdown", "Html", "Form", "Session");
@@ -52,7 +45,7 @@ class PostsController extends UrgPostAppController {
 			$this->redirect(array('action' => 'index'));
 		}
 
-        $logged_user = $this->Auth->user();
+        $logged_user = $this->Session->read("User");
 
         $post = $this->Post->find("first", array("conditions" => array("Post.id" => $id)));
 
@@ -133,7 +126,7 @@ class PostsController extends UrgPostAppController {
     }
 
 	function add($group_slug = null) {
-        $post_creator = $this->Auth->user();
+        $post_creator = $this->Session->read("User");
 
 		if (!empty($this->request->data)) {
 			$this->Post->create();
