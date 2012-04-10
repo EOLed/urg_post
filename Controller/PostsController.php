@@ -160,7 +160,7 @@ class PostsController extends UrgPostAppController {
                 $vars = array("post_id" => $this->request->data["Post"]["id"], "group_id" => $this->data["Post"]["group_id"]);
                 $widgets = $this->prepare_widgets($this->WidgetUtil->load($this->request->data["Post"]["group_id"], $vars));
                 $this->set("widgets", $widgets);
-              /*  $this->loadModel("Urg.Attachment");
+              /*  $this->loadModel("UrgPost.Attachment");
                 foreach ($attachments as $attachment) {
                     $this->Attachment->create();
                     $this->Attachment->save(array("Attachment"=>$attachment));
@@ -169,7 +169,7 @@ class PostsController extends UrgPostAppController {
                     $attachment_data["AttachmentMetadatum"]["value"] = $this->request->data["Post"]["id"];
                     $attachment_data["AttachmentMetadatum"]["attachment_id"] = $this->Attachment->id;
                     $this->log("now saving attachments: " . Debugger::exportVar($attachment_data, 3), LOG_DEBUG);
-                    $this->loadModel("Urg.AttachmentMetadatum");
+                    $this->loadModel("UrgPost.AttachmentMetadatum");
                     $this->AttachmentMetadatum->save($attachment_data);
                 }*/
                 $this->Poster->resize_banner($this->request->data["Post"]["id"]);
@@ -223,7 +223,7 @@ class PostsController extends UrgPostAppController {
 	}
 
     function set_attachment_types() {
-        $this->loadModel("Attachment");
+        $this->loadModel("UrgPost.Attachment");
         $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
 
         $banner_type = $this->Attachment->AttachmentType->findByName("Banner");
@@ -352,7 +352,7 @@ class PostsController extends UrgPostAppController {
     }
 
     function get_banners($post) {
-        $this->loadModel("Attachment");
+        $this->loadModel("UrgPost.Attachment");
         $this->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
 
         $banner_type = $this->Attachment->AttachmentType->findByName("Banner");

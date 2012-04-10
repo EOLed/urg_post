@@ -42,8 +42,8 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     }
 
     function get_recent_activity($group_id) {
-        $this->controller->loadModel("Group");
-        $this->controller->loadModel("Post");
+        $this->controller->loadModel("Urg.Group");
+        $this->controller->loadModel("UrgPost.Post");
 
         $children = $this->controller->Group->children($group_id);
         CakeLog::write("debug", "child groups: " . Debugger::exportVar($children, 3));

@@ -22,7 +22,7 @@ class DocViewerComponent extends AbstractWidgetComponent {
     }
 
     function bindModels() {
-        $this->controller->loadModel("Attachment");
+        $this->controller->loadModel("UrgPost.Attachment");
     }
 
     function set_documents($post) {

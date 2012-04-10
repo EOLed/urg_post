@@ -13,7 +13,7 @@ class PosterComponent extends Component {
     var $BANNER_SIZE = 700;
     var $PANEL_BANNER_SIZE = 460;
 
-    var $components = array("Auth", "ImgLib.ImgLib", "Cuploadify");
+    var $components = array("Auth", "ImgLib.ImgLib", "Cuploadify", "Session");
 
     var $controller = null;
 
@@ -126,7 +126,7 @@ class PosterComponent extends Component {
         $full_image_path = $this->get_doc_root($this->IMAGES) . "/" .  $post_id;
 
         if (file_exists($full_image_path)) {
-            $this->controller->loadModel("Attachment");
+            $this->controller->loadModel("UrgPost.Attachment");
             $this->controller->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
 
             $post_banners = $this->get_banners($post_id);
@@ -146,17 +146,17 @@ class PosterComponent extends Component {
     }
 
     function get_banners($post_id) {
-        $banners = false;
-        $this->controller->loadModel("Urg.Attachment");
-        $this->controller->loadModel("Urg.AttachmentMetadatum");
-        $meta = $this->controller->AttachmentMetadatum->find("first", array("conditions" => array(
-                "AttachmentMetadatum.key" => "post_id",
-                "AttachmentMetadatum.value" => $post_id)));
+        CakeLog::write(LOG_DEBUG, "getting banners for post $post_id");
+        $this->controller->loadModel("UrgPost.Attachment");
+        $this->controller->loadModel("UrgPost.AttachmentType");
 
-        if (!empty($meta)) {
-            $banners = $this->controller->Attachment->findAllById($meta["AttachmentMetadatum"]["attachment_id"]);
-        }
+        $banner_type = $this->controller->AttachmentType->findByName("Banner");
+    
+        $banners = $this->controller->Attachment->find("all", 
+                array("conditions" => array("Attachment.post_id" => $post_id,
+                                            "Attachment.attachment_type_id" => $banner_type["AttachmentType"]["id"])));
 
+        CakeLog::write(LOG_DEBUG, "banners for post $post_id: " . Debugger::exportVar($banners, 3));
         return $banners;
     }
 
@@ -168,7 +168,7 @@ class PosterComponent extends Component {
     }
 
     function prepare_attachments(&$data) {
-        $logged_user = $this->Auth->user();
+        $logged_user = $this->Session->read("User");
         $attachment_count = isset($data["Attachment"]) ? 
                 sizeof($data["Attachment"]) : 0;
         if ($attachment_count > 0) {
@@ -206,7 +206,7 @@ class PosterComponent extends Component {
 
         $this->log("determining what type of attachment...", LOG_DEBUG);
 
-        $this->controller->loadModel("Attachment");
+        $this->controller->loadModel("UrgPost.Attachment");
         $this->controller->Attachment->bindModel(array("belongsTo" => array("AttachmentType")));
         $attachment_type = null;
         $root = null;
@@ -220,7 +220,7 @@ class PosterComponent extends Component {
             $attachment_type = $this->controller->Attachment->AttachmentType->findByName("Audio");
             $webroot_folder = $this->AUDIO_WEBROOT;
         } else if ($this->is_filetype($this->Cuploadify->get_filename(), 
-                array(".ppt", ".pptx", ".doc", ".docx"))) {
+                array(".pdf", ".ppt", ".pptx", ".doc", ".docx"))) {
             $root = $this->FILES;
             $attachment_type = $this->controller->Attachment->AttachmentType->findByName("Documents");
             $webroot_folder = $this->FILES_WEBROOT;

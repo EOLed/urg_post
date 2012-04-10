@@ -26,7 +26,7 @@ class AboutComponent extends Component {
     }
 
     function get_about($group_id) {
-        $this->controller->loadModel("Post");
+        $this->controller->loadModel("UrgPost.Post");
         $this->controller->Post->bindModel(array("belongsTo" => array("Group")));
 
         $about_group = $this->controller->Group->findById($group_id);

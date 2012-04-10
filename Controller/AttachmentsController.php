@@ -69,7 +69,7 @@ class AttachmentsController extends UrgAppController {
 	}
 
     function banner($group_slug = null) {
-        $this->loadModel("Group");
+        $this->loadModel("Urg.Group");
         $banner_type = $this->Attachment->AttachmentType->findByName("Banner");
 
         if ($this->data == null)
