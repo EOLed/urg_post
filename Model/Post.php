@@ -1,4 +1,5 @@
 <?php
+App::uses("UrgPostAppModel", "UrgPost.Model");
 class Post extends UrgPostAppModel {
 	var $name = 'Post';
 	var $displayField = 'title';
