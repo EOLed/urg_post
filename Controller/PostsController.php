@@ -145,7 +145,8 @@ class PostsController extends UrgPostAppController {
                     " $post_timestamp[hour]:$post_timestamp[minute]";
 
             if (!isset($this->request->data["Post"]["slug"]) || strlen($this->data["Post"]["slug"]) == 0) {
-                $this->request->data["Post"]["slug"] = strtolower(Inflector::slug($this->data["Post"]["title"], "-"));
+                $this->request->data["Post"]["slug"] = strtolower(Inflector::slug(str_replace("'", "", $this->data["Post"]["title"]),
+                                                                                  "-"));
             }
 
             $this->request->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
