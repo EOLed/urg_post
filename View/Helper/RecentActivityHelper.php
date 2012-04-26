@@ -52,7 +52,7 @@ class RecentActivityHelper extends AppHelper {
                                                                                            $banner_attachment["filename"], 
                                                                                            array("class" => "activity-feed-thumbnail")),
                                                                         $link, 
-                                                                        array("escape"=>false)) : "";
+                                                                        array("escape"=>false, "class"=>"span1")) : "";
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
                                                               $link,
                                                               array("class"=>"post-title")));
@@ -68,10 +68,11 @@ class RecentActivityHelper extends AppHelper {
                                                                                              $home_group["Group"]["slug"]));
                 $home_link = $this->Html->div("home-link", $home_link);
             }
+
             $post_content = $this->Html->div("activity-feed-post-content", 
                                              $this->Markdown->html($feed_item["Post"]["content"]),
                                              array("id" => "activity-feed-post-content-" . $feed_item["Post"]["id"]));
-            $feed .= $banner . $this->Html->div("activity-feed-post post", $title . $home_link . $post_content . $this->js($feed_item["Post"]["id"]) . $time);
+            $feed .= $this->Html->div("row", $banner . $this->Html->div("activity-feed-post post span4", $title . $home_link . $post_content . $this->js($feed_item["Post"]["id"]) . $time));
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));

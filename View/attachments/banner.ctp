@@ -1,5 +1,5 @@
 <div class="attachments form">
-    <div class="grid_6 right-border">
+    <div class="span6 right-border">
         <?php echo $this->Form->create('Attachment', array("type" => "file")); ?>
         <fieldset>
             <legend> <div> <h2><?php echo __('Add Banner'); ?></h2> </div> </legend>

@@ -81,7 +81,7 @@
 <?php echo $this->Html->scriptEnd(); ?>
 <div class="posts form">
 <?php echo $this->Form->create('Post'); ?>
-    <div class="grid_6 right-border">
+    <div class="span6 right-border">
         <fieldset>
             <legend> <div> <h2><?php echo __('Add Post'); ?></h2> </div> </legend>
             <?php
@@ -100,7 +100,7 @@
             ?>
         </fieldset>
     </div>
-    <div class="grid_3 suffix_3">
+    <div class="span3 suffix_3">
         <fieldset>
             <legend> <div> <h2><?php echo __('Add Resources'); ?></h2> </div> </legend>
             <?php 
@@ -147,7 +147,7 @@
             ?>
         </fieldset>
     </div>
-    <div class="grid_6 suffix_6">
+    <div class="span6 suffix_6">
         <?php echo $this->Form->end(__('Upload Post'));?>
     </div>
     <?php 

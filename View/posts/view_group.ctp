@@ -1,19 +1,19 @@
 <div class="posts view">
     <?php foreach ($banners as $banner) { ?>
-    <div id="banner" class="grid_9 right-border">
+    <div id="banner" class="span9 right-border">
         <?php echo $this->Html->image($banner, array("class"=>"shadow")); ?>
     </div>
     <?php } ?>
-    <div id="about-panel" class="grid_3">
+    <div id="about-panel" class="span3">
         <h3><?php echo strtoupper(__("About us")); ?></h3>
         <?php echo $about["Post"]["content"] ?>
     </div>
 
-    <div id='group-name' class='grid_12 page-title'>
+    <div id='group-name' class='span12 page-title'>
         <div><?php echo $group["Group"]["name"]?></div>
     </div>
 
-    <div class="grid_4 right-border">
+    <div class="span4 right-border">
         <?php 
         foreach ($widgets[0] as $widget) {
             $options = array();
@@ -24,10 +24,10 @@
         }
         ?>
     </div>
-    <div id="group-feed" class="grid_4 right-border">
+    <div id="group-feed" class="span4 right-border">
         <h2><?php echo __("Recent activity"); ?></h2>
     </div>
-    <div id="group-upcoming" class="grid_4">
+    <div id="group-upcoming" class="span4">
         <h2><?php echo __("Upcoming events"); ?></h2>
     </div>
 </div>

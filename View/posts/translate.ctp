@@ -1,4 +1,4 @@
-<div class="grid_6 posts form">
+<div class="span6 posts form">
 <?php echo $this->Form->create('Post');?>
 	<fieldset>
  		<legend><?php echo __('Translate Post'); ?></legend>
@@ -16,7 +16,7 @@
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
 </div>
-<div class="grid_6 actions">
+<div class="span6 actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 
