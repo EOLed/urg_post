@@ -122,7 +122,10 @@ img.feed-icon {
 #activity-feed .post {
     line-height: 125%;
     letter-spacing: 0;
-    margin-bottom: 20px;
+    margin-bottom: 60px;
+    border-bottom-width: 1px;
+    border-bottom-style: dashed;
+    border-bottom-color: #ccc;
 }
 
 h3.post-title {
@@ -143,19 +146,25 @@ ul#attachment-list {
     height: 400px;
 }
 
-.span5 .post-widget .activity-feed-thumbnail {
-    width: 60px;
-    display:inline;
-    float:left;
-    position:relative;
-    margin-left:0px;
-    margin-right:10px
+.activity-feed-thumbnail {
+    padding-bottom: 10px;
 }
 
-.span5 .post-widget .activity-feed-post {
-    display:inline;
-    float:left;
-    position:relative;
+.activity-feed-post {
+}
+
+.group-col .post-widget {
+    padding: 19px;
+    border-style: solid;
+    border-color: #ccc;
+    border-width: 0px;
+}
+.group-col .post-widget.right-border {
+    border-right-width: 1px;
+}
+
+.group-col .post-widget.left-border {
+    border-left-width: 1px;
 }
 
 div.gallery-image {
@@ -171,7 +180,9 @@ div.activity-feed-post-content {
 }
 
 .activity-feed-post h3 {
-    float: left;
+    font-size: 24px;
+    font-family: "Antic Slab", sans-serif;
+    font-weight: normal;
 }
 
 div.home-link {
@@ -216,6 +227,11 @@ div.home-link a:hover {
 
 .post-section {
     margin-top: 20px;
+}
+
+a.post-author {
+    font-weight: bold;
+    color: #000;
 }
 
 .gallery {

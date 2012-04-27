@@ -38,41 +38,44 @@ class RecentActivityHelper extends AppHelper {
 
         foreach ($posts as $feed_item) {
             $feed_icon = $this->feed_icon($feed_item);
-            $time = $this->Html->div("feed-timestamp",
-                    $feed_icon . 
-                    $this->Time->timeAgoInWords($feed_item["Post"]["publish_timestamp"], 'j/n/y', false, true));
             $banner_attachment = $this->options["feed_banners"][$feed_item["Post"]["id"]][0];
             $link = array("plugin"=>"urg_post", 
                                   "action"=>"view", 
                                   "controller"=>"posts", 
                                   $feed_item["Post"]["id"],
                                   $feed_item["Post"]["slug"]);
-            $banner = $this->options["show_thumbs"] ? $this->Html->link($this->Html->image("/urg_post/img/" . 
+            $banner = $this->options["show_thumbs"] ? $this->Html->div("row", $this->Html->link($this->Html->image("/urg_post/img/" . 
                                                                                            $banner_attachment["post_id"]. "/" . 
                                                                                            $banner_attachment["filename"], 
                                                                                            array("class" => "activity-feed-thumbnail")),
                                                                         $link, 
-                                                                        array("escape"=>false, "class"=>"span1")) : "";
+                                                                        array("escape"=>false, "class"=>"span"))) : "";
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
                                                               $link,
                                                               array("class"=>"post-title")));
             $home_group = $feed_item["Group"]["home"] ? $feed_item : array("Group" => $feed_item["Group"]["ParentGroup"]);
             CakeLog::write(LOG_DEBUG, "the home group: " . Debugger::exportVar($home_group, 3));
 
-            $home_link = "";
+            $post_meta = "";
 
             if ($this->options["show_home_link"]) {
-                $home_link = $this->Html->link(__($home_group["Group"]["name"]), array("plugin" => "urg",
-                                                                                             "controller" => "groups",
-                                                                                             "action" => "view",
-                                                                                             $home_group["Group"]["slug"]));
-                $home_link = $this->Html->div("home-link", $home_link);
+                $post_meta = $this->Html->link(__($home_group["Group"]["name"]), 
+                                               array("plugin" => "urg",
+                                                     "controller" => "groups",
+                                                     "action" => "view",
+                                                     $home_group["Group"]["slug"]),
+                                               array("class" => "post-author")) . " | ";
             }
 
+            $post_meta = $this->Html->div("activity-feed-post-meta row", $this->Html->div("span", $post_meta . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["publish_timestamp"])));
+
+            $pos = strpos($feed_item["Post"]["content"], ' ', min(strlen($feed_item["Post"]["content"]), 400));
+            $content_snippet = $pos === false ? $feed_item["Post"]["content"] : substr($feed_item["Post"]["content"], 0, $pos ) . "..."; 
+
             $post_content = $this->Html->div("activity-feed-post-content", 
-                                             $this->Markdown->html($feed_item["Post"]["content"]),
+                                             $this->Markdown->html($content_snippet),
                                              array("id" => "activity-feed-post-content-" . $feed_item["Post"]["id"]));
-            $feed .= $this->Html->div("row", $banner . $this->Html->div("activity-feed-post post span4", $title . $home_link . $post_content . $this->js($feed_item["Post"]["id"]) . $time));
+            $feed .= $this->Html->div("row", $this->Html->div("span", $this->Html->div("activity-feed-post post ", $title . $post_meta . $banner . $post_content . $this->js($feed_item["Post"]["id"]))));
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));

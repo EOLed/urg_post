@@ -110,7 +110,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     function get_banners($banner_type, $post) {
         $post_banners = array();
         foreach ($post["Attachment"] as &$attachment) {
-            $attachment["filename"] = $this->get_post_image_path($banner_type, $attachment, 60, 60);
+            $attachment["filename"] = $this->get_post_image_path($banner_type, $attachment, 370, 208);
 
             if ($attachment["filename"]) {
                 array_push($post_banners, $attachment);
