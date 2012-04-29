@@ -56,7 +56,7 @@ class PostsController extends UrgPostAppController {
                 $slug = $post["Post"]["slug"];
             } else {
                 $this->Post->id = $id;
-                $slug = strtolower(Inflector::slug($post["Post"]["title"], "-"));
+                $slug = strtolower(Inflector::slug(str_replace("'", "", $post["Post"]["title"]), "-"));
                 $this->log("Post to create slug for ($id): " . Debugger::exportVar($post, 3), LOG_DEBUG);
                 $this->log("Saving slug as: " . $slug, LOG_DEBUG);
                 $this->Post->saveField("slug", $slug);
