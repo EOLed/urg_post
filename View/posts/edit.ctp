@@ -81,83 +81,92 @@
 <?php echo $this->Html->scriptEnd(); ?>
 <div class="posts form">
 <?php echo $this->Form->create('Post'); ?>
-    <div class="span6 right-border">
-        <fieldset>
-            <legend> <div> <h2><?php echo __('Edit Post'); ?></h2> </div> </legend>
-            <?php
-            echo $this->Form->hidden("Post.id");
-            echo $this->Form->hidden("bannerAttachmentIndex");
-            echo $this->Form->input('Post.group_id', array("escape" => false));
-            echo $this->Form->input('Post.title');
-            echo $this->Html->div("error-message", "", 
-                    array("id"=>"PostTitleError", "style"=>"display: none"));
-            echo $this->Html->div("validated", "✓", 
-                    array("id"=>"PostTitleValid", "style"=>"display: none"));
-            echo $this->Form->hidden("Post.formatted_date");
-            echo $this->Form->input("Post.displayDate", 
-                    array("type"=>"text", 
-                          "label"=>__("Date"), 
-                          "after"=>$this->Form->text("Post.displayTime", 
-                                                     array("div"=>false, "label"=>false))));
-            echo $this->Markdown->input('Post.content', array("label"=>__("Content"), "rows"=>"20"));
-            ?>
-        </fieldset>
+    <div class="row">
+        <div class="span6 right-border">
+            <fieldset>
+                <legend> <div> <h2><?php echo __('Edit Post'); ?></h2> </div> </legend>
+                <?php
+                echo $this->Form->hidden("Post.id");
+                echo $this->Form->hidden("bannerAttachmentIndex");
+                echo $this->Form->input('Post.group_id', array("escape" => false));
+                echo $this->Form->input('Post.title');
+                echo $this->Html->div("error-message", "", 
+                        array("id"=>"PostTitleError", "style"=>"display: none"));
+                echo $this->Html->div("validated", "✓", 
+                        array("id"=>"PostTitleValid", "style"=>"display: none"));
+                echo $this->Form->hidden("Post.formatted_date");
+                echo $this->Form->input("Post.displayDate", 
+                        array("type"=>"text", 
+                              "label"=>__("Date"), 
+                              "after"=>$this->Form->text("Post.displayTime", 
+                                                         array("div"=>false, "label"=>false))));
+                ?>
+            </fieldset>
+        </div>
+        <div class="span3 suffix_3">
+            <fieldset>
+                <legend> <div> <h2><?php echo __('Add Resources'); ?></h2> </div> </legend>
+                <?php 
+                echo $this->Html->div("input", 
+                        $this->Html->div("placeholder", 
+                                $this->Html->div("", 
+                                        isset($banner) ? $this->Html->image($banner, array("id"=>"post-banner-id")) : "", 
+                                        array("id" => "post-banner")
+                        ) . 
+                        $this->element("Cuploadify.uploadify", 
+                        array("plugin" => "Cuploadify", 
+                                "dom_id" => "image_upload", 
+                                "session_id" => CakeSession::id(),
+                                "include_scripts" => array("uploadify_css", "uploadify", "swfobject"),
+                                "options" => array("auto" => true, 
+                                        "folder" => "/" . $this->data["Post"]["id"],
+                                        "script" => $this->Html->url("/urg_post/posts/upload_image"),
+                                        "buttonText" => strtoupper(__("Add Banner")), 
+                                        //"multi" => true,
+                                        //"queueID" => "upload_queue",
+                                        "removeCompleted" => true,
+                                        "fileExt" => "*.jpg;*.jpeg;*.png;*.gif;*.bmp",
+                                        "fileDataName" => "imageFile",
+                                        "fileDesc" => "Image Files",
+                                        "onComplete" => "on_complete_images",
+                                        "onProgress" => "image_upload_in_progress",
+                                        "onAllComplete" => "image_uploads_completed"
+                                        ))))); 
+                echo $this->Html->div("input", $this->element("Cuploadify.uploadify",
+                        array("plugin" => "Cuploadify", 
+                                "dom_id" => "attachment_upload", 
+                                "session_id" => CakeSession::id(),
+                                "options" => array("auto" => true, 
+                                        "folder" => "/" . $this->data["Post"]["id"],
+                                        "script" => $this->Html->url("/urg_post/posts/upload_attachments"),
+                                        "buttonText" => strtoupper(__("Attachments")), 
+                                        "removeCompleted" => true,
+                                        "fileExt" => "*.mp3;*.jpg;*.jpeg;*.png;*.gif;*.bmp;" .
+                                                     "*.ppt;*.pptx;*.doc;*.docx;*.pdf",
+                                        "fileDataName" => "attachmentFile",
+                                        "fileDesc" => "Post Attachments",
+                                        "multi" => true,
+                                        "onComplete" => "on_complete_attachments",
+                                        "onProgress" => "attachment_upload_in_progress",
+                                        "onAllComplete" => "attachment_uploads_completed"
+                                        ))));
+                echo $this->element("attachment_queue", array("attachments" => $attachments, 
+                                                              "post_id" => $this->data["Post"]["id"], 
+                                                              "plugin" => "urg_post"));
+                ?>
+            </fieldset>
+        </div>
     </div>
-    <div class="span3 suffix_3">
-        <fieldset>
-            <legend> <div> <h2><?php echo __('Add Resources'); ?></h2> </div> </legend>
-            <?php 
-            echo $this->Html->div("input", 
-                    $this->Html->div("placeholder", 
-                            $this->Html->div("", 
-                                    isset($banner) ? $this->Html->image($banner, array("id"=>"post-banner-id")) : "", 
-                                    array("id" => "post-banner")
-                    ) . 
-                    $this->element("Cuploadify.uploadify", 
-                    array("plugin" => "Cuploadify", 
-                            "dom_id" => "image_upload", 
-                            "session_id" => CakeSession::id(),
-                            "include_scripts" => array("uploadify_css", "uploadify", "swfobject"),
-                            "options" => array("auto" => true, 
-                                    "folder" => "/" . $this->data["Post"]["id"],
-                                    "script" => $this->Html->url("/urg_post/posts/upload_image"),
-                                    "buttonText" => strtoupper(__("Add Banner")), 
-                                    //"multi" => true,
-                                    //"queueID" => "upload_queue",
-                                    "removeCompleted" => true,
-                                    "fileExt" => "*.jpg;*.jpeg;*.png;*.gif;*.bmp",
-                                    "fileDataName" => "imageFile",
-                                    "fileDesc" => "Image Files",
-                                    "onComplete" => "on_complete_images",
-                                    "onProgress" => "image_upload_in_progress",
-                                    "onAllComplete" => "image_uploads_completed"
-                                    ))))); 
-            echo $this->Html->div("input", $this->element("Cuploadify.uploadify",
-                    array("plugin" => "Cuploadify", 
-                            "dom_id" => "attachment_upload", 
-                            "session_id" => CakeSession::id(),
-                            "options" => array("auto" => true, 
-                                    "folder" => "/" . $this->data["Post"]["id"],
-                                    "script" => $this->Html->url("/urg_post/posts/upload_attachments"),
-                                    "buttonText" => strtoupper(__("Attachments")), 
-                                    "removeCompleted" => true,
-                                    "fileExt" => "*.mp3;*.jpg;*.jpeg;*.png;*.gif;*.bmp;" .
-                                                 "*.ppt;*.pptx;*.doc;*.docx;*.pdf",
-                                    "fileDataName" => "attachmentFile",
-                                    "fileDesc" => "Post Attachments",
-                                    "multi" => true,
-                                    "onComplete" => "on_complete_attachments",
-                                    "onProgress" => "attachment_upload_in_progress",
-                                    "onAllComplete" => "attachment_uploads_completed"
-                                    ))));
-            echo $this->element("attachment_queue", array("attachments" => $attachments, 
-                                                          "post_id" => $this->data["Post"]["id"], 
-                                                          "plugin" => "urg_post"));
-            ?>
-        </fieldset>
+    <div class="row">
+        <div class="span6">
+            <?php echo $this->Markdown->input('Post.content', array("preview" => "desktop-preview", "label"=>__("Content"), "rows"=>"20")); ?>
+        </div>
+        <div class="span6 markdown-preview" id="desktop-preview"></div>
     </div>
-    <div class="span6 suffix_6">
-        <?php echo $this->Form->end(__('Upload Post'));?>
+    <div class="row">
+        <div class="span12 form-actions">
+            <?php echo $this->Form->end(array("label" => __('Upload Post'), "class" => "btn btn-primary"));?>
+        </div>
     </div>
     <?php 
         echo $this->Html->div("", $this->Html->image("/urg_post/img/loading.gif"), 

@@ -236,6 +236,10 @@ a.post-author {
 
 .gallery {
 }
+
+.markdown-preview {
+    padding-top: 60px;
+}
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;
