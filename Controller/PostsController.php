@@ -215,9 +215,9 @@ class PostsController extends UrgPostAppController {
             $groups = $this->Post->Group->find("list");
         } else {
             $children = $this->Post->Group->children($group["Group"]["id"], false);
-            $groups[$group["Group"]["id"]] = $group["Group"]["name"];
+            $groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
             foreach ($children as $child) {
-                $groups[$child["Group"]["id"]] = $child["Group"]["name"];
+                $groups[$child["Group"]["id"]] = $child["Group"]["name"] . " (" . $child["Group"]["slug"] . ")";
             }
         }
 		$this->set(compact('groups'));
@@ -283,7 +283,13 @@ class PostsController extends UrgPostAppController {
             $this->Session->write("Referer", $this->referer());
 		}
         $this->set_attachment_types();
-		$groups = $this->Post->Group->find('list');
+
+		$all_groups = $this->Post->Group->find('all');
+        $groups = array();
+        foreach ($all_groups as $group) {
+            $groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
+        }
+
 		$users = $this->Post->User->find('list');
 		$this->set(compact('groups', 'users'));
 	}
