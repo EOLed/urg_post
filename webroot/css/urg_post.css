@@ -229,7 +229,7 @@ div.home-link a:hover {
     margin-top: 20px;
 }
 
-a.post-author {
+.post-author {
     font-weight: bold;
     color: #000;
 }
