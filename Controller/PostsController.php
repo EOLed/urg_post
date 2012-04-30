@@ -212,16 +212,26 @@ class PostsController extends UrgPostAppController {
                                    $this->Post->Group->children($group["Group"]["id"], false); */
 
         if ($group == null) {
-            $groups = $this->Post->Group->find("list");
+            $all_groups = $this->Post->Group->find("all");
+            $groups = $this->build_groups_dropdown_list($all_groups);
         } else {
             $children = $this->Post->Group->children($group["Group"]["id"], false);
+            $groups = $this->build_groups_dropdown_list($children);
             $groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
-            foreach ($children as $child) {
-                $groups[$child["Group"]["id"]] = $child["Group"]["name"] . " (" . $child["Group"]["slug"] . ")";
-            }
         }
 		$this->set(compact('groups'));
 	}
+
+
+    /** given a list of groups, return an array formatted to be displayed in dropdown */
+    function build_groups_dropdown_list($groups) {
+        $dropdown_groups = array();
+        foreach ($groups as $group) {
+            $dropdown_groups[$group["Group"]["id"]] = $group["Group"]["name"] . " (" . $group["Group"]["slug"] . ")";
+        }
+
+        return $dropdown_groups;
+    }
 
     function set_attachment_types() {
         $this->loadModel("UrgPost.Attachment");

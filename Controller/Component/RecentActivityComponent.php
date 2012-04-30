@@ -50,7 +50,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         $child_ids = array($group_id);
 
         foreach ($children as $child) {
-            if ($child["Group"]["name"] == __("News & Events")) {
+            if ($child["Group"]["name"] == __("Newsletter")) {
                 array_push($child_ids, $child["Group"]["id"]);
             }
         }

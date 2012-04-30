@@ -25,7 +25,7 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
         $upcoming_group = false;
 
         foreach ($children as $child) {
-            if ($child["Group"]["name"] == "Upcoming Events") {
+            if ($child["Group"]["name"] == "Schedule") {
                 $upcoming_group = $child;
                 break;
             }
