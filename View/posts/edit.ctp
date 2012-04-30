@@ -103,7 +103,7 @@
                 ?>
             </fieldset>
         </div>
-        <div class="span3 suffix_3">
+        <div class="span6">
             <fieldset>
                 <legend> <div> <h2><?php echo __('Add Resources'); ?></h2> </div> </legend>
                 <?php 
