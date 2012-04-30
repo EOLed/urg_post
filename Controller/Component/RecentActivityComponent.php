@@ -61,9 +61,9 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         
         $posts = $this->controller->Post->find('all', 
                 array("conditions" => array("Post.group_id" => $child_ids,
-                                            "Post.publish_timestamp BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()"),
+                                            "Post.created BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()"),
                       "limit" => $limit,
-                      "order" => "Post.publish_timestamp DESC",
+                      "order" => "Post.created DESC",
                       "recursive" => 2));
         $activity = array();
 
