@@ -13,10 +13,17 @@ class UpcomingEventsHelper extends AbstractWidgetHelper {
     function add_post() {
         $link = "";
         if ($this->options["can_add"]) {
-            $link = $this->Html->link(__("Add an upcoming event..."), array("plugin" => "urg_post",
-                                                                                     "controller" => "posts",
-                                                                                     "action" => "add",
-                                                                                     $this->options["upcoming_group"]["Group"]["slug"]));
+            $link = $this->Html->link(__("Add event to schedule"),
+                                      array("plugin" => "urg_post",
+                                            "controller" => "posts",
+                                            "action" => "add",
+                                            $this->options["upcoming_group"]["Group"]["slug"]));
+            $link = $this->Html->div("", 
+                                     $this->_View->element("bootstrap_dropdown", 
+                                                           array("label" => __("Action", true),
+                                                                 "items" => array($link),
+                                                                 "class" => "btn-mini btn-inverse")),
+                                     array("class" => "action-dropdown", "escape" => false));
         }
         return $link;
     }

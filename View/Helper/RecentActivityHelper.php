@@ -16,10 +16,16 @@ class RecentActivityHelper extends AppHelper {
     function add_post() {
         $link = "";
         if ($this->options["can_add"]) {
-            $link = $this->Html->link(__("Add a new post..."), array("plugin" => "urg_post",
+            $link = $this->Html->link(__("Add a new post"), array("plugin" => "urg_post",
                                                                            "controller" => "posts",
                                                                            "action" => "add",
                                                                            $this->options["group_slug"]));
+            $link = $this->Html->div("", 
+                                     $this->_View->element("bootstrap_dropdown", 
+                                                           array("label" => __("Action", true),
+                                                                 "items" => array($link),
+                                                                 "class" => "btn-mini btn-inverse")),
+                                     array("class" => "action-dropdown", "escape" => false));
         }
         return $link;
     }

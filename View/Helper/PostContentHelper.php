@@ -18,26 +18,38 @@ class PostContentHelper extends AbstractWidgetHelper {
 
     function post_content($title, $post) {
         $content = "";
+        $links = array();
 
         if ($title !== false) {
             $content = $this->Html->tag("h2", __($title));
         }
 
         if ($this->options["can_edit"]) {
-            $content .= $this->Html->link(__("Edit"), array("plugin" => "urg_post",
-                                                                              "controller" => "posts",
-                                                                              "action" => "edit",
-                                                                              $this->options["post"]["Post"]["id"]));
+            array_push($links, $this->Html->link(__("Edit"), 
+                                                 array("plugin" => "urg_post",
+                                                       "controller" => "posts",
+                                                       "action" => "edit",
+                                                       $this->options["post"]["Post"]["id"])));
         }
 
         if ($this->options["can_delete"]) {
-            $content .= $this->Html->link(__("Delete"),
-                                          array("plugin" => "urg_post",
-                                                "controller" => "posts",
-                                                "action" => "delete",
-                                                $this->options["post"]["Post"]["id"]), 
-                                          null,
-                                          __("Are you sure you want to delete this?"));
+            array_push($links, $this->Html->link(__("Delete"),
+                                                 array("plugin" => "urg_post",
+                                                       "controller" => "posts",
+                                                       "action" => "delete",
+                                                       $this->options["post"]["Post"]["id"]), 
+                                                 null,
+                                                 __("Are you sure you want to delete this?")));
+        }
+
+        if (!empty($links)) {
+            $content .= $this->Html->div("", 
+                                        $this->_View->element("bootstrap_dropdown", 
+                                                              array("label" => __("Action", true),
+                                                                    "items" => $links,
+                                                                    "class" => "btn-mini btn-inverse")),
+                                        array("class" => "action-dropdown", "escape" => false));
+
         }
 
         $content .= $this->Markdown->html($post["Post"]["content"]);
