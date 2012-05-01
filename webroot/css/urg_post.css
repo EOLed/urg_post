@@ -55,7 +55,7 @@ ul#activity_feed, ul#upcoming-events {
     padding-left: 0;
 }
 
-ul#activity-feed li, ul#upcoming-events li {
+ul#activity-feed .activity-feed-item, ul#upcoming-events li {
     margin-bottom: 20px;
 }
 
@@ -113,10 +113,10 @@ img.feed-icon {
 }
 
 #post-content {
-    font-size: 14px;
+    /*font-size: 14px;
     line-height: 19px;
     letter-spacing: 0;
-    color: #444444;
+    color: #444444;*/
 }
 
 #activity-feed .post {
@@ -159,12 +159,16 @@ ul#attachment-list {
     border-color: #ccc;
     border-width: 0px;
 }
-.group-col .post-widget.right-border {
-    border-right-width: 1px;
-}
 
 .group-col .post-widget.left-border {
     border-left-width: 1px;
+}
+
+.right-border .post-col {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #eee;
+    padding-right: 20px;
 }
 
 div.gallery-image {
@@ -240,6 +244,11 @@ div.home-link a:hover {
 .markdown-preview {
     padding-top: 60px;
 }
+
+.action-dropdown {
+    padding-bottom: 20px;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

@@ -55,7 +55,8 @@
         }
 
         foreach ($columns as $column_id => $column_class) { ?>
-        <div id="<?php echo $column_id ?>" class="post-col <?php echo $column_class ?>">
+        <div id="<?php echo $column_id ?>" class="<?php echo $column_class ?>">
+            <div class="post-col">
             <?php 
             if (isset($widgets[$column_id])) {
                 foreach ($widgets[$column_id] as $widget) {
@@ -68,6 +69,7 @@
             ?>
 
             <?php //echo $this->Post->attachments($post); ?>
+            </div>
         </div>
         <?php } ?>
     </div>
