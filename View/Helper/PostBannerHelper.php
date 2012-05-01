@@ -12,6 +12,7 @@ class PostBannerHelper extends AbstractWidgetHelper {
             $widget .= $this->Html->div("banner", $this->Html->image("/urg_post/img/" . 
                                                                      $banner["Attachment"]["post_id"] . "/" . 
                                                                      $banner["Attachment"]["filename"]));
+            break;
         }
 
         return $widget;
