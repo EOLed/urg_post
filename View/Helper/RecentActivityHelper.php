@@ -50,12 +50,20 @@ class RecentActivityHelper extends AppHelper {
                                   "controller"=>"posts", 
                                   $feed_item["Post"]["id"],
                                   $feed_item["Post"]["slug"]);
-            $banner = $this->options["show_thumbs"] ? $this->Html->div("row", $this->Html->link($this->Html->image("/urg_post/img/" . 
-                                                                                           $banner_attachment["post_id"]. "/" . 
-                                                                                           $banner_attachment["filename"], 
-                                                                                           array("class" => "activity-feed-thumbnail")),
-                                                                        $link, 
-                                                                        array("escape"=>false, "class"=>"span"))) : "";
+            $banner = "";
+            
+            if ($this->options["show_thumbs"])
+            {
+                 $post_id = $banner_attachment["post_id"];
+                 $filename = $banner_attachment["filename"];
+                 $thumb = $this->Html->image("/urg_post/img/$post_id/$filename",
+                                             array("class" => "activity-feed-thumbnail-image"));
+                 $banner = $this->Html->div("activity-feed-thumbnail", 
+                                            $this->Html->link($thumb,
+                                                              $link, 
+                                                              array("escape" => false)));
+            }
+
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
                                                               $link,
                                                               array("class"=>"post-title")));
@@ -77,15 +85,15 @@ class RecentActivityHelper extends AppHelper {
                                               array("class" => "post-author"));
             }
 
-            $post_meta = $this->Html->div("activity-feed-post-meta row", $this->Html->div("span", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["created"])));
+            $post_meta = $this->Html->div("activity-feed-post-meta", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["created"]));
 
             $pos = strpos($feed_item["Post"]["content"], ' ', min(strlen($feed_item["Post"]["content"]), 400));
             $content_snippet = $pos === false ? $feed_item["Post"]["content"] : substr($feed_item["Post"]["content"], 0, $pos ) . "..."; 
 
-            $post_content = $this->Html->div("activity-feed-post-content", 
+            $post_content = $this->Html->div("activity-feed-post-content",
                                              $this->Markdown->html($content_snippet),
                                              array("id" => "activity-feed-post-content-" . $feed_item["Post"]["id"]));
-            $feed .= $this->Html->div("row", $this->Html->div("span", $this->Html->div("activity-feed-post post ", $title . $post_meta . $banner . $post_content . $this->js($feed_item["Post"]["id"]))));
+            $feed .= $this->Html->div("activity-feed-post post ", $title . $post_meta . $banner . $post_content . $this->js($feed_item["Post"]["id"]));
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));
