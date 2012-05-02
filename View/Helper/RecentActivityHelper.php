@@ -1,4 +1,5 @@
 <?php
+App::uses("Sanitize", "Utility");
 App::uses("MarkdownHelper", "Markdown.View/Helper");
 class RecentActivityHelper extends AppHelper {
     var $helpers = array("Html", "Time", "Session", "Markdown");
@@ -88,7 +89,7 @@ class RecentActivityHelper extends AppHelper {
             $post_meta = $this->Html->div("activity-feed-post-meta", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["created"]));
 
             $pos = strpos($feed_item["Post"]["content"], ' ', min(strlen($feed_item["Post"]["content"]), 400));
-            $content_snippet = $pos === false ? $feed_item["Post"]["content"] : substr($feed_item["Post"]["content"], 0, $pos ) . "..."; 
+            $content_snippet = Sanitize::html($pos === false ? $feed_item["Post"]["content"] : substr($feed_item["Post"]["content"], 0, $pos ) . "..."); 
 
             $post_content = $this->Html->div("activity-feed-post-content",
                                              $this->Markdown->html($content_snippet),

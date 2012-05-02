@@ -1,6 +1,7 @@
 <?php
 App::uses("MarkdownHelper", "Markdown.View/Helper");
 App::uses("AbstractWidgetHelper", "Urg.Lib");
+App::uses("Sanitize", "Utility");
 class PostContentHelper extends AbstractWidgetHelper {
     var $helpers = array("Html", "Time", "Markdown");
     var $images_type;
@@ -52,7 +53,7 @@ class PostContentHelper extends AbstractWidgetHelper {
 
         }
 
-        $content .= $this->Markdown->html($post["Post"]["content"]);
+        $content .= $this->Markdown->html(Sanitize::html($post["Post"]["content"]));
         $gallery = "";
 
         $gallery_index = 1;

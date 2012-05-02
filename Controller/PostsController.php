@@ -149,7 +149,7 @@ class PostsController extends UrgPostAppController {
                                                                                   "-"));
             }
 
-            $this->request->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
+            //$this->request->data["Post"]["content"] = Sanitize::html($this->data["Post"]["content"]);
            /* $attachments = array();
             if (isset($this->request->data["Attachment"])) {
                 $attachments = $this->request->data["Attachment"];
