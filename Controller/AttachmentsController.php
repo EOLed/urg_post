@@ -87,7 +87,7 @@ class AttachmentsController extends UrgAppController {
             $this->data["Attachment"]["user_id"] = $user["User"]["id"];
             $this->data["Attachment"]["attachment_type_id"] = $banner_type["AttachmentType"]["id"];
             if ($this->Attachment->saveAll($this->data)) {
-                $target_path = $this->get_doc_root($this->BANNER_FOLDER) . "/" . $group["Group"]["id"];
+                $target_path = $this->__get_doc_root($this->BANNER_FOLDER) . "/" . $group["Group"]["id"];
                 CakeLog::write("debug", "Target path: $target_path");
                 if (!file_exists($target_path)) {
                     CakeLog::write("debug", "Creating directory: $target_path");
@@ -97,7 +97,7 @@ class AttachmentsController extends UrgAppController {
                 }
 
                 move_uploaded_file($uploaded_banner["tmp_name"], 
-                                   $this->get_doc_root($this->BANNER_FOLDER) . "/" . $group["Group"]["id"] . "/" . 
+                                   $this->__get_doc_root($this->BANNER_FOLDER) . "/" . $group["Group"]["id"] . "/" . 
                                    $uploaded_banner["name"]);
 
                 $this->redirect(array("plugin" => "urg", 
@@ -108,11 +108,11 @@ class AttachmentsController extends UrgAppController {
         }
     }
 
-    function get_doc_root($root = null) {
-        $doc_root = $this->remove_trailing_slash(env('DOCUMENT_ROOT'));
+    function __get_doc_root($root = null) {
+        $doc_root = $this->__remove_trailing_slash(env('DOCUMENT_ROOT'));
 
         if ($root != null) {
-            $root = $this->remove_trailing_slash($root);
+            $root = $this->__remove_trailing_slash($root);
             $doc_root .=  $root;
         }
 
@@ -123,7 +123,7 @@ class AttachmentsController extends UrgAppController {
      * Removes the trailing slash from the string specified.
      * @param $string the string to remove the trailing slash from.
      */
-    function remove_trailing_slash($string) {
+    function __remove_trailing_slash($string) {
         $string_length = strlen($string);
         if (strrpos($string, "/") === $string_length - 1) {
             $string = substr($string, 0, $string_length - 1);
