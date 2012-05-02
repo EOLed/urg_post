@@ -63,7 +63,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                 array("conditions" => array("Post.group_id" => $child_ids,
                                             "Post.created BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()"),
                       "limit" => $limit,
-                      "order" => "Post.created DESC",
+                      "order" => "Post.sticky DESC, Post.created DESC",
                       "recursive" => 2));
         $activity = array();
 

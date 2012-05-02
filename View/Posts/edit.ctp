@@ -88,6 +88,7 @@
                 <?php
                 echo $this->Form->hidden("Post.id");
                 echo $this->Form->hidden("bannerAttachmentIndex");
+                echo $this->Form->input('Post.sticky');
                 echo $this->Form->input('Post.group_id', array("escape" => false));
                 echo $this->Form->input('Post.title');
                 echo $this->Html->div("error-message", "", 

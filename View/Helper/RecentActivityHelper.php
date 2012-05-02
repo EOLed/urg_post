@@ -68,6 +68,10 @@ class RecentActivityHelper extends AppHelper {
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
                                                               $link,
                                                               array("class"=>"post-title")));
+            if ($feed_item["Post"]["sticky"]) {
+                $title = $this->Html->tag("span", __("Sticky", true), array("class" => "label label-important sticky")) . $title;
+            }
+
             $home_group = $feed_item["Group"]["home"] ? $feed_item : array("Group" => $feed_item["Group"]["ParentGroup"]);
             CakeLog::write(LOG_DEBUG, "the home group: " . Debugger::exportVar($home_group, 3));
 
