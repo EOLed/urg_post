@@ -9,7 +9,7 @@
                         true)); ?>
 </p>
 <?php if (isset($banner)) { ?>
-<p><?php echo $this->Html->image("http://" . $_SERVER['HTTP_HOST'] . $banner) ?></p>
+<p><?php echo $this->Html->image("http://" . $_SERVER['HTTP_HOST'] . $banner, array("style" => "width: 500px")) ?></p>
 <br/><br/>
 <?php } ?>
 <?php echo $this->Markdown->html($post["Post"]["content"]); ?>
