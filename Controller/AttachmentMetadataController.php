@@ -1,4 +1,5 @@
 <?php
+App::uses("UrgPostAppController", "UrgPost.Controller");
 class AttachmentMetadataController extends UrgPostAppController {
 
 	var $name = 'AttachmentMetadata';
