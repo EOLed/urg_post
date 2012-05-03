@@ -98,7 +98,7 @@ class PostsController extends UrgPostAppController {
         return $widget_list;
     }
 
-	function add($group_slug = null) {
+	function add($group_slug = null, $post_id = null) {
         $post_creator = $this->Session->read("User");
 
 		if (!empty($this->request->data)) {
@@ -162,7 +162,7 @@ class PostsController extends UrgPostAppController {
 			}
 		} else {
             $this->loadModel("Urg.SequenceId");
-            $this->request->data["Post"]["id"] = $this->SequenceId->next($this->Post->useTable);
+            $this->request->data["Post"]["id"] = $post_id == null ? $this->SequenceId->next($this->Post->useTable) : $post_id;
             $this->request->data["Post"]["displayDate"] = date("F d, Y");
             $this->request->data["Post"]["displayTime"] = date("h:i A");
             $this->request->data["Post"]["formatted_date"] = date("Y-m-d");
@@ -238,10 +238,6 @@ class PostsController extends UrgPostAppController {
     }
 
 	function edit($id = null) {
-		if (!$id && empty($this->request->data)) {
-			$this->Session->setFlash(__('Invalid post'));
-			$this->redirect(array('action' => 'index'));
-		}
 		if (!empty($this->request->data)) {
             $post_timestamp = date_parse_from_format("Y-m-d h:i A", 
                                                      $this->request->data["Post"]["formatted_date"] . " " . 
@@ -259,6 +255,11 @@ class PostsController extends UrgPostAppController {
 			}
 		} else {
 			$this->request->data = $this->Post->read(null, $id);
+
+            if (!$this->request->data) {
+                $this->redirect(array("plugin" => "urg_post", "controller" => "posts", 'action' => 'add', "churches", $id));
+            }
+
             CakeLog::write(LOG_DEBUG, "post to edit: " . Debugger::exportVar($this->request->data, 3));
             $this->request->data["Post"]["formatted_date"] = date("Y-m-d", strtotime($this->data["Post"]["publish_timestamp"]));
             $this->request->data["Post"]["displayDate"] = date("F j, Y", strtotime($this->data["Post"]["publish_timestamp"]));

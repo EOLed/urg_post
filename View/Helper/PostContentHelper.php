@@ -34,7 +34,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                                                  array("plugin" => "urg_post",
                                                        "controller" => "posts",
                                                        "action" => "edit",
-                                                       $this->options["post"]["Post"]["id"])));
+                                                       $this->options["post_id"])));
         }
 
         if ($this->options["can_delete"]) {
@@ -42,7 +42,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                                                  array("plugin" => "urg_post",
                                                        "controller" => "posts",
                                                        "action" => "delete",
-                                                       $this->options["post"]["Post"]["id"]), 
+                                                       $this->options["post_id"]), 
                                                  null,
                                                  __("Are you sure you want to delete this?")));
         }
@@ -83,7 +83,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                                            $post["Post"]["slug"]));
         $social = "";
         if ($this->options["social"] !== false) {
-            $social = $this->Html->div("social-bookmarks", 
+            $social = $this->Html->div("hidden-phone social-bookmarks", 
                                        $this->Facebook->loadJavascriptSdk() . $this->Facebook->share(FULL_BASE_URL . $post_url));
         }
 
