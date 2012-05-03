@@ -31,6 +31,11 @@ class PostContentComponent extends AbstractWidgetComponent {
         $this->set("can_edit", $this->can_edit());
         $this->set("can_delete", $this->can_delete());
         $this->set("group_slug", $this->get_group_slug());
+
+        if (!isset($this->widget_settings["social"]))
+            $this->widget_settings["social"] = false;
+
+        $this->set("social", $this->widget_settings["social"]);
     }
 
     function get_group_slug() {

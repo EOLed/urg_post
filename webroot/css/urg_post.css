@@ -249,6 +249,10 @@ div.home-link a:hover {
     padding-bottom: 20px;
 }
 
+.social-bookmarks {
+    overflow: hidden;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;

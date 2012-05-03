@@ -2,8 +2,12 @@
 App::uses("MarkdownHelper", "Markdown.View/Helper");
 App::uses("AbstractWidgetHelper", "Urg.Lib");
 App::uses("Sanitize", "Utility");
+App::uses("FacebookHelper", "Socialize.View/Helper");
 class PostContentHelper extends AbstractWidgetHelper {
-    var $helpers = array("Html", "Time", "Markdown");
+    var $helpers = array("Socialize.Facebook" => array("app_id" => "169875155877"), 
+                         "Html", 
+                         "Time", 
+                         "Markdown.Markdown");
     var $images_type;
 
     function build_widget() {
@@ -72,7 +76,18 @@ class PostContentHelper extends AbstractWidgetHelper {
             $gallery = $this->Html->div("post-section post-section-gallery", $this->Html->tag("h2", __("Pictures")) . $this->Html->div("gallery", $gallery, array("id" => "gallery-" . $post["Post"]["id"])));
         }
 
-        return $this->Html->div("", $content . $gallery, array("id" => $this->options["id"]));
+        $post_url = $this->Html->url(array("plugin" => "urg_post",
+                                           "controller" => "posts",
+                                           "action" => "view",
+                                           $post["Post"]["id"],
+                                           $post["Post"]["slug"]));
+        $social = "";
+        if ($this->options["social"] !== false) {
+            $social = $this->Html->div("social-bookmarks", 
+                                       $this->Facebook->loadJavascriptSdk() . $this->Facebook->share(FULL_BASE_URL . $post_url));
+        }
+
+        return $this->Html->div("", $content . $gallery . $social, array("id" => $this->options["id"]));
     }
 
     function js($id) {
