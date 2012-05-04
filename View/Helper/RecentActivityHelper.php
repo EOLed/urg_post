@@ -8,7 +8,6 @@ class RecentActivityHelper extends AppHelper {
     function build($options = array()) {
         $this->options = $options;
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
-        $this->Html->script("/urg_post/js/jquery.expander.min", array("inline" => false));
         $title = $this->Html->tag("h2", __($options["recent_activity_title"]));
         return $this->Html->div("recent-activity", 
                                 $title . $this->add_post() . $this->post_feed($options["recent_activity"]));
@@ -92,27 +91,40 @@ class RecentActivityHelper extends AppHelper {
 
             $post_meta = $this->Html->div("activity-feed-post-meta", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["created"]));
 
-            $pos = strpos($feed_item["Post"]["content"], ' ', min(strlen($feed_item["Post"]["content"]), 400));
-            $content_snippet = Sanitize::html($pos === false ? $feed_item["Post"]["content"] : substr($feed_item["Post"]["content"], 0, $pos ) . "..."); 
+            $content_snippet = Sanitize::html($this->snippet($feed_item["Post"]["content"])); 
 
             $post_content = $this->Html->div("activity-feed-post-content",
                                              $this->Markdown->html($content_snippet),
                                              array("id" => "activity-feed-post-content-" . $feed_item["Post"]["id"]));
-            $feed .= $this->Html->div("activity-feed-post post ", $title . $post_meta . $banner . $post_content . $this->js($feed_item["Post"]["id"]));
+            $feed .= $this->Html->div("activity-feed-post post ", $title . $post_meta . $banner . $post_content);
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));
     }
 
-    function js($post_id) {
-        return $this->Html->scriptBlock("
-            $('#activity-feed-post-content-$post_id').expander({
-                slicePoint: 250,
-                preserveWords: true,
-                widow: 50,
-                userCollapseText: '',
-                expandText: '" . __("See More") . "',
-                expandPrefix: '<br/>...<br/>'
-            });", array("inline" => true));
+    function snippet($string, $strlen = 300, $leeway = 100) {
+        if (strlen($string) <= ($strlen + $leeway))
+            return $string;
+
+        $split_pos = min(strlen($string), $strlen);
+        $pos = strpos($string, ' ', $split_pos);
+
+        $snippet = "";
+        if ($pos === false) {
+             $snippet = substr($string, 0, $strlen);
+        } else {
+            $snippet = substr($string, 0, $pos);
+            $newline_pos = strrpos($snippet, "\n");
+
+            if ($newline_pos === false)
+                return $snippet  . "...";
+
+            if (($pos - $newline_pos) < 20) {
+                $pos = $newline_pos;
+                $snippet = substr($string, 0, $newline_pos - 3);
+            }
+        }
+
+        return $snippet . "...";
     }
 }
