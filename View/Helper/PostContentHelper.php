@@ -9,6 +9,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                          "Time", 
                          "Markdown.Markdown");
     var $images_type;
+    var $banner_type;
     var $audio_type;
 
     function build_widget() {
@@ -18,6 +19,7 @@ class PostContentHelper extends AbstractWidgetHelper {
         $this->Html->css("/urg_post/css/colorbox.css", null, array("inline"=>false));
         $this->Html->script("/urg_post/js/jquery.masonry.min", array("inline" => false));
         $this->Html->script("/urg_post/js/jquery.colorbox-min", array("inline" => false));
+        $this->banner_type = $this->options["banner_type"];
         $this->audio_type = $this->options["audio_type"];
         $this->images_type = $this->options["images_type"];
         return $this->post_content($this->options["title"], $this->options["post"]) . $this->js($this->options["post"]["Post"]["id"]);
@@ -70,7 +72,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                 if ($attachment["attachment_type_id"] == $this->images_type["AttachmentType"]["id"]) {
                     $link = $this->Html->link($this->Html->image("/urg_post/img/" .  $attachment["post_id"] . "/" .  $attachment["filename"]["thumb"]), "/urg_post/img/" .  $attachment["post_id"] . "/" . $attachment["filename"]["view"], array("escape" => false, "class" => "thumbnail gallery-$attachment[post_id]"));
                     $gallery .= $this->Html->tag("li", $link, array("class" => "span2")); 
-                } else {
+                } else if ($attachment["attachment_type_id"] != $this->banner_type["AttachmentType"]["id"]) {
                     $webroot = $attachment["attachment_type_id"] == $this->audio_type["AttachmentType"]["id"] ? "audio" : "files";
                     $attachment_items .= $this->Html->tag("li", 
                                                           $this->Html->link($attachment["filename"], 

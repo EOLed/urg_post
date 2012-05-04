@@ -17,6 +17,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         $this->controller->loadModel("UrgPost.Post");
         $this->controller->loadModel("UrgPost.AttachmentType");
         $images_type = $this->controller->AttachmentType->findByName("Images");
+        $banner_type = $this->controller->AttachmentType->findByName("Banner");
         $audio_type = $this->controller->AttachmentType->findByName("Audio");
         $this->post = $this->controller->Post->findById($this->widget_settings["post_id"]);
         CakeLog::write("debug", "post for post content widget: " . Debugger::exportVar($this->post, 3));
@@ -25,6 +26,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         }
         $this->set("post", $this->post);
         $this->set("images_type", $images_type);
+        $this->set("banner_type", $banner_type);
         $this->set("audio_type", $audio_type);
         $this->set("title", isset($this->widget_settings["title"]) ? 
                             $this->widget_settings["title"] : $this->post["Post"]["title"]);
