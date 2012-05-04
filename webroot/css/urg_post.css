@@ -164,15 +164,14 @@ ul#attachment-list {
     border-left-width: 1px;
 }
 
-.right-border .post-col {
+/*.right-border .post-col {
     border-right-width: 1px;
     border-right-style: solid;
     border-right-color: #eee;
     padding-right: 20px;
-}
+}*/
 
 div.gallery-image {
-    margin-right: 15px;
     margin-bottom: 15px;
 }
 
@@ -181,6 +180,10 @@ div.gallery-image.last {
 
 div.activity-feed-post-content {
     clear:both;
+}
+
+ul.thumbnails {
+    padding: 0;
 }
 
 .activity-feed-post h3 {
@@ -223,8 +226,6 @@ div.home-link a:hover {
 
 .post-section-gallery {
     background-color: #f9f9f9;
-    margin-left: -10px;
-    padding-left: 10px;
     padding-top: 10px;
     text-transform: uppercase;
 }
@@ -250,6 +251,7 @@ div.home-link a:hover {
 }
 
 .social-bookmarks {
+    margin-top: 80px;
 }
 
 /** NOTICES & MESSAGES */

@@ -17,6 +17,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         $this->controller->loadModel("UrgPost.Post");
         $this->controller->loadModel("UrgPost.AttachmentType");
         $images_type = $this->controller->AttachmentType->findByName("Images");
+        $audio_type = $this->controller->AttachmentType->findByName("Audio");
         $this->post = $this->controller->Post->findById($this->widget_settings["post_id"]);
         CakeLog::write("debug", "post for post content widget: " . Debugger::exportVar($this->post, 3));
         if (isset($this->post["Attachment"])) {
@@ -24,6 +25,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         }
         $this->set("post", $this->post);
         $this->set("images_type", $images_type);
+        $this->set("audio_type", $audio_type);
         $this->set("title", isset($this->widget_settings["title"]) ? 
                             $this->widget_settings["title"] : $this->post["Post"]["title"]);
         $this->set("id", isset($this->widget_settings["id"]) ?
@@ -37,6 +39,11 @@ class PostContentComponent extends AbstractWidgetComponent {
             $this->widget_settings["social"] = false;
 
         $this->set("social", $this->widget_settings["social"]);
+
+        if (!isset($this->widget_settings["attachments"]))
+            $this->widget_settings["attachments"] = false;
+
+        $this->set("list_attachments", $this->widget_settings["attachments"]);
     }
 
     function get_group_slug() {

@@ -9,6 +9,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                          "Time", 
                          "Markdown.Markdown");
     var $images_type;
+    var $audio_type;
 
     function build_widget() {
         CakeLog::write(LOG_DEBUG, "building Post Content widget with options: " .
@@ -17,6 +18,7 @@ class PostContentHelper extends AbstractWidgetHelper {
         $this->Html->css("/urg_post/css/colorbox.css", null, array("inline"=>false));
         $this->Html->script("/urg_post/js/jquery.masonry.min", array("inline" => false));
         $this->Html->script("/urg_post/js/jquery.colorbox-min", array("inline" => false));
+        $this->audio_type = $this->options["audio_type"];
         $this->images_type = $this->options["images_type"];
         return $this->post_content($this->options["title"], $this->options["post"]) . $this->js($this->options["post"]["Post"]["id"]);
     }
@@ -62,18 +64,28 @@ class PostContentHelper extends AbstractWidgetHelper {
 
         $gallery_index = 1;
 
+        $attachment_items = "";
         if (isset($post["Attachment"])) {
             foreach ($post["Attachment"] as $attachment) {
                 if ($attachment["attachment_type_id"] == $this->images_type["AttachmentType"]["id"]) {
-                    $class = $gallery_index++ % 4 == 0 ? "last" : "";
-                    $link = $this->Html->link($this->Html->image("/urg_post/img/" .  $attachment["post_id"] . "/" .  $attachment["filename"]["thumb"]), "/urg_post/img/" .  $attachment["post_id"] . "/" . $attachment["filename"]["view"], array("escape" => false, "class" => "gallery-" . $attachment["post_id"]));
-                    $gallery .= $this->Html->div("gallery-image $class", $link); 
+                    $link = $this->Html->link($this->Html->image("/urg_post/img/" .  $attachment["post_id"] . "/" .  $attachment["filename"]["thumb"]), "/urg_post/img/" .  $attachment["post_id"] . "/" . $attachment["filename"]["view"], array("escape" => false, "class" => "thumbnail gallery-$attachment[post_id]"));
+                    $gallery .= $this->Html->tag("li", $link, array("class" => "span2")); 
+                } else {
+                    $webroot = $attachment["attachment_type_id"] == $this->audio_type["AttachmentType"]["id"] ? "audio" : "files";
+                    $attachment_items .= $this->Html->tag("li", 
+                                                          $this->Html->link($attachment["filename"], 
+                                                                            "/urg_post/$webroot/$attachment[post_id]/$attachment[filename]"));
                 }
             }
         }
 
         if ($gallery != "") {
-            $gallery = $this->Html->div("post-section post-section-gallery", $this->Html->tag("h2", __("Pictures")) . $this->Html->div("gallery", $gallery, array("id" => "gallery-" . $post["Post"]["id"])));
+            $gallery = $this->Html->div("post-section post-section-gallery", $this->Html->tag("h2", __("Pictures")) . $this->Html->tag("ul", $gallery, array("class" => "thumbnails", "id" => "gallery-" . $post["Post"]["id"])));
+        }
+
+        $attachment_list = "";
+        if ($this->options["list_attachments"] && $attachment_items != "") {
+            $attachment_list = $this->Html->div("post-section post-section-attachments", $this->Html->tag("h2", __("Attachments")) . $this->Html->tag("ul", $attachment_items));
         }
 
         $post_url = $this->Html->url(array("plugin" => "urg_post",
@@ -87,20 +99,13 @@ class PostContentHelper extends AbstractWidgetHelper {
                                        $this->Facebook->loadJavascriptSdk() . $this->Facebook->share(FULL_BASE_URL . $post_url));
         }
 
-        return $this->Html->div("", $content . $gallery . $social, array("id" => $this->options["id"]));
+        return $this->Html->div("", 
+                                $content . $gallery . $attachment_list . $social, 
+                                array("id" => $this->options["id"]));
     }
 
     function js($id) {
-        $js = "$(function(){
-                   $(window).load(function(){   
-                       $('#gallery-$id').masonry({
-                           // options
-                          itemSelector : '.gallery-image',
-                          columnWidth : 155
-                       }); 
-                   });
-                   $('.gallery-$id').colorbox({rel:'gallery-$id'});
-               });";
+        $js = "$(function() { $('.gallery-$id').colorbox({rel:'gallery-$id'}); });";
         return $this->Html->scriptBlock($js);
     }
 }
