@@ -86,7 +86,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
 
                     if ($widget) {
                         $settings = $this->controller->WidgetUtil->get_settings($widget, array());
-                        $post_id = $settings["Component"]["post_id"];
+                        $post_id = $settings["post_id"];
                         $parent_post = $this->controller->Post->findById($post_id);
                         $post_banners = $this->get_banners($banner_type, $parent_post);
                     }
@@ -134,5 +134,26 @@ class RecentActivityComponent extends AbstractWidgetComponent {
             $path = $image["filename"];
         }
         return $path;
+    }
+
+    function build_placement($data) {
+        return $data["RecentActivity"]["col"] . "|" . $data["RecentActivity"]["row"];
+    }
+
+    function build_options($data) {
+        $options = array();
+        $options["title"] = $data["RecentActivity"]["title"] == "" ? false : $data["RecentActivity"]["title"];
+        $options["group_id"] = $data["RecentActivity"]["group"];
+        foreach ($data["RecentActivity"]["flags"] as $flag) {
+            $options[$flag] = true;
+        }
+        
+        return $options;
+    }
+
+    function build_ui_options($controller) {
+        $controller->loadModel("Urg.Group");
+        $groups = $controller->Group->find("all", array("order" => "Group.name"));
+        return array("groups" => $groups);
     }
 }

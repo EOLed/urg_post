@@ -40,7 +40,6 @@ class PostBannerComponent extends GroupBannerComponent {
                 if ($widget) {
                     CakeLog::write("debug", "fallback widget: " . Debugger::exportVar($widget, 3));
                     $this->widget_settings = $this->controller->WidgetUtil->get_settings($widget, array("post_id", $post["Post"]["id"]));
-                    $this->widget_settings = $this->widget_settings["Component"];
 
                     $post_id = $this->widget_settings["post_id"];
                    

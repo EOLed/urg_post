@@ -2,12 +2,15 @@
 App::uses("Sanitize", "Utility");
 App::uses("MarkdownHelper", "Markdown.View/Helper");
 class RecentActivityHelper extends AppHelper {
-    var $helpers = array("Html", "Time", "Session", "Markdown");
+    var $helpers = array("TwitterBootstrap.TwitterBootstrap", "Form", "Html", "Time", "Session", "Markdown");
     var $options;
 
     function build($options = array()) {
         $this->options = $options;
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
+        if (!isset($options["recent_activity_title"]) || $options["recent_activity_title"] === false) {
+            $options["recent_activity_title"] = "Recent Activity";
+        }
         $title = $this->Html->tag("h2", __($options["recent_activity_title"]));
         return $this->Html->div("recent-activity", 
                                 $title . $this->add_post() . $this->post_feed($options["recent_activity"]));
@@ -126,5 +129,35 @@ class RecentActivityHelper extends AppHelper {
         }
 
         return $snippet . "...";
+    }
+
+    function build_ui($options) {
+        $title = $this->TwitterBootstrap->input("RecentActivity.title");
+        $col =  $this->TwitterBootstrap->input("RecentActivity.col", 
+                                               array("type" => "select", 
+                                                     "options" => array("col-0" => 1, 
+                                                                        "col-1" => 2, 
+                                                                        "col-2" => 3)));
+        $row = $this->TwitterBootstrap->input("RecentActivity.row",
+                                              array("type" => "select",
+                                                    "options" => array("0" => 1, "1" => 2, "2" => 3)));
+
+        $group_options = array();
+        foreach ($options["groups"] as $group) {
+            $slug = $group["Group"]["slug"];
+            $group_options[$group["Group"]["id"]] = __($group["Group"]["name"], true) . " ($slug)";
+        }
+        $groups = $this->TwitterBootstrap->input("RecentActivity.group", 
+                                                 array("type" => "select", 
+                                                       "options" => $group_options,
+                                                       "empty" => array('${group_id}' => "[" . __("Current group") . "]")));
+        $flag_options = array("show_thumbs" => __("Thumbnails", true),
+                              "social" => __("Social Bookmarks", true),
+                              "show_home_link" => __("Home Links", true));
+        $flags = $this->TwitterBootstrap->input("RecentActivity.flags",
+                                                array("type" => "select",
+                                                      "multiple" => "checkbox",
+                                                      "options" => $flag_options));
+        return $title . $col . $row . $groups . $flags;
     }
 }
