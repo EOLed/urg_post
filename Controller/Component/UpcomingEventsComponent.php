@@ -9,18 +9,20 @@ App::uses("AbstractWidgetComponent", "Urg.Lib");
 class UpcomingEventsComponent extends AbstractWidgetComponent {
     var $upcoming_group = false;
     function build_widget() {
-        $upcoming = $this->get_upcoming_activity($this->widget_settings["group_id"]);
+        $this->upcoming_group = $this->get_upcoming_group();
+        $upcoming = $this->get_upcoming_activity();
         $this->set("upcoming_events", $upcoming);
-
-        $upcoming_group = $this->get_upcoming_group();
-
         $this->set("can_add", $this->can_add());
         $this->set("can_edit", $this->can_add());
         $this->set("can_delete", $this->can_delete());
-        $this->set("upcoming_group", $this->get_upcoming_group());
+        $this->set("upcoming_group", $this->upcoming_group);
     }
 
     function get_upcoming_group() {
+        $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
+        if ($group["Group"]["name"] == "Schedule")
+            return $group;
+
         $children = $this->controller->Group->children($this->widget_settings["group_id"]);
         $upcoming_group = false;
 
@@ -55,7 +57,8 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
                                                   $this->upcoming_group["Group"]["id"]);
     }
 
-    function get_upcoming_activity($group_id) {
+    function get_upcoming_activity() {
+        $group_id = $this->upcoming_group["Group"]["id"];
         $children = $this->controller->Group->children($group_id);
         $child_ids = array($group_id);
 
