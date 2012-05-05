@@ -22,7 +22,13 @@ class PostsController extends UrgPostAppController {
     var $BANNER_SIZE = 700;
     var $PANEL_BANNER_SIZE = 460;
     var $components = array(
-           "Urg.Urg", "UrgPost.Poster", "Cuploadify.Cuploadify", "ImgLib.ImgLib", "Urg.WidgetUtil", "FlyLoader"
+           "Urg.Urg", 
+           "UrgPost.Poster", 
+           "Cuploadify.Cuploadify", 
+           "ImgLib.ImgLib", 
+           "Urg.WidgetUtil", 
+           "FlyLoader",
+           "Urg.GroupTitle"
     );
 
     var $helpers = array("UrgPost.Post", "Markdown.Markdown", "Html", "Form", "Session");
@@ -79,7 +85,8 @@ class PostsController extends UrgPostAppController {
 		$this->set('post', $post);
         $group = $this->Post->Group->findById($post["Group"]["id"]);
 
-        $this->set("title_for_layout", $group["Group"]["name"] . " &raquo; " . $post["Post"]["title"]);
+        $this->set("title_for_layout", 
+                   $post["Post"]["title"] . " &laquo; " . $this->GroupTitle->get_title($post));
 	}
 
     function __prepare_widgets($widgets) {
