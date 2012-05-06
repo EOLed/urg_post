@@ -19,13 +19,13 @@ class Post extends UrgPostAppModel {
 		'title' => array(
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
-                'message' => 'posts.errors.title.required',
+                'message' => 'Please enter a title',
                 'required' => true,
                 'allowEmpty' => false
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
+		)
 	);
 
 	var $belongsTo = array(

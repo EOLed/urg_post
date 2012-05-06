@@ -79,107 +79,7 @@
         attachment_in_progress = true;
     }
 <?php echo $this->Html->scriptEnd(); ?>
-<div class="posts form">
-    <?php echo $this->Form->create('Post'); ?>
-        <div class="row">
-            <div class="span6 right-border">
-                <fieldset>
-                    <legend> <div> <h2><?php echo __('Add Post'); ?></h2> </div> </legend>
-                    <?php
-                    echo $this->Form->hidden("Post.id");
-                    echo $this->Form->hidden("bannerAttachmentIndex");
-                    echo $this->Form->input('Post.sticky');
-                    echo $this->Form->input('Post.group_id', array("escape" => false));
-                    echo $this->Form->input('Post.title', array("class" => "span6"));
-                    echo $this->Html->div("error-message", "", 
-                            array("id"=>"PostTitleError", "style"=>"display: none"));
-                    echo $this->Html->div("validated", "✓", 
-                            array("id"=>"PostTitleValid", "style"=>"display: none"));
-                    echo $this->Form->hidden("Post.formatted_date");
-                    echo $this->Form->input("Post.displayDate", 
-                            array("type"=>"text", "label"=>__("Date"), "after"=>$this->Form->text("Post.displayTime", array("div"=>false, "label"=>false))));
-                    ?>
-                </fieldset>
-            </div>
-            <div class="span6">
-                <fieldset>
-                    <legend> <div> <h2><?php echo __('Add Resources'); ?></h2> </div> </legend>
-                    <?php 
-                    echo $this->Html->div("input", 
-                            $this->Html->div("placeholder", "", array("id" => "post-banner")) . 
-                            $this->element("Cuploadify.uploadify", 
-                            array("plugin" => "Cuploadify", 
-                                    "dom_id" => "image_upload", 
-                                    "session_id" => CakeSession::id(),
-                                    "include_scripts" => array("uploadify_css", "uploadify", "swfobject"),
-                                    "options" => array("auto" => true, 
-                                            "folder" => "/" . $this->data["Post"]["id"],
-                                            "script" => $this->Html->url("/urg_post/posts/upload_image"),
-                                            "buttonText" => strtoupper(__("Add Banner")), 
-                                            //"multi" => true,
-                                            //"queueID" => "upload_queue",
-                                            "removeCompleted" => true,
-                                            "fileExt" => "*.jpg;*.jpeg;*.png;*.gif;*.bmp",
-                                            "fileDataName" => "imageFile",
-                                            "fileDesc" => "Image Files",
-                                            "onComplete" => "on_complete_images",
-                                            "onProgress" => "image_upload_in_progress",
-                                            "onAllComplete" => "image_uploads_completed"
-                                            )))); 
-                    echo $this->Html->div("input", $this->element("Cuploadify.uploadify",
-                            array("plugin" => "Cuploadify", 
-                                    "dom_id" => "attachment_upload", 
-                                    "session_id" => CakeSession::id(),
-                                    "options" => array("auto" => true, 
-                                            "folder" => "/" . $this->data["Post"]["id"],
-                                            "script" => $this->Html->url("/urg_post/posts/upload_attachments"),
-                                            "buttonText" => strtoupper(__("Attachments")), 
-                                            "removeCompleted" => true,
-                                            "fileExt" => "*.mp3;*.jpg;*.jpeg;*.png;*.gif;*.bmp;" .
-                                                         "*.ppt;*.pptx;*.doc;*.docx;*.pdf",
-                                            "fileDataName" => "attachmentFile",
-                                            "fileDesc" => "Post Attachments",
-                                            "multi" => true,
-                                            "onComplete" => "on_complete_attachments",
-                                            "onProgress" => "attachment_upload_in_progress",
-                                            "onAllComplete" => "attachment_uploads_completed"
-                                            ))));
-                    echo $this->Html->div("", $this->Html->tag("ul", "", array("id"=>"attachment-queue")));
-                    ?>
-                </fieldset>
-            </div>
-        </div>
-        <div class="row">
-            <div class="span6">
-            <?php
-                echo $this->Markdown->input('Post.content', array("label"=>__("Content"),
-                                                                  "rows"=>"20", 
-                                                                  "cols" => false,
-                                                                  "preview" => "desktop-preview"));
-            ?>
-            </div>
-            <div class="span6 markdown-preview" id="desktop-preview"></div>
-        </div>
-        <div class="row form-actions">
-            <div class="span12">
-                <?php
-                    echo $this->Form->button(__("Publish", true), array("class" => "btn btn-primary")) . " ";
-                    echo $this->Form->button(__("Reset", true), array("type" => "reset", "class" => "btn"));
-                    echo $this->Form->end();
-                ?>
-            </div>
-        </div>
-        <?php 
-            echo $this->Html->div("", $this->Html->image("/urg_post/img/loading.gif"), 
-                    array("id" => "loading-validate", "style" => "display: none")); 
-        ?>
-        <div style="display: none;" id="in-progress" title="<?php echo __("Uploads pending..."); ?>">
-            <p>
-                <?php echo __("The post form will be submitted after all attachments have been uploaded."); ?>
-            </p>
-        </div>
-    </div>
-</div>
+<?php echo $this->element("post_form", array("plugin" => "UrgPost")); ?>
 <?php echo $this->Html->scriptStart(); ?>
     function on_validate(dom_id, XMLHttpRequest, textStatus) {
         $("#loading-validate").hide();
@@ -225,7 +125,6 @@
     var search_speaker = true;
 <?php echo $this->Html->scriptEnd(); ?>
 
-<?php echo $this->Html->script("tinymce/jquery.tinymce.js"); ?>
 <?php echo $this->Html->script("/urg_post/js/jquery.timepicker.min.js"); ?>
 
 <?php echo $this->Html->scriptStart(); ?>

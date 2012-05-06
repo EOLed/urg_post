@@ -31,7 +31,12 @@ class PostsController extends UrgPostAppController {
            "Urg.GroupTitle"
     );
 
-    var $helpers = array("UrgPost.Post", "Markdown.Markdown", "Html", "Form", "Session");
+    var $helpers = array("TwitterBootstrap.TwitterBootstrap", 
+                         "UrgPost.Post", 
+                         "Markdown.Markdown", 
+                         "Html", 
+                         "Form", 
+                         "Session");
 
 	function index() {
 		$this->Post->recursive = 0;
@@ -105,6 +110,8 @@ class PostsController extends UrgPostAppController {
         return $widget_list;
     }
 
+    function add2() {
+    }
 	function add($group_slug = null, $post_id = null) {
         $post_creator = $this->Session->read("User");
 

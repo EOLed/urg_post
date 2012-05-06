@@ -206,15 +206,6 @@ div.home-link a {
     color: #acacac;
 }
 
-input#PostDisplayTime {
-    width: 150px;
-    padding-left: 10px;
-}
-
-input#PostDisplayDate {
-    width: 200px;
-}
-
 div.home-link a:hover {
     text-decoration: none;
     color: #bebebe;
