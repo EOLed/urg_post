@@ -94,7 +94,6 @@
                         <?php
                             echo $this->Form->button(__("Publish", true), array("class" => "btn btn-primary")) . " ";
                             echo $this->Form->button(__("Reset", true), array("type" => "reset", "class" => "btn"));
-                            echo $this->Form->end();
                         ?>
                     </div>
                 </div>
