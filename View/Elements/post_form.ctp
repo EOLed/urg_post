@@ -110,4 +110,8 @@
         </div>
     </div>
 </div>    
-
+<?php if (isset($banner) && $banner !== false) { ?>
+     <script type="text/javascript">
+         $($("#post-banner").prepend('<?php echo $this->Html->image($banner); ?>'));
+     </script>
+ <?php } ?>
