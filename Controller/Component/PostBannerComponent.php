@@ -86,7 +86,8 @@ class PostBannerComponent extends GroupBannerComponent {
         $banner_type = $this->controller->AttachmentType->findByName("Banner");
         $attachments = $this->controller->Attachment->find("all", 
                 array("conditions"=>array("Attachment.post_id" => $post_id,
-                                          "Attachment.attachment_type_id" => $banner_type["AttachmentType"]["id"])));
+                                          "Attachment.attachment_type_id" => $banner_type["AttachmentType"]["id"]),
+                      "order" => "Attachment.created DESC"));
         $this->set_post_banners($attachments);
 
         CakeLog::write("debug", "banners found: " . Debugger::exportVar($attachments, 3));
