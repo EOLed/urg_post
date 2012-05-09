@@ -328,7 +328,7 @@ class PostsController extends UrgPostAppController {
             $errors = $model->invalidFields();
         }
 
-        $this->log("Errors on $model_name.$field: " . Debugger::exportVar($errors, 2), LOG_DEBUG);
+        $this->log("Errors on $model_name.$field: " . Debugger::exportVar($errors, 5), LOG_DEBUG);
         $this->set("error", isset($errors[$field]) ? $errors[$field] : null);
         $this->set("model", $model_name);
         $this->set("field", $field);
