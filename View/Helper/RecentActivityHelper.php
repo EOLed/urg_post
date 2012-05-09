@@ -98,7 +98,7 @@ class RecentActivityHelper extends AppHelper {
                                               array("class" => "post-author"));
             }
 
-            $post_meta = $this->Html->div("activity-feed-post-meta", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["created"]));
+            $post_meta = $this->Html->div("activity-feed-post-meta", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["publish_timestamp"]));
 
             $content_snippet = Sanitize::html($this->SmartSnippet->snippet($feed_item["Post"]["content"])); 
 
