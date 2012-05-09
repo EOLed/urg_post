@@ -10,7 +10,7 @@
             }
         ?>
         </div>
-        <div id="side-panel" class="span3">
+        <div id="side-panel" class="hidden-phone span3">
         <?php
             if (isset($widgets["side"])) {
                 $side = $widgets["side"];

@@ -7,7 +7,8 @@ class PostContentHelper extends AbstractWidgetHelper {
     var $helpers = array("Socialize.Facebook" => array("app_id" => "169875155877"), 
                          "Html", 
                          "Time", 
-                         "Markdown.Markdown");
+                         "Markdown.Markdown",
+                         "Urg.SmartSnippet");
     var $images_type;
     var $banner_type;
     var $audio_type;
@@ -99,6 +100,11 @@ class PostContentHelper extends AbstractWidgetHelper {
         if ($this->options["social"] !== false) {
             $social = $this->Html->div("hidden-phone social-bookmarks", 
                                        $this->Facebook->loadJavascriptSdk() . $this->Facebook->share(FULL_BASE_URL . $post_url));
+            $this->_View->assign("meta", "");
+            $this->Html->meta(array("name"=>"og:description", 
+                                    "content"=>$this->SmartSnippet->snippet($post["Post"]["content"], 125, 25)),
+                              array(),
+                              array("inline" => false));
         }
 
         return $this->Html->div("", 

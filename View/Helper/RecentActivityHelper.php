@@ -2,7 +2,13 @@
 App::uses("Sanitize", "Utility");
 App::uses("MarkdownHelper", "Markdown.View/Helper");
 class RecentActivityHelper extends AppHelper {
-    var $helpers = array("TwitterBootstrap.TwitterBootstrap", "Form", "Html", "Time", "Session", "Markdown");
+    var $helpers = array("Urg.SmartSnippet", 
+                         "TwitterBootstrap.TwitterBootstrap", 
+                         "Form", 
+                         "Html", 
+                         "Time", 
+                         "Session", 
+                         "Markdown");
     var $options;
 
     function build($options = array()) {
@@ -94,7 +100,7 @@ class RecentActivityHelper extends AppHelper {
 
             $post_meta = $this->Html->div("activity-feed-post-meta", $post_meta . " | " . $this->Time->format("F j, Y g:i a", $feed_item["Post"]["created"]));
 
-            $content_snippet = Sanitize::html($this->snippet($feed_item["Post"]["content"])); 
+            $content_snippet = Sanitize::html($this->SmartSnippet->snippet($feed_item["Post"]["content"])); 
 
             $post_content = $this->Html->div("activity-feed-post-content",
                                              $this->Markdown->html($content_snippet),
@@ -103,32 +109,6 @@ class RecentActivityHelper extends AppHelper {
         }
 
         return $this->Html->div("", $feed, array("id" => "activity-feed"));
-    }
-
-    function snippet($string, $strlen = 300, $leeway = 100) {
-        if (strlen($string) <= ($strlen + $leeway))
-            return $string;
-
-        $split_pos = min(strlen($string), $strlen);
-        $pos = strpos($string, ' ', $split_pos);
-
-        $snippet = "";
-        if ($pos === false) {
-             $snippet = substr($string, 0, $strlen);
-        } else {
-            $snippet = substr($string, 0, $pos);
-            $newline_pos = strrpos($snippet, "\n");
-
-            if ($newline_pos === false)
-                return $snippet  . "...";
-
-            if (($pos - $newline_pos) < 20) {
-                $pos = $newline_pos;
-                $snippet = substr($string, 0, $newline_pos - 3);
-            }
-        }
-
-        return $snippet . "...";
     }
 
     function build_ui($options) {
