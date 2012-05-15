@@ -10,8 +10,10 @@ App::uses("UrgComponent", "Urg.Controller/Component");
 class RecentActivityComponent extends AbstractWidgetComponent {
     var $components = array("Urg.Urg");
     var $POST_BANNERS = "/app/Plugin/UrgPost/webroot/img";
+    var $__newsletter_group = null;
 
     function build_widget() {
+        $this->__newsletter_group = $this->get_newsletter_group();
         $activity = $this->get_recent_activity($this->widget_settings["group_id"]);
         $this->set("recent_activity", $activity);
 
@@ -30,15 +32,32 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     }
 
     function get_group_slug() {
+        return $this->__newsletter_group["Group"]["slug"];
+    }
+
+    function get_newsletter_group() {
         $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
-        return $group["Group"]["slug"];
+        if ($group["Group"]["name"] == "Newsletter")
+            return $group;
+
+        $children = $this->controller->Group->children($this->widget_settings["group_id"]);
+        $newsletter_group = false;
+
+        foreach ($children as $child) {
+            if ($child["Group"]["name"] == "Newsletter") {
+                $newsletter_group = $child;
+                break;
+            }
+        }
+
+        return $newsletter_group;
     }
 
     function can_add() {
         return $this->controller->Urg->has_access(array("plugin"=>"urg_post", 
                                                         "controller"=>"posts", 
                                                         "action"=>"add"), 
-                                                  $this->widget_settings["group_id"]);
+                                                  $this->__newsletter_group["Group"]["id"]);
     }
 
     function get_recent_activity($group_id) {
