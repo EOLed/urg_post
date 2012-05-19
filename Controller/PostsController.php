@@ -280,6 +280,14 @@ class PostsController extends UrgPostAppController {
             $this->request->data["Post"]["displayTime"] = date("h:i A", strtotime($this->data["Post"]["publish_timestamp"]));
             $this->Session->write("Referer", $this->referer());
 		}
+        
+        if (!empty($this->request->data)) {
+            $this->set("__can_delete", $this->Urg->has_access(array("plugin" => "urg_post",
+                                                                    "controller"=>"posts", 
+                                                                    "action"=>"delete"), 
+                                                              $this->request->data["Post"]["group_id"]));
+        }
+
         $this->__set_attachment_types();
 
 		$all_groups = $this->Post->Group->find('all');

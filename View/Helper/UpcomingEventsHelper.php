@@ -35,7 +35,15 @@ class UpcomingEventsHelper extends AbstractWidgetHelper {
             foreach ($posts as $post) {
                 $time = $this->Html->div("upcoming-timestamp",
                         $this->Time->format("F j, Y @ g:i A", $post["Post"]["publish_timestamp"]));
-                $title = $this->Html->div("upcoming-title", $post["Post"]["title"]);
+                $title = $post["Post"]["title"];
+                if ($this->options["can_edit"])
+                    $title = $this->Html->link($title, array("plugin" => "urg_post",
+                                                             "controller" => "posts",
+                                                             "action" => "edit",
+                                                             $post["Post"]["id"]));
+
+                $title = $this->Html->div("upcoming-title", $title);
+
                 $details = $this->Html->div("upcoming-details", $post["Post"]["content"]);
                 $upcoming_events .= $this->Html->tag("li", $time . $title . $details);
             }

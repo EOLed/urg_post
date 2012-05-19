@@ -94,6 +94,8 @@
                         <?php
                             echo $this->Form->button(__("Publish", true), array("class" => "btn btn-primary")) . " ";
                             echo $this->Form->button(__("Reset", true), array("type" => "reset", "class" => "btn"));
+                            if ($__can_delete)
+                                echo " " . $this->Html->link(__("Delete", true), array("action" => "delete", $this->data["Post"]["id"]), array("class" => "btn btn-danger"), __("Are you sure you want to delete this post?"));
                         ?>
                     </div>
                 </div>
