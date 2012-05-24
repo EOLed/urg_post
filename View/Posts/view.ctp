@@ -28,7 +28,16 @@
         } else { ?>
         <div id='post-title' class='span12 page-title'>
             <div><?php echo $post["Post"]["title"]?></div>
-            <div id="post-info"><?php echo __(sprintf("by %s on %s", $post["User"]["username"], date("F j, Y h:i A", strtotime($post["Post"]["publish_timestamp"])))) ?></div>
+            <div id="post-info">
+                <?php echo __(sprintf("by %s on %s", $post["User"]["username"], date("F j, Y h:i A", strtotime($post["Post"]["publish_timestamp"])))) ?>
+                <span id="post-title-home-group"> &raquo;
+                    <?php echo $this->Html->link($home_group["Group"]["name"],
+                                                 array("plugin" => "urg",
+                                                       "controller" => "groups",
+                                                       "action" => "view",
+                                                       $home_group["Group"]["slug"]))?>
+                </span>
+            </div>
         </div>
         <?php } ?>
     </div>

@@ -28,7 +28,7 @@ class PostsController extends UrgPostAppController {
            "ImgLib.ImgLib", 
            "Urg.WidgetUtil", 
            "FlyLoader",
-           "Urg.GroupTitle"
+           "Urg.GroupUtil"
     );
 
     var $helpers = array("TwitterBootstrap.TwitterBootstrap", 
@@ -90,8 +90,9 @@ class PostsController extends UrgPostAppController {
 		$this->set('post', $post);
         $group = $this->Post->Group->findById($post["Group"]["id"]);
 
+        $this->set("home_group", $this->GroupUtil->get_closest_home_group($post));
         $this->set("title_for_layout", 
-                   $post["Post"]["title"] . " &laquo; " . $this->GroupTitle->get_title($post));
+                   $post["Post"]["title"] . " &laquo; " . $this->GroupUtil->get_title($post));
 	}
 
     function __prepare_widgets($widgets) {
