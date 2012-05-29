@@ -14,12 +14,19 @@ class RecentActivityComponent extends AbstractWidgetComponent {
 
     function build_widget() {
         $this->__newsletter_group = $this->get_newsletter_group();
-        $activity = $this->get_recent_activity($this->widget_settings["group_id"]);
+
+        $post_id = false;
+        if (isset($this->widget_settings["post_id"])) {
+            $post_id = $this->widget_settings["post_id"];
+        }
+        
+        $activity = $this->get_recent_activity($this->widget_settings["group_id"], $post_id);
         $this->set("recent_activity", $activity);
 
         if (!isset($this->widget_settings["title"])) {
             $this->widget_settings["title"] = "Recent Activity";
         }
+
         $this->set("recent_activity_title", $this->widget_settings["title"]);
         $this->set("show_thumbs", isset($this->widget_settings["show_thumbs"]) && 
                                   $this->widget_settings["show_thumbs"]);
@@ -60,7 +67,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                                                   $this->__newsletter_group["Group"]["id"]);
     }
 
-    function get_recent_activity($group_id) {
+    function get_recent_activity($group_id, $post_id = false) {
         $this->controller->loadModel("Urg.Group");
         $this->controller->loadModel("UrgPost.Post");
 
@@ -78,9 +85,15 @@ class RecentActivityComponent extends AbstractWidgetComponent {
         $days_of_relevance = Configure::read("ActivityFeed.daysOfRelevance");
         $limit = isset($this->widget_settings["limit"]) ? $this->widget_settings["limit"] : Configure::read("ActivityFeed.limit");
         
+        $post_conditions = array("Post.group_id" => $child_ids,
+                                 "Post.publish_timestamp BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()");
+
+        if ($post_id != false) {
+            $post_conditions["Post.id !="] = $post_id;
+        }
+        
         $posts = $this->controller->Post->find('all', 
-                array("conditions" => array("Post.group_id" => $child_ids,
-                                            "Post.publish_timestamp BETWEEN SYSDATE() - INTERVAL $days_of_relevance DAY AND SYSDATE()"),
+                array("conditions" => $post_conditions,
                       "limit" => $limit,
                       "order" => "Post.sticky DESC, Post.publish_timestamp DESC",
                       "recursive" => 2));
