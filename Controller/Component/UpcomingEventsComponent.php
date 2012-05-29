@@ -1,4 +1,5 @@
 <?php
+App::uses("GroupUtilComponent", "Urg.Controller/Component");
 App::uses("AbstractWidgetComponent", "Urg.Lib");
 
 /**
@@ -7,7 +8,9 @@ App::uses("AbstractWidgetComponent", "Urg.Lib");
  * Parameters: group_id The group_id to retrieve upcoming posts for.
  */
 class UpcomingEventsComponent extends AbstractWidgetComponent {
+    var $components = array("Urg.GroupUtil");
     var $upcoming_group = false;
+
     function build_widget() {
         $this->upcoming_group = $this->get_upcoming_group();
         $upcoming = $this->get_upcoming_activity();
@@ -20,10 +23,14 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
 
     function get_upcoming_group() {
         $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
+
         if ($group["Group"]["name"] == "Schedule")
             return $group;
 
-        $children = $this->controller->Group->children($this->widget_settings["group_id"]);
+        $group = $this->GroupUtil->get_closest_home_group($group);
+        CakeLog::write(LOG_DEBUG, "home group for upcoming events: " . Debugger::exportVar($group, 3));
+
+        $children = $this->controller->Group->children($group["Group"]["id"]);
         $upcoming_group = false;
 
         foreach ($children as $child) {
