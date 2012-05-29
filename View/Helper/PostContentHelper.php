@@ -107,7 +107,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                               array("inline" => false));
         }
 
-        return $this->Html->div("", 
+        return $this->Html->div("post-content", 
                                 $content . $gallery . $attachment_list . $social, 
                                 array("id" => $this->options["id"]));
     }

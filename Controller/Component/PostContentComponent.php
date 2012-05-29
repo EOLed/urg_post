@@ -31,7 +31,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         $this->set("title", isset($this->widget_settings["title"]) ? 
                             $this->widget_settings["title"] : $this->post["Post"]["title"]);
         $this->set("id", isset($this->widget_settings["id"]) ?
-                            $this->widget_settings["id"] : "post-content");
+                            $this->widget_settings["id"] : "post-content-" . $this->post["Post"]["id"]);
         $this->set("can_edit", $this->can_edit());
         $this->set("can_delete", $this->can_delete());
         $this->set("group_slug", $this->get_group_slug());
