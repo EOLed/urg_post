@@ -71,7 +71,7 @@ class PostContentComponent extends AbstractWidgetComponent {
         Configure::load("config");
         foreach ($attachments as &$attachment) {
             $ext = pathinfo($attachment["filename"], PATHINFO_EXTENSION);
-            if (strcmp($ext, "jpg") != 0 && strcmp($ext, "png") != 0 && strcmp($ext, "gif") != 0 && strcmp($ext, "bmp") != 0) {
+            if (strcmp($ext, "jpeg") != 0 && strcmp($ext, "jpg") != 0 && strcmp($ext, "png") != 0 && strcmp($ext, "gif") != 0 && strcmp($ext, "bmp") != 0) {
                 continue;
             }
             $this->log("getting image for " . $attachment["filename"], LOG_DEBUG);

@@ -17,9 +17,6 @@ class PostContentHelper extends AbstractWidgetHelper {
         CakeLog::write(LOG_DEBUG, "building Post Content widget with options: " .
                                   Debugger::exportVar($this->options, 3));
         $this->Html->css("/urg_post/css/urg_post.css", null, array("inline"=>false));
-        $this->Html->css("/urg_post/css/colorbox.css", null, array("inline"=>false));
-        $this->Html->script("/urg_post/js/jquery.masonry.min", array("inline" => false));
-        $this->Html->script("/urg_post/js/jquery.colorbox-min", array("inline" => false));
         $this->banner_type = $this->options["banner_type"];
         $this->audio_type = $this->options["audio_type"];
         $this->images_type = $this->options["images_type"];
@@ -83,6 +80,8 @@ class PostContentHelper extends AbstractWidgetHelper {
         }
 
         if ($gallery != "") {
+            $this->Html->css("/urg_post/css/colorbox.css", null, array("inline"=>false));
+            $this->Html->script("/urg_post/js/jquery.colorbox-min", array("inline" => false));
             $gallery = $this->Html->div("post-section post-section-gallery", $this->Html->tag("h2", __("Pictures")) . $this->Html->tag("ul", $gallery, array("class" => "thumbnails", "id" => "gallery-" . $post["Post"]["id"])));
         }
 
