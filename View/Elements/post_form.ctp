@@ -26,6 +26,63 @@
                             echo $this->TwitterBootstrap->input("Post.displayDate", $options);
                             echo $this->TwitterBootstrap->input("Post.content", array("class" => "span4",
                                                                                       "rows" => "15"));
+                            echo $this->Html->div("row content-format-guide", 
+                                                  $this->Html->div("offset2 span4", $this->Html->link(__("Formatting guide"), "#", array("id" => "formatting-guide-link")))); 
+
+                            ?>
+                            <table class="table" style="display: none" id="formatting-guide">
+                                <tr>
+                                    <th><?php echo __("You type:"); ?></th>
+                                    <th><?php echo __("You see:"); ?></th>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "**" . __("Bold text") . "**"; ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "*" . __("Italic text") . "*"; ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "* " . __("Bullet list") . "\n* " . __("Bullet list"); ?>
+                                    <td><?php echo nl2br($type_this) ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "1. " . __("Ordered list") . "\n1. " . __("Ordered list"); ?>
+                                    <td><?php echo nl2br($type_this) ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "> " . __("blockquote"); ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "[Google](http://google.com)"; ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "# " . __("Level 1 Header") . " #"; ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "### " . __("Level 3 Header") . " ###"; ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                                <tr>
+                                    <?php $type_this = "![" . __("My alt text") . "](/favicon.png)"; ?>
+                                    <td><?php echo $type_this ?></td>
+                                    <td><?php echo $this->Markdown->html($type_this); ?></td>
+                                </tr>
+                            </table>
+                            <?php
                             $sticky_msg = __("Display this post at the top of activity feeds.");
                             echo $this->TwitterBootstrap->input("Post.sticky", 
                                                                 array("help_inline" => $sticky_msg,
@@ -112,8 +169,12 @@
         </div>
     </div>
 </div>    
+<script type="text/javascript">
+    $("#formatting-guide-link").click(function() {
+        $("#formatting-guide").toggle();
+        return false;
+    });
 <?php if (isset($banner) && $banner !== false) { ?>
-     <script type="text/javascript">
-         $($("#post-banner").prepend('<?php echo $this->Html->image($banner); ?>'));
-     </script>
+     $($("#post-banner").prepend('<?php echo $this->Html->image($banner); ?>'));
  <?php } ?>
+ </script>

@@ -245,6 +245,12 @@ div.home-link a:hover {
     margin-top: 80px;
 }
 
+.content-format-guide {
+    text-align: right;
+    margin-bottom: 18px;
+}
+
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;
