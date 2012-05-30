@@ -20,7 +20,7 @@ class PostContentHelper extends AbstractWidgetHelper {
         $this->banner_type = $this->options["banner_type"];
         $this->audio_type = $this->options["audio_type"];
         $this->images_type = $this->options["images_type"];
-        return $this->post_content($this->options["title"], $this->options["post"]) . $this->js($this->options["post"]["Post"]["id"]);
+        return $this->post_content($this->options["title"], $this->options["post"]);
     }
 
     function post_content($title, $post) {
@@ -79,10 +79,12 @@ class PostContentHelper extends AbstractWidgetHelper {
             }
         }
 
+        $js = "";
         if ($gallery != "") {
             $this->Html->css("/urg_post/css/colorbox.css", null, array("inline"=>false));
             $this->Html->script("/urg_post/js/jquery.colorbox-min", array("inline" => false));
             $gallery = $this->Html->div("post-section post-section-gallery", $this->Html->tag("h2", __("Pictures")) . $this->Html->tag("ul", $gallery, array("class" => "thumbnails", "id" => "gallery-" . $post["Post"]["id"])));
+            $js = $this->js($post["Post"]["id"]);
         }
 
         $attachment_list = "";
@@ -108,7 +110,7 @@ class PostContentHelper extends AbstractWidgetHelper {
 
         return $this->Html->div("post-content", 
                                 $content . $gallery . $attachment_list . $social, 
-                                array("id" => $this->options["id"]));
+                                array("id" => $this->options["id"])) . $js;
     }
 
     function js($id) {

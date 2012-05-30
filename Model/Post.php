@@ -48,9 +48,11 @@ class Post extends UrgPostAppModel {
     var $hasMany = array("Attachment");
 
     function afterSave($created) {
-        if ($created) {
-            Cache::clear(false);
-        }
+        Cache::clear(false);
+    }
+
+    function afterDelete() {
+        Cache::clear(false);
     }
 }
 ?>
