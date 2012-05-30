@@ -50,6 +50,9 @@ class RecentActivityHelper extends AppHelper {
 
     function post_feed($posts) {
         $feed = "";
+        $thumb_counter = 0;
+        Configure::load("config");
+        $max_thumbs = Configure::read("ActivityFeed.maxThumbs");
 
         foreach ($posts as $feed_item) {
             $feed_icon = $this->feed_icon($feed_item);
@@ -61,7 +64,8 @@ class RecentActivityHelper extends AppHelper {
                                   $feed_item["Post"]["slug"]);
             $banner = "";
             
-            if ($this->options["show_thumbs"])
+
+            if ($this->options["show_thumbs"] && $max_thumbs == null || $thumb_counter < $max_thumbs)
             {
                  $post_id = $banner_attachment["post_id"];
                  $filename = $banner_attachment["filename"];
@@ -76,8 +80,11 @@ class RecentActivityHelper extends AppHelper {
             $title = $this->Html->tag("h3", $this->Html->link($feed_item["Post"]["title"], 
                                                               $link,
                                                               array("class"=>"post-title")));
+
             if ($feed_item["Post"]["sticky"]) {
                 $title = $this->Html->tag("span", __("Sticky", true), array("class" => "label label-important sticky")) . $title;
+            } else {
+                $thumb_counter++;
             }
 
             $home_group = $feed_item["Group"]["home"] ? $feed_item : array("Group" => $feed_item["Group"]["ParentGroup"]);
