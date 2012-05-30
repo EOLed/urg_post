@@ -68,6 +68,18 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     }
 
     function get_recent_activity($group_id, $post_id = false) {
+        $cached_feed_key = "recentactivity-$group_id-$post_id";
+        $cached_banners_key = "recentactivity-banners-$group_id-$post_id";
+        $cached_feed = Cache::read($cached_feed_key);
+        $cached_banners = Cache::read($cached_banners_key);
+        if ($cached_feed !== false) {
+            CakeLog::write(LOG_DEBUG, "using cached recent activity for group $group_id and post $post_id");
+            $this->set("feed_banners", $cached_banners);
+            return $cached_feed;
+        }
+
+        CakeLog::write(LOG_DEBUG, "generating recent activity for group $group_id and post $post_id");
+
         $this->controller->loadModel("Urg.Group");
         $this->controller->loadModel("UrgPost.Post");
 
@@ -132,9 +144,11 @@ class RecentActivityComponent extends AbstractWidgetComponent {
             array_push($activity, $post);
         }
 
+        Cache::write($cached_banners_key, $banners);
         $this->set("feed_banners", $banners);
         
         CakeLog::write("debug", "group activity: " . Debugger::exportVar($activity, 3));
+        Cache::write($cached_feed_key, $activity);
 
         return $activity;
     }
