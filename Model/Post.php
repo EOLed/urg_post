@@ -45,7 +45,12 @@ class Post extends UrgPostAppModel {
 		)
 	);
 
-    var $hasMany = array("Attachment");
+    var $hasMany = array(
+		'Attachment' => array(
+			'className' => 'UrgPost.Attachment',
+			'order' => 'Attachment.created DESC'
+		)
+    );
 
     function afterSave($created) {
         Cache::clear(false);
