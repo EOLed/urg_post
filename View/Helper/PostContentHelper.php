@@ -3,12 +3,15 @@ App::uses("MarkdownHelper", "Markdown.View/Helper");
 App::uses("AbstractWidgetHelper", "Urg.Lib");
 App::uses("Sanitize", "Utility");
 App::uses("FacebookHelper", "Socialize.View/Helper");
+App::uses("TwitterBootstrapHelper", "TwitterBootstrap.View/Helper");
 class PostContentHelper extends AbstractWidgetHelper {
     var $helpers = array("Socialize.Facebook" => array("app_id" => "169875155877"), 
                          "Html", 
                          "Time", 
                          "Markdown.Markdown",
-                         "Urg.SmartSnippet");
+                         "Urg.SmartSnippet",
+                         "Form",
+                         "TwitterBootstrap.TwitterBootstrap");
     var $images_type;
     var $banner_type;
     var $audio_type;
@@ -92,15 +95,60 @@ class PostContentHelper extends AbstractWidgetHelper {
             $attachment_list = $this->Html->div("post-section post-section-attachments", $this->Html->tag("h2", __("Attachments")) . $this->Html->tag("ul", $attachment_items));
         }
 
+        return $this->Html->div("post-content", 
+                                $content . $gallery . $attachment_list . $this->build_social_widget($post) . $this->build_comments($post), 
+                                array("id" => $this->options["id"])) . $js;
+    }
+
+    function build_comments($post) {
+        if (!$post["Post"]["commentable"] || (isset($this->options["comments"]) && $this->options["comments"] === false))
+            return "";
+
+        $comments_header = $this->Html->tag("h2", 
+                                            __("Comments") . "<a name='comments'></a>", 
+                                            array("id" => "comments-header-" . $post["Post"]["id"]));
+        $comments = $this->Html->div("", "", array("id" => "comments-" . $post["Post"]["id"]));
+        $comments_form = $this->Html->tag("h2", 
+                                          __("Add a Comment"), 
+                                          array("class" => "comments-form-header"));
+        $comments_form .= $this->Form->create("PostComment", 
+                                              array("action" => "add", "class" => "post-comment-form"));
+        $comments_form .= $this->Form->hidden("PostComment.post_id", array("value" => $post["Post"]["id"]));
+
+        $logged_user = CakeSession::read("User");
+
+        if ($logged_user == null) {
+            $comments_form .= $this->TwitterBootstrap->input("PostComment.username");
+            $comments_form .= $this->TwitterBootstrap->input("PostComment.link");
+        }
+
+        $comments_form .= $this->Form->textarea("PostComment.comment", 
+                                                array("style" => "width: 98%; height: 200px"));
+        $formatting_guide = $this->Html->div("format-guide", 
+                              $this->Html->div("", $this->Html->link(__("Formatting guide"), "#", array("id" => "formatting-guide-link")))); 
+
+        $formatting_guide .= $this->_View->element("UrgPost.formatting_guide", array("dom_id" => "formatting-guide"));
+        $comments_form .= $formatting_guide;
+        $comments_form .= $this->Form->button(__("Comment", true), array("class" => "btn btn-inverse")) . " ";
+        $comments_form .= $this->Form->end();
+
+        $js = "$.get(\"" . $this->Html->url(array("plugin" => "urg_post", "controller" => "post_comments", "action" => "post", $post["Post"]["id"])) . "\", function(data) { $('#comments-" . $post["Post"]["id"] . "').html(data);});";
+        return $this->Html->div("post-comments", $comments_header . $comments . $comments_form . $this->Html->scriptBlock($js));
+    }
+
+    function build_social_widget($post) {
         $post_url = $this->Html->url(array("plugin" => "urg_post",
                                            "controller" => "posts",
                                            "action" => "view",
                                            $post["Post"]["id"],
                                            $post["Post"]["slug"]));
+
         $social = "";
         if ($this->options["social"] !== false) {
             $social = $this->Html->div("hidden-phone social-bookmarks", 
-                                       $this->Facebook->loadJavascriptSdk() . $this->Facebook->share(FULL_BASE_URL . $post_url));
+                                       $this->Facebook->loadJavascriptSdk() . 
+                                       $this->Facebook->share(FULL_BASE_URL . $post_url));
+
             $this->_View->assign("meta", "");
             $this->Html->meta(array("name"=>"og:description", 
                                     "content"=>$this->SmartSnippet->snippet($post["Post"]["content"], 125, 25)),
@@ -108,9 +156,7 @@ class PostContentHelper extends AbstractWidgetHelper {
                               array("inline" => false));
         }
 
-        return $this->Html->div("post-content", 
-                                $content . $gallery . $attachment_list . $social, 
-                                array("id" => $this->options["id"])) . $js;
+        return $social;
     }
 
     function js($id) {

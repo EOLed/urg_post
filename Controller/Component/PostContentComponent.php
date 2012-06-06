@@ -24,6 +24,10 @@ class PostContentComponent extends AbstractWidgetComponent {
         if (isset($this->post["Attachment"])) {
             $this->setup_images($this->post["Attachment"]);
         }
+
+        if (isset($this->widget_settings["comments"]))
+            $this->set("comments", $this->widget_settings["comments"]);
+
         $this->set("post", $this->post);
         $this->set("images_type", $images_type);
         $this->set("banner_type", $banner_type);

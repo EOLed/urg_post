@@ -245,11 +245,42 @@ div.home-link a:hover {
     margin-top: 80px;
 }
 
-.content-format-guide {
+.format-guide {
     text-align: right;
     margin-bottom: 18px;
 }
 
+.comments-form-header {
+    margin-top: 80px;
+}
+
+.post-comment {
+}
+
+.post-commenter {
+    margin-bottom: 5px;
+}
+
+.post-comment-meta {
+    text-transform: uppercase;
+    color: #ccc;
+    font-size: 10px;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.post-comment-body {
+    border-bottom-style: dashed;
+    border-bottom-width: 1px;
+    border-bottom-color: #ececec;
+}
+
+.post-comments {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    margin-top: 80px;
+}
 
 /** NOTICES & MESSAGES */
 div.validated {
