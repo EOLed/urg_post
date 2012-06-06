@@ -181,6 +181,7 @@ class PostsController extends UrgPostAppController {
             $this->request->data["Post"]["displayDate"] = date("F d, Y");
             $this->request->data["Post"]["displayTime"] = date("h:i A");
             $this->request->data["Post"]["formatted_date"] = date("Y-m-d");
+            $this->request->data["Post"]["commentable"] = true;
             $this->log("next id for " . $this->Post->useTable . " " . $this->request->data["Post"]["id"], LOG_DEBUG);
             $this->log("post creator: " . Debugger::exportVar($post_creator, 3), LOG_DEBUG);
             $this->loadModel("Profile");
@@ -537,4 +538,3 @@ if (!function_exists('date_parse_from_format')) {
 return  $output;
   }
 }
-?>
