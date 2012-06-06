@@ -1,12 +1,13 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UrgPostAppModel', 'UrgPost.Model');
 /**
  * PostComment Model
  *
  * @property Post $Post
  * @property User $User
  */
-class PostComment extends AppModel {
+class PostComment extends UrgAppModel {
 /**
  * Display field
  *
@@ -29,7 +30,7 @@ class PostComment extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'link' => array(
+		/*'link' => array(
 			'url' => array(
 				'rule' => array('url'),
 				//'message' => 'Your custom message here',
@@ -38,7 +39,7 @@ class PostComment extends AppModel {
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-		),
+		),*/
 		'comment' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),

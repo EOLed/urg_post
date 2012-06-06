@@ -1,14 +1,15 @@
 <?php
 App::uses('Sanitize', "Utility");
 App::uses('MarkdownHelper', 'Markdown.View/Helper');
-App::uses('AppController', 'Controller');
+App::uses('UrgPostAppController', 'UrgPost.Controller');
 /**
  * PostComments Controller
  *
  * @property PostComment $PostComment
  */
-class PostCommentsController extends AppController {
+class PostCommentsController extends UrgPostAppController {
     var $helpers = array("Time", "Html", "Form", "Markdown.Markdown");
+    var $components = array("Urg.Urg");
 
 /**
  * index method
