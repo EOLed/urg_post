@@ -37,7 +37,7 @@
         banner_width = $("#post-banner").width();
 
         $("#post-banner").html(
-                "<img id='#post-banner-img' src='" +
+                "<img id='post-banner-img' src='" +
                 "<?php echo $this->Html->url("/urg_post/img/" . $this->data["Post"]["id"]); ?>" 
                 + "/" + fileObj.name + "#" + Math.random() + "' style='width: " + banner_width +  "px;' />");
     }
@@ -68,7 +68,7 @@
                 target: "_blank"
         }).appendTo("#AttachmentQueueListItem" + attachmentCounter);
 
-        $("#AttachmentQueueAudioLink" + attachmentCounter).text(fileObj.name);
+        $("#AttachmentQueueAudioLink" + attachmentCounter).text(fileObj.name.substring(0, 40));
     }
 
     function image_upload_in_progress(event, ID, fileObj, data) {

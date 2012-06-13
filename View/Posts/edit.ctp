@@ -37,7 +37,7 @@
         banner_width = $("#post-banner").width();
 
         $("#post-banner").html(
-                "<img id='#post-banner-img' src='" +
+                "<img id='post-banner-img' src='" +
                 "<?php echo $this->Html->url("/urg_post/img/" . $this->data["Post"]["id"]); ?>" 
                 + "/" + fileObj.name + "#" + Math.random() + "' style='width: " + banner_width +  "px;' />");
     }
@@ -132,7 +132,6 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
     var search_speaker = true;
 <?php echo $this->Html->scriptEnd(); ?>
 
-<?php echo $this->Html->script("tinymce/jquery.tinymce.js"); ?>
 <?php echo $this->Html->script("/urg_post/js/jquery.timepicker.min.js"); ?>
 
 <?php echo $this->Html->scriptStart(); ?>

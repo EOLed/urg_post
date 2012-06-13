@@ -432,6 +432,23 @@ class PostsController extends UrgPostAppController {
     function __ends_with($haystack, $needle) {
         return strrpos($haystack, $needle) === strlen($haystack)-strlen($needle);
     }
+
+    function sideload_banner() {
+        $this->layout = false;
+
+        if (!isset($_GET["url"]) || !isset($_GET["post_id"])) {
+            return ;
+        }
+
+        $url = $_GET["url"];
+        $post_id = $_GET["post_id"];
+
+        $image_data = file_get_contents($url);
+        $ext = strrchr($url,'.');
+        $filename = String::uuid() . $ext;
+        file_put_contents($this->__get_doc_root($this->Poster->IMAGES) . "/$post_id/" . $filename, $image_data);
+        $this->set("image", array("full_path" => "/$post_id/$filename", "filename" => $filename));
+    }
 }
 
 if (!function_exists('date_parse_from_format')) {
