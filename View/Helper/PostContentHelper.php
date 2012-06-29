@@ -11,7 +11,8 @@ class PostContentHelper extends AbstractWidgetHelper {
                          "Markdown.Markdown",
                          "Urg.SmartSnippet",
                          "Form",
-                         "TwitterBootstrap.TwitterBootstrap");
+                         "TwitterBootstrap.TwitterBootstrap",
+                         "Session");
     var $images_type;
     var $banner_type;
     var $audio_type;
@@ -111,6 +112,7 @@ class PostContentHelper extends AbstractWidgetHelper {
         $comments_form = $this->Html->tag("h2", 
                                           __("Add a Comment"), 
                                           array("class" => "comments-form-header"));
+        $comments_form .= $this->Session->flash();
         $comments_form .= $this->Form->create("PostComment", 
                                               array("action" => "add", "class" => "post-comment-form"));
         $comments_form .= $this->Form->hidden("PostComment.post_id", array("value" => $post["Post"]["id"]));

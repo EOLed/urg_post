@@ -48,10 +48,11 @@ class PostCommentsController extends UrgPostAppController {
                 $this->request->data["PostComment"]["user_id"] = $logged_user["User"]["id"];
             }
 			if ($this->PostComment->save($this->request->data)) {
-				$this->Session->setFlash(__('The post comment has been saved'));
+				$this->Session->setFlash(__('The post comment has been saved'), "alert_success");
 				$this->redirect($this->referer());
 			} else {
-				$this->Session->setFlash(__('The post comment could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The post comment could not be saved. Please, try again.'), "alert_error");
+                $this->redirect($this->referer() . "#comments");
 			}
 		}
 		$posts = $this->PostComment->Post->find('list');
