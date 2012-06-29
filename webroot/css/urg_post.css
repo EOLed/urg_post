@@ -282,6 +282,10 @@ div.home-link a:hover {
     margin-top: 80px;
 }
 
+#editable-banner-img {
+    cursor: pointer;
+}
+
 /** NOTICES & MESSAGES */
 div.validated {
     clear: both;
