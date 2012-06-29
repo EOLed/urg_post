@@ -97,7 +97,7 @@ class PostContentHelper extends AbstractWidgetHelper {
         }
 
         return $this->Html->div("post-content", 
-                                $content . $gallery . $attachment_list . $this->build_social_widget($post) . $this->build_comments($post), 
+                                $content . $gallery . $this->build_stream_widget($post) . $attachment_list . $this->build_social_widget($post) . $this->build_comments($post), 
                                 array("id" => $this->options["id"])) . $js;
     }
 
@@ -136,6 +136,27 @@ class PostContentHelper extends AbstractWidgetHelper {
 
         $js = "$.get(\"" . $this->Html->url(array("plugin" => "urg_post", "controller" => "post_comments", "action" => "post", $post["Post"]["id"])) . "\", function(data) { $('#comments-" . $post["Post"]["id"] . "').html(data);});";
         return $this->Html->div("post-comments", $comments_header . $comments . $comments_form . $this->Html->scriptBlock($js));
+    }
+
+    function build_stream_widget($post) {
+        if (!isset($this->options["ustream"]))
+            return "";
+
+        if (date("dmY", strtotime($post["Post"]["publish_timestamp"])) != date("dmY"))
+            return "";
+
+        $ustream = $this->options["ustream"];
+        $channel_id = $ustream["channel_id"];
+
+        $width = isset($ustream["width"]) ? $ustream["width"] : 360;
+        $height = isset($stream["height"]) ? $ustream["heigth"] : 228;
+
+        return $this->Html->tag("iframe", "", array("width" => $width,
+                                                     "height" => $height,
+                                                     "src" => "http://www.ustream.tv/embed/$channel_id",
+                                                     "scrolling" => "no",
+                                                     "frameborder" => 0,
+                                                     "style" => "border: 0px none transparent"));
     }
 
     function build_social_widget($post) {

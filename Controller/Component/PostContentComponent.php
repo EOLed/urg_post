@@ -41,6 +41,9 @@ class PostContentComponent extends AbstractWidgetComponent {
         $this->set("group_slug", $this->get_group_slug());
         $this->set("post_id", $this->widget_settings["post_id"]);
 
+        if (isset($this->widget_settings["ustream"]))
+            $this->set("ustream", $this->widget_settings["ustream"]);
+
         if (!isset($this->widget_settings["social"]))
             $this->widget_settings["social"] = false;
 
