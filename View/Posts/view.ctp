@@ -85,7 +85,3 @@
         <?php } ?>
     </div>
 </div>
-<script type="text/javascript">
-<?php echo $this->element("js_equal_height"); ?>
-$(".post-col").equalHeight();
-</script>
