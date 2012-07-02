@@ -37,7 +37,7 @@
         banner_width = $("#post-banner").width();
 
         $("#post-banner").html(
-                "<img id='post-banner-img' src='" +
+                "<img id='editable-banner-img' src='" +
                 "<?php echo $this->Html->url("/urg_post/img/" . $this->data["Post"]["id"]); ?>" 
                 + "/" + fileObj.name + "#" + Math.random() + "' style='width: " + banner_width +  "px;' />");
     }

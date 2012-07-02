@@ -1,4 +1,4 @@
-<?php echo $this->HtmlText->convert_html_to_text($post["Post"]["content"]); ?>
+<?php echo $this->HtmlText->convert_html_to_text($this->Markdown->html($post["Post"]["content"])); ?>
 
 
 <?php echo __("The HTML version of this email can be found at ") .

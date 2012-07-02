@@ -78,10 +78,8 @@
                         <fieldset>
                             <legend><h2><?php echo __('Add Resources'); ?></h2></legend>
                             <?php 
-                            $edit_banner = $this->Html->link(__("Edit"), "#", array("id" => "edit-banner"));
                             echo $this->Html->div("input", 
                                     $this->Html->div("placeholder", "", array("id" => "post-banner")) . 
-                                    $this->Html->div("", $edit_banner) . 
                                     $this->element("Cuploadify.uploadify", 
                                     array("plugin" => "Cuploadify", 
                                             "dom_id" => "image_upload", 
@@ -156,11 +154,11 @@
     </div>
 </div>    
 <script type="text/javascript">
-    $("#edit-banner").click(function() {
-        launchEditor("post-banner-img", "<?php echo substr(Router::url('/', true), 0, strlen(Router::url('/', true)) - 1); ?>" + $("#post-banner-img").attr("src"));
+    $("#post-banner").click(function() {
+        launchEditor("editable-banner-img", "<?php echo substr(Router::url('/', true), 0, strlen(Router::url('/', true)) - 1); ?>" + $("#editable-banner-img").attr("src"));
         return false;
     });
 <?php if (isset($banner) && $banner !== false) { ?>
-     $($("#post-banner").prepend('<?php echo $this->Html->image($banner, array("id" => "post-banner-img")); ?>'));
+     $($("#post-banner").prepend('<?php echo $this->Html->image($banner, array("id" => "editable-banner-img")); ?>'));
  <?php } ?>
  </script>
