@@ -149,14 +149,17 @@ class PostContentHelper extends AbstractWidgetHelper {
         $channel_id = $ustream["channel_id"];
 
         $width = isset($ustream["width"]) ? $ustream["width"] : 360;
-        $height = isset($stream["height"]) ? $ustream["heigth"] : 228;
+        $height = isset($ustream["height"]) ? $ustream["height"] : 228;
+        $title = isset($ustream["title"]) ? $ustream["title"] : __("Live Stream");
 
-        return $this->Html->tag("iframe", "", array("width" => $width,
-                                                     "height" => $height,
-                                                     "src" => "http://www.ustream.tv/embed/$channel_id",
-                                                     "scrolling" => "no",
-                                                     "frameborder" => 0,
-                                                     "style" => "border: 0px none transparent"));
+        $frame = $this->Html->tag("iframe", "", array("width" => $width,
+                                                      "height" => $height,
+                                                      "src" => "http://www.ustream.tv/embed/$channel_id",
+                                                      "scrolling" => "no",
+                                                      "frameborder" => 0,
+                                                      "style" => "border: 0px none transparent"));
+        $caption = isset($ustream["caption"]) ? $this->Html->div("stream-caption", $ustream["caption"]) : "";
+        return $this->Html->tag("h2", $title) . $frame . $caption;
     }
 
     function build_social_widget($post) {
