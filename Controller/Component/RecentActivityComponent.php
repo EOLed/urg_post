@@ -11,8 +11,11 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     var $components = array("Urg.Urg");
     var $POST_BANNERS = "/app/Plugin/UrgPost/webroot/img";
     var $__newsletter_group = null;
+    var $__group = null;
 
     function build_widget() {
+        $this->__group = isset($this->widget_settings["group_slug"]) ? $this->controller->Group->findBySlug($this->widget_settings["group_slug"]) :
+                                                                       $this->controller->Group->findById($this->widget_settings["group_id"]);
         $this->__newsletter_group = $this->get_newsletter_group();
 
         $post_id = false;
@@ -20,7 +23,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
             $post_id = $this->widget_settings["post_id"];
         }
         
-        $activity = $this->get_recent_activity($this->widget_settings["group_id"], $post_id);
+        $activity = $this->get_recent_activity($this->__group["Group"]["id"], $post_id);
         $this->set("recent_activity", $activity);
 
         if (!isset($this->widget_settings["title"])) {
@@ -32,7 +35,7 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                                   $this->widget_settings["show_thumbs"]);
         $this->set("show_home_link", isset($this->widget_settings["show_home_link"]) && 
                                      $this->widget_settings["show_home_link"]);
-        $this->set("group_id", $this->widget_settings["group_id"]);
+        $this->set("group_id", $this->__group["Group"]["id"]);
         $this->set("can_add", $this->can_add());
 
         $this->set("group_slug", $this->get_group_slug());
@@ -43,11 +46,10 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     }
 
     function get_newsletter_group() {
-        $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
-        if ($group["Group"]["name"] == "Newsletter")
-            return $group;
+        if ($this->__group["Group"]["name"] == "Newsletter")
+            return $this->__group;
 
-        $children = $this->controller->Group->children($this->widget_settings["group_id"]);
+        $children = $this->controller->Group->children($this->__group["Group"]["id"]);
         $newsletter_group = false;
 
         foreach ($children as $child) {

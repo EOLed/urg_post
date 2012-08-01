@@ -77,6 +77,7 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
         $days_of_relevance = Configure::read("ActivityFeed.daysOfRelevance");
         $limit = isset($this->widget_settings["limit"]) ? $this->widget_settings["limit"] : Configure::read("ActivityFeed.limit");
 
+        $this->controller->loadModel("UrgPost.Post");
         $posts = $this->controller->Post->find('all', 
                 array("conditions" => array("Post.group_id" => $child_ids,
                                             "Post.publish_timestamp BETWEEN SYSDATE() AND SYSDATE() + INTERVAL $days_of_relevance DAY"),
