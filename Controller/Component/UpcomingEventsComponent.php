@@ -22,7 +22,8 @@ class UpcomingEventsComponent extends AbstractWidgetComponent {
     }
 
     function get_upcoming_group() {
-        $group = $this->controller->Group->findById($this->widget_settings["group_id"]);
+        $group = isset($this->widget_settings["group_slug"]) ? $this->controller->Group->findBySlug($this->widget_settings["group_slug"]) :
+                                                               $this->controller->Group->findById($this->widget_settings["group_id"]);
 
         if ($group["Group"]["name"] == "Schedule")
             return $group;
