@@ -43,10 +43,12 @@
                             echo $this->Form->hidden("bannerAttachmentIndex");
                             echo $this->TwitterBootstrap->input('Post.group_id', array("escape" => false));
                             echo $this->TwitterBootstrap->input('Post.title', array("class" => "span4"));
-                            echo $this->Html->div("error-message", "", 
-                                    array("id"=>"PostTitleError", "style"=>"display: none"));
-                            echo $this->Html->div("validated", "✓", 
-                                    array("id"=>"PostTitleValid", "style"=>"display: none"));
+                            echo $this->Html->tag("span", "", array("id"=>"PostTitleError",
+                                                                    "style"=>"display: none",
+                                                                    "class"=>"help-inline"));
+                            echo $this->Html->tag("span", "✓", array("class"=>"help-inline", 
+                                                                     "id"=>"PostTitleValid",
+                                                                     "style"=>"display: none"));
                             echo $this->Form->hidden("Post.formatted_date");
                             $time = $this->Form->text("Post.displayTime", array("div"=> false, 
                                                                                 "label"=> false,

@@ -96,11 +96,15 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
             $(dom_id).after($(dom_id + "Valid"));
             $(dom_id + "Valid").show();
             $(dom_id).removeClass("invalid");
+            $(dom_id).parents(".control-group").removeClass("error");
+            $(dom_id).parents(".control-group").addClass("success");
         } else {
             $(dom_id + "Valid").hide();
             $(dom_id).after($(dom_id + "Error"));
             $(dom_id + "Error").show();
             $(dom_id).addClass("invalid");
+            $(dom_id).parents(".control-group").removeClass("success");
+            $(dom_id).parents(".control-group").addClass("error");
         }
     }
 
@@ -110,22 +114,23 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
         $("#loading-validate").show();
     }
 
-    $("#PostTitle").blur(function() {
-        if ($(this).hasClass("dirty")) {
-        <?php
-        $this->Js->get("#PostTitle");
-        echo $this->Js->request("/urg_post/posts/validate_field/Post/title", array(
-                "update" => "#PostTitleError",
-                "async" => true,
-                "data" => '{ value: $("#PostTitle").val() }',
-                "dataExpression" => true,
-                "complete" => "on_validate('#PostTitle', XMLHttpRequest, textStatus)",
-                "before" => "loading_validate('#PostTitle')"
-        ));
-        ?>
-        }
-
-        $(this).removeClass("dirty");
+    $("#PostTitle").keyup(function() {
+        clearTimeout($.data(this, 'timer'));
+        var wait = setTimeout(function() {
+          <?php
+          $this->Js->get("#PostTitle");
+          echo $this->Js->request("/urg_post/posts/validate_field/Post/title", array(
+                  "update" => "#PostTitleError",
+                  "async" => true,
+                  "data" => '{ value: $("#PostTitle").val() }',
+                  "dataExpression" => true,
+                  "complete" => "on_validate('#PostTitle', XMLHttpRequest, textStatus)",
+                  "before" => "loading_validate('#PostTitle')"
+          ));
+          ?>
+          $(this).removeClass("dirty");
+        }, 500);
+        $(this).data('timer', wait);
     });
 
     var search_series = true;
@@ -142,7 +147,7 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
         })
     });
 
-    $("#PostAddForm").submit(function() {
+    $("#PostEditForm").submit(function() {
         error = false;
         scrolled = false;
         $(":input.invalid").each(function(index) {
@@ -173,7 +178,7 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
         $("#in-progress").dialog("close");
 
         if (submit_form) {
-            $("#PostAddForm").submit();
+            $("#PostEditForm").submit();
         }
     }
 
@@ -183,7 +188,7 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
         $("#in-progress").dialog("close");
 
         if (submit_form) {
-            $("#PostAddForm").submit();
+            $("#PostEditForm").submit();
         }
     }
     
