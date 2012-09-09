@@ -1,5 +1,5 @@
 <?php
-App::uses("AbstractWidgetComponent", "Urg.Controller/Component");
+App::uses("AbstractWidgetComponent", "Urg.Lib");
 class PostTitleComponent extends AbstractWidgetComponent {
     function build_widget() {
         $this->controller->loadModel("UrgPost.Post");
