@@ -17,8 +17,8 @@ class PosterComponent extends Component {
 
     var $controller = null;
 
-    function initialize(&$controller, $settings=array()) {
-        $this->controller =& $controller;
+    function initialize(Controller $controller, $settings=array()) {
+        $this->controller = $controller;
     }
     
     /**

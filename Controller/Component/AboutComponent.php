@@ -3,8 +3,8 @@ class AboutComponent extends Component {
     var $controller = null;
     var $settings = null;
 
-    function initialize(&$controller, $settings = array()) {
-        $this->controller =& $controller;
+    function initialize(Controller $controller, $settings = array()) {
+        $this->controller = $controller;
         $this->settings = $settings;
 
         CakeLog::write("debug", "about component settings: " . Debugger::exportVar($settings, 3));
