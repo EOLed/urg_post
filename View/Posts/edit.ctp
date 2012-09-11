@@ -192,7 +192,7 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
         }
     }
     
-    $($(":input").addClass("dirty"));
+    $($(":input").removeClass("invalid"));
 
     $($(":input").change(function(event) {
         $(this).addClass("dirty");
@@ -204,10 +204,6 @@ echo $this->element("post_form", array("plugin" => "UrgPost"));
             $(dom_id).addClass("invalid"); 
         }
     }
-
-    $(function() {
-        invalidate("#PostTitle");
-    });
 
     $(function() {
         $("#PostDisplayDate").datepicker({
