@@ -70,9 +70,8 @@ class RecentActivityComponent extends AbstractWidgetComponent {
     }
 
     function get_recent_activity($group_id, $post_id = false) {
-        $lang = $this->controller->Session->read("Config.language");
-        $cached_feed_key = "recentactivity-$group_id-$post_id-$lang";
-        $cached_banners_key = "recentactivity-banners-$group_id-$post_id-$lang";
+        $cached_feed_key = "recentactivity-$group_id-$post_id";
+        $cached_banners_key = "recentactivity-banners-$group_id-$post_id";
         $cached_feed = Cache::read($cached_feed_key);
         $cached_banners = Cache::read($cached_banners_key);
         if ($cached_feed !== false) {
@@ -125,10 +124,9 @@ class RecentActivityComponent extends AbstractWidgetComponent {
                     CakeLog::write("debug", "parent group: " . Debugger::exportVar($parent, 3));
                     $parent_group_id = $parent["Group"]["id"];
                     $widget = $this->controller->Group->Widget->find("first", array(
-                            "conditions" => array("AND" => array("Widget.group_id" => $parent_group_id,
-                                                                 "Widget.action" => "/urg/groups/view"),
-                                                  "OR" => array("Widget.name" => "UrgPost.PostBanner",
-                                                                "Widget.name" => "UrgPost.I18nPostBanner")),
+                            "conditions" => array("Widget.group_id" => $parent_group_id,
+                                                  "Widget.action" => "/urg/groups/view",
+                                                  "Widget.name" => "UrgPost.PostBanner"),
                             "order" => "Widget.placement"
                     ));
 
@@ -136,8 +134,6 @@ class RecentActivityComponent extends AbstractWidgetComponent {
 
                     if ($widget) {
                         $settings = $this->controller->WidgetUtil->get_settings($widget, array());
-                        if (isset($settings[$lang]))
-                          $settings = $settings[$lang];
 
                         $post_id = $settings["post_id"];
                         $parent_post = $this->controller->Post->findById($post_id);
