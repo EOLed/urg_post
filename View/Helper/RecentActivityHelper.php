@@ -122,9 +122,9 @@ class RecentActivityHelper extends AppHelper {
         $title = $this->TwitterBootstrap->input("RecentActivity.title");
         $col =  $this->TwitterBootstrap->input("RecentActivity.col", 
                                                array("type" => "select", 
-                                                     "options" => array("col-0" => 1, 
-                                                                        "col-1" => 2, 
-                                                                        "col-2" => 3)));
+                                                     "options" => array("col0" => 1, 
+                                                                        "col1" => 2, 
+                                                                        "col2" => 3)));
         $row = $this->TwitterBootstrap->input("RecentActivity.row",
                                               array("type" => "select",
                                                     "options" => array("0" => 1, "1" => 2, "2" => 3)));
